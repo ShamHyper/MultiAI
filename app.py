@@ -73,7 +73,7 @@ def rem_bg_def_batch(inputs, outputs):
     return outputs
 
 with gr.Blocks(theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) as app:
-    gr.Markdown("MultiAI v0.3")
+    gr.Markdown("MultiAI v0.3.1")
     with gr.Tab("BgRemoverLite"):
         with gr.Row():
             gr.Label("Remove background from single image")
