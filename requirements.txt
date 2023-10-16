@@ -1,0 +1,8 @@
+pillow
+rembg
+colorama
+clear
+librosa
+soundfile
+numpy
+gradio
