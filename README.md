@@ -1,6 +1,7 @@
 # MultiAI [![wakatime](https://wakatime.com/badge/github/ShamHyper/MultiAI.svg)](https://wakatime.com/badge/github/ShamHyper/MultiAI)
-*Beta, but you can use this.*
-
+### What AIs supporting now?
+**1. BgRemoverLite - https://github.com/ShamHyper/BgRemoverLite**
+### How to use
 **1. Download using "Code --> Download ZIP"**
 
 **2. Unarchive ZIP**
