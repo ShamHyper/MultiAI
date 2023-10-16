@@ -2,7 +2,7 @@
 ### What AIs supporting now?
 **1. BgRemoverLite - https://github.com/ShamHyper/BgRemoverLite**
 ### How to use
-**1. Download using "Code --> Download ZIP"**
+**1. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
 
 **2. Unarchive ZIP**
 
