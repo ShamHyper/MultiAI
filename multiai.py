@@ -5,10 +5,11 @@ import numpy
 
 from PIL import Image, UnidentifiedImageError
 from rembg import remove
-from local_eng import *
 
 from nudenet import NudeClassifier
 from tqdm import tqdm
+
+ver = "MultiAI v0.4.1"
 
 classifier = NudeClassifier()
 current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -92,7 +93,7 @@ def detector_clear(outputs):
             
 
 with gr.Blocks(theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) as multiai:
-    gr.Markdown("MultiAI v0.4.0")
+    gr.Markdown(ver)
     with gr.Tab("BgRemoverLite"):
         with gr.Row():
             gr.Label("Remove background from single image")
