@@ -1,0 +1,2 @@
+python multiai.py
+pause

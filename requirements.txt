@@ -2,3 +2,5 @@ pillow
 rembg
 gradio
 numpy
+nudenet
+tqdm
