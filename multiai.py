@@ -9,7 +9,7 @@ from rembg import remove
 from nudenet import NudeClassifier
 from tqdm import tqdm
 
-ver = "MultiAI v0.4.1"
+ver = "MultiAI v0.5.0"
 
 classifier = NudeClassifier()
 current_directory = os.path.dirname(os.path.abspath(__file__))
