@@ -23,7 +23,7 @@
 
 **4. Unarchive ZIP**
 
-**5. Run *install.bat* (only first time, next time use run.bat)**
+**5. Run *Install.bat* (only first time, next time use run.bat)**
 
 **6. Run *run.bat***
 #
