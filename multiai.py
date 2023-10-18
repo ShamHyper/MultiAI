@@ -9,7 +9,7 @@ from rembg import remove
 from nudenet import NudeClassifier
 from tqdm import tqdm
 
-ver = "MultiAI v0.5.1"
+ver = "MultiAI v0.5.2"
 
 classifier = NudeClassifier()
 current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -142,4 +142,4 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) 
 
 
 multiai.queue()
-multiai.launch()
+multiai.launch(share=True)
