@@ -1,5 +1,6 @@
 pillow==10.0
 rembg==2.0.50
+onnxruntime==1.16.1
 gradio==3.42.0
 numpy==1.24.3
 urllib3==2.0.5
