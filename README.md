@@ -23,4 +23,4 @@
 
 *RemBG library - https://github.com/danielgatis/rembg*
 
-*Nudenet - https://github.com/notAI-tech/nudenet*
+*Mobilnet model, NSFW Detection Machine Learning Model - https://github.com/GantMan/nsfw_model*

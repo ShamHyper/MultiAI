@@ -1,9 +1,6 @@
 @echo off
 
 pip install -r requirements.txt
-pip install --upgrade nudenet
-pip install NudeNetClassifier
-pip install -U git+https://github.com/platelminto/NudeNet
 
 if not defined PYTHON (set PYTHON=python)
 if not defined VENV_DIR (set "VENV_DIR=%~dp0%venv")
