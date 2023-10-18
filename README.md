@@ -4,7 +4,7 @@
 
 **2. NSFW Detector**
 #
-### How to use
+## How to use
 **1. Instal [Python 3.9.x - 3.10.x](https://www.python.org/downloads/)**
 
 **2. Install [Git](https://git-scm.com/downloads)**
@@ -14,8 +14,7 @@
 **4. Run *MultiAI_Installer.bat* (only first time, next time use run.bat)**
 
 **5. Run *run.bat***
-## OR (if have troubles)
-
+### OR (if have troubles)
 **1. Instal [Python 3.9.x - 3.10.x](https://www.python.org/downloads/)**
 
 **2. Install [Git](https://git-scm.com/downloads)**
