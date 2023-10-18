@@ -39,15 +39,6 @@ goto :show_stdout_stderr
 :activate_venv
 set PYTHON="%VENV_DIR%\Scripts\Python.exe"
 echo venv %PYTHON%
-if exist %VENV_DIR%\Scripts\python.exe (
-    %VENV_DIR%\Scripts\python.exe -m pip install -r requirements.txt
-)
-if exist %VENV_DIR%\Scripts\python.exe (
-    %VENV_DIR%\Scripts\python.exe -m pip install --upgrade nudenet
-)
-if exist %VENV_DIR%\Scripts\python.exe (
-    %VENV_DIR%\Scripts\python.exe -m pip install NudeNetClassifier
-)
 
 :launch
 %PYTHON% multiai.py %*

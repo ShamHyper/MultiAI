@@ -9,7 +9,7 @@ from rembg import remove
 from nudenet import NudeClassifier
 from tqdm import tqdm
 
-ver = "MultiAI v0.5.2"
+ver = "MultiAI v0.5.3"
 
 classifier = NudeClassifier()
 current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -92,7 +92,7 @@ def detector_clear(outputs):
     return(outputs)
             
 
-with gr.Blocks(theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) as multiai:
+with gr.Blocks(title=ver,theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) as multiai:
     gr.Markdown(ver)
     with gr.Tab("BgRemoverLite"):
         with gr.Row():
@@ -142,4 +142,4 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) 
 
 
 multiai.queue()
-multiai.launch(share=True)
+multiai.launch(inbrowser=True)

@@ -9,13 +9,24 @@
 
 **2. Install [Git](https://git-scm.com/downloads)**
 
+**3. Download [latest release](https://github.com/ShamHyper/MultiAI/releases)**
+
+**4. Run *MultiAI_Installer.bat* (only first time, next time use run.bat)**
+
+**5. Run *run.bat***
+## OR (if have troubles)
+
+**1. Instal [Python 3.9.x - 3.10.x](https://www.python.org/downloads/)**
+
+**2. Install [Git](https://git-scm.com/downloads)**
+
 **3. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
 
 **4. Unarchive ZIP**
 
-**5. Run Install.bat (only first time, next time use run.bat)**
+**5. Run *install.bat* (only first time, next time use run.bat)**
 
-**6. Run WEBUI_RUN.bat**
+**6. Run *run.bat***
 #
 *Built with Gradio*
 
