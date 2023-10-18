@@ -12,7 +12,7 @@ from tqdm import tqdm
 
 import urllib.request
 
-ver = "MultiAI v0.6.1"
+ver = "MultiAI v0.6.2"
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 

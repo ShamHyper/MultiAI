@@ -1,8 +1,8 @@
-pillow
-rembg
-gradio
-numpy
-urllib3
+pillow==10.0
+rembg==2.0.50
+gradio==3.42.0
+numpy==1.24.3
+urllib3==2.0.5
 protobuf==3.19.0
-nsfw_detector
-tqdm
+nsfw_detector==1.1.1
+tqdm==4.66.1
