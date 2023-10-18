@@ -7,7 +7,7 @@
 ## How to use
 **1. Instal [Python 3.9.x - 3.10.x](https://www.python.org/downloads/)**
 
-**2. Install [Git](https://git-scm.com/downloads)**
+**2. Install [Git](https://git-scm.com/downloads) (not necessarily, at the moment, but preferably)**
 
 **3. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
 
