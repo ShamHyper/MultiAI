@@ -12,7 +12,7 @@ from tqdm import tqdm
 
 import urllib.request
 
-ver = "MultiAI v0.6.0"
+ver = "MultiAI v0.6.1"
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 
@@ -114,6 +114,15 @@ def detector_clear(outputs):
     outputs = "Done!"
     return(outputs)
             
+def clearp_bgr_def(outputs):
+    outputs_dir = os.path.join(current_directory, 'rembg_outputs')
+    shutil.rmtree(outputs_dir)
+    folder_path = 'rembg_outputs'
+    os.makedirs(folder_path)
+    file = open(f"{folder_path}/outputs will be here.txt", "w")
+    file.close()
+    outputs = "Done!"
+    return(outputs)
 
 with gr.Blocks(title=ver,theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) as multiai:
     gr.Markdown(ver)
@@ -132,6 +141,11 @@ with gr.Blocks(title=ver,theme=gr.themes.Soft(primary_hue="red", secondary_hue="
             image_output_dir = gr.Textbox(label="Output", placeholder="BrRemoverLite outputs will be here")
         with gr.Row():
             rembg_batch_button = gr.Button("Remove some backgrounds")
+        with gr.Row():
+            gr.Label("Clear outputs")
+        with gr.Row():
+            clearp_bgr_button = gr.Button("Clear outputs")
+            clearp_bgr = gr.Textbox(label="Clearing progress")
     with gr.Tab("NSFW Detector"):
         with gr.Row():
             gr.Label("Detect NSFW images from dir")
@@ -157,6 +171,7 @@ with gr.Blocks(title=ver,theme=gr.themes.Soft(primary_hue="red", secondary_hue="
 
     rembg_button.click(rem_bg_def, inputs=image_input, outputs=image_output)
     rembg_batch_button.click(rem_bg_def_batch, inputs=image_input_dir, outputs=image_output_dir)
+    clearp_bgr_button.click(clearp_bgr_def, outputs=clearp_bgr)
     
     detector_button.click(detector, inputs=[detector_input, detector_slider], outputs=detector_output)
     detector_clear_button.click(detector_clear, outputs=clearp)
