@@ -44,15 +44,6 @@ echo venv %PYTHON%
 if exist %VENV_DIR%\Scripts\python.exe (
     %VENV_DIR%\Scripts\python.exe -m pip install -r requirements.txt
 )
-if exist %VENV_DIR%\Scripts\python.exe (
-    %VENV_DIR%\Scripts\python.exe -m pip install --upgrade nudenet
-)
-if exist %VENV_DIR%\Scripts\python.exe (
-    %VENV_DIR%\Scripts\python.exe -m pip install NudeNetClassifier
-)
-if exist %VENV_DIR%\Scripts\python.exe (
-    %VENV_DIR%\Scripts\python.exe -m pip install -U git+https://github.com/platelminto/NudeNet
-)
 
 call run.bat
 
