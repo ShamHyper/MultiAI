@@ -1,3 +1,6 @@
+ver = "MultiAI v0.6.3"
+print(f"Initializing {ver} launch...")
+
 import shutil
 import os
 import gradio as gr
@@ -11,8 +14,6 @@ from nsfw_detector import predict
 from tqdm import tqdm
 
 import urllib.request
-
-ver = "MultiAI v0.6.2"
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 
@@ -91,7 +92,7 @@ def detector(detector_input, detector_slider, outputs):
                     shutil.copyfile(file, f'./detector_outputs_nsfw/{file.split("/")[-1]}')
             else:
                 shutil.copyfile(file, f'./detector_outputs_plain/{file.split("/")[-1]}')
-        except (PermissionError, FileNotFoundError, UnidentifiedImageError):
+        except (PermissionError, FileNotFoundError, UnidentifiedImageError, ValueError):
             pass
     
     outputs = "NSFW: " + os.path.abspath('./detector_outputs_nsfw') + "\nPlain: " + os.path.abspath('./detector_outputs_plain')

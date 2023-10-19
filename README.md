@@ -26,5 +26,3 @@
 *u2net model - https://github.com/xuebinqin/U-2-Net*
 
 *RemBG library - https://github.com/danielgatis/rembg*
-
-*Mobilnet model, NSFW Detection Machine Learning Model - https://github.com/GantMan/nsfw_model*
