@@ -1,4 +1,4 @@
-ver = "MultiAI v0.6.6-beta"
+ver = "[Beta]MultiAI v0.7.0"
 print(f"Initializing {ver} launch...")
 
 import shutil
@@ -17,19 +17,19 @@ import urllib.request
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 
-modelname = "nsfw_mobilenet2.224x224.h5" 
-url = "https://s3.amazonaws.com/ir_public/nsfwjscdn/nsfw_mobilenet2.224x224.h5"
+modelname1 = "nsfw_mobilenet2.224x224.h5" 
+url1 = "https://s3.amazonaws.com/ir_public/nsfwjscdn/nsfw_mobilenet2.224x224.h5"
 
-def check_file(filename):
+def check_file1(filename):
     files_in_directory = os.listdir(current_directory)
 
     if filename in files_in_directory:
-        print("NSFW Model detected")
+        print("NSFW Model 1 detected")
     else:
         print("NSFW Model undected. Downloading...")
-        urllib.request.urlretrieve(url, modelname)
+        urllib.request.urlretrieve(url1, modelname1)
 
-check_file(modelname)
+check_file1(modelname1)
 
 def clear_cache():
     outputs = current_directory + r"\__pycache__"
@@ -70,9 +70,13 @@ def rem_bg_def_batch(inputs, outputs):
     return outputs
 
 def detector(detector_input, detector_slider, outputs):
+    print("Loading model...")
     model = predict.load_model('nsfw_mobilenet2.224x224.h5')
+    print("Model nsfw_mobilenet2.224x224.h5 loaded!")
     FOLDER_NAME = str(detector_input)
     THRESHOLD = detector_slider
+    nsfw = 0
+    plain = 0
     
     dirarr = [f'{FOLDER_NAME}/{f}' for f in os.listdir(FOLDER_NAME)]
     
@@ -87,17 +91,19 @@ def detector(detector_input, detector_slider, outputs):
             value_nsfw_3 = result[x]['sexy']
             value_sfw = result[x]['neutral']
             
-            if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD*1.5:
-                if value_sfw < THRESHOLD:
-                    shutil.copyfile(file, f'./detector_outputs_nsfw/{file.split("/")[-1]}')
+            print(result)
+            
+            if (value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD*1.5) and value_sfw < THRESHOLD:
+                shutil.copyfile(file, f'./detector_outputs_nsfw/{file.split("/")[-1]}')
+                nsfw += 1
             else:
                 shutil.copyfile(file, f'./detector_outputs_plain/{file.split("/")[-1]}')
+                plain += 1
         except (PermissionError, FileNotFoundError, UnidentifiedImageError, ValueError):
             pass
     
-    outputs = "NSFW: " + os.path.abspath('./detector_outputs_nsfw') + "\nPlain: " + os.path.abspath('./detector_outputs_plain')
+    outputs = "[" + str(nsfw) + "]" + "NSFW: " + os.path.abspath('./detector_outputs_nsfw') + "\n[" + str(plain) + "]" + "Plain: " + os.path.abspath('./detector_outputs_plain')
     return outputs
-
 
 def detector_clear(outputs):
     outputs_dir1 = os.path.join(current_directory, 'detector_outputs_nsfw')

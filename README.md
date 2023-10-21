@@ -24,3 +24,5 @@
 *u2net model - https://github.com/xuebinqin/U-2-Net*
 
 *RemBG library - https://github.com/danielgatis/rembg*
+
+*NSFW Detection - https://github.com/GantMan/nsfw_model*
