@@ -1,4 +1,4 @@
-ver = "[Beta]MultiAI v0.7.0"
+ver = "[Beta]MultiAI v0.7.1"
 print(f"Initializing {ver} launch...")
 
 import shutil
@@ -30,12 +30,6 @@ def check_file1(filename):
         urllib.request.urlretrieve(url1, modelname1)
 
 check_file1(modelname1)
-
-def clear_cache():
-    outputs = current_directory + r"\__pycache__"
-    pycache_directory = os.path.join(current_directory, '__pycache__')
-    shutil.rmtree(pycache_directory)
-    return outputs
 
 def rem_bg_def(inputs): 
     try:
@@ -170,11 +164,6 @@ with gr.Blocks(title=ver,theme=gr.themes.Soft(primary_hue="red", secondary_hue="
         with gr.Row():
             detector_clear_button = gr.Button("Clear outputs")
             clearp = gr.Textbox(label="Clearing progress")
-    with gr.Tab("Clear cache"):
-        with gr.Row():
-            cache_dir = gr.Textbox(label="Cache Dir", placeholder="Cache dir will be here")
-        with gr.Row():
-            clear_cache_button = gr.Button("Click here to clear Python cache")
 
     rembg_button.click(rem_bg_def, inputs=image_input, outputs=image_output)
     rembg_batch_button.click(rem_bg_def_batch, inputs=image_input_dir, outputs=image_output_dir)
@@ -182,9 +171,6 @@ with gr.Blocks(title=ver,theme=gr.themes.Soft(primary_hue="red", secondary_hue="
     
     detector_button.click(detector, inputs=[detector_input, detector_slider], outputs=detector_output)
     detector_clear_button.click(detector_clear, outputs=clearp)
-    
-    clear_cache_button.click(clear_cache)
-
 
 multiai.queue()
 multiai.launch(inbrowser=True)

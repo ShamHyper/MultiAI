@@ -46,7 +46,6 @@ if exist %VENV_DIR%\Scripts\python.exe (
 )
 
 :launch
-%PYTHON% -m pip install --upgrade pip %*
 %PYTHON% multiai.py %*
 
 pause
