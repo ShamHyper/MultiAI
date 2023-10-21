@@ -7,15 +7,13 @@
 ## How to use
 **1. Instal [Python 3.9.x - 3.10.x](https://www.python.org/downloads/)**
 
-**2. Install [Git](https://git-scm.com/downloads) (not necessarily, at the moment, but preferably)**
+**2. Install [Git](https://git-scm.com/downloads)**
 
 **3. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
 
 **4. Unarchive ZIP**
 
-**5. Run *Install.bat* (only first time, next time use run.bat)**
-
-**6. Run *run.bat***
+**5. Run *run.bat***
 ## Gallery
 ![1](https://i.imgur.com/mIkIOMB.png?raw=true)
 ![2](https://i.imgur.com/zveO3a7.png?raw=true)
