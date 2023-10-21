@@ -1,4 +1,4 @@
-ver = "MultiAI v0.6.3"
+ver = "MultiAI v0.6.4"
 print(f"Initializing {ver} launch...")
 
 import shutil
