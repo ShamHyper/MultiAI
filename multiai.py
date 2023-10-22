@@ -1,5 +1,6 @@
-ver = "[Beta]MultiAI v0.7.1"
+ver = "[Beta]MultiAI v0.7.2"
 print(f"Initializing {ver} launch...")
+debug = False
 
 import shutil
 import os
@@ -15,7 +16,16 @@ from tqdm import tqdm
 
 import urllib.request
 
+from icecream import ic
+
+if debug == False:
+    ic.disable()
+elif debug == True:
+    ic.enable()
+
 current_directory = os.path.dirname(os.path.abspath(__file__))
+ic()
+ic(current_directory)
 
 modelname1 = "nsfw_mobilenet2.224x224.h5" 
 url1 = "https://s3.amazonaws.com/ir_public/nsfwjscdn/nsfw_mobilenet2.224x224.h5"
@@ -34,11 +44,19 @@ check_file1(modelname1)
 def rem_bg_def(inputs): 
     try:
         outputs = remove(inputs)
+        ic()
+        ic("Removing bg...")
     except PermissionError:
+        ic()
+        ic("PermissionError")
         pass
     except FileNotFoundError:
+        ic()
+        ic("FileNotFoundError")
         pass
     except UnidentifiedImageError:
+        ic()
+        ic("UnidentifiedImageError")
         pass
     return outputs
 
@@ -47,7 +65,7 @@ def rem_bg_def_batch(inputs, outputs):
     for filename in tqdm(os.listdir(inputs)):
         outputs = "rembg_outputs"
         inputs = os.path.abspath(temp_dir)
-        try:
+        try:     
             inputs = os.path.join(inputs, filename)
             outputs = os.path.join(outputs, f"{filename[:-4]}_output.png")
 
@@ -55,17 +73,25 @@ def rem_bg_def_batch(inputs, outputs):
             output_image = remove(input_image)
             output_image.save(outputs)
         except PermissionError:
+            ic()
+            ic("PermissionError")
             pass
         except FileNotFoundError:
+            ic()
+            ic("FileNotFoundError")
             pass
         except UnidentifiedImageError:
+            ic()
+            ic("UnidentifiedImageError")
             pass
     outputs = current_directory + r"\rembg_outputs"
     return outputs
 
 def detector(detector_input, detector_slider, outputs):
+    ic()
     print("Loading model...")
     model = predict.load_model('nsfw_mobilenet2.224x224.h5')
+    ic()
     print("Model nsfw_mobilenet2.224x224.h5 loaded!")
     FOLDER_NAME = str(detector_input)
     THRESHOLD = detector_slider
@@ -77,15 +103,17 @@ def detector(detector_input, detector_slider, outputs):
     for file in tqdm(dirarr):
         try:
             result = predict.classify(model, file)
+            ic()
             keys_list = list(result.keys())
+            ic()
             x = keys_list[0]
+            ic()
             
             value_nsfw_1 = result[x]['porn']
             value_nsfw_2 = result[x]['hentai']
             value_nsfw_3 = result[x]['sexy']
             value_sfw = result[x]['neutral']
             
-            print(result)
             
             if (value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD*1.5) and value_sfw < THRESHOLD:
                 shutil.copyfile(file, f'./detector_outputs_nsfw/{file.split("/")[-1]}')
@@ -93,6 +121,9 @@ def detector(detector_input, detector_slider, outputs):
             else:
                 shutil.copyfile(file, f'./detector_outputs_plain/{file.split("/")[-1]}')
                 plain += 1
+            ic()
+            ic(result)
+            
         except (PermissionError, FileNotFoundError, UnidentifiedImageError, ValueError):
             pass
     
@@ -100,6 +131,8 @@ def detector(detector_input, detector_slider, outputs):
     return outputs
 
 def detector_clear(outputs):
+    ic()
+    ic("Removing dirs...")
     outputs_dir1 = os.path.join(current_directory, 'detector_outputs_nsfw')
     shutil.rmtree(outputs_dir1)
     outputs_dir2 = os.path.join(current_directory, 'detector_outputs_plain')
@@ -116,6 +149,8 @@ def detector_clear(outputs):
     return(outputs)
             
 def clearp_bgr_def(outputs):
+    ic()
+    ic("Removing dirs...")
     outputs_dir = os.path.join(current_directory, 'rembg_outputs')
     shutil.rmtree(outputs_dir)
     folder_path = 'rembg_outputs'
@@ -126,6 +161,8 @@ def clearp_bgr_def(outputs):
     return(outputs)
 
 with gr.Blocks(title=ver,theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) as multiai:
+    ic()
+    ic("Staring gradio...")
     gr.Markdown(ver)
     with gr.Tab("BgRemoverLite"):
         with gr.Row():
