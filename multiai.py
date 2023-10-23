@@ -1,11 +1,7 @@
-ver = "[Beta]MultiAI v0.7.2"
-print(f"Initializing {ver} launch...")
-debug = False
 
 import shutil
 import os
 import gradio as gr
-import numpy
 
 from PIL import Image, UnidentifiedImageError
 from rembg import remove
@@ -18,9 +14,14 @@ import urllib.request
 
 from icecream import ic
 
-if debug == False:
+ver = "[Beta]MultiAI v0.7.3"
+print(f"Initializing {ver} launch...")
+
+debug = False
+
+if debug is False:
     ic.disable()
-elif debug == True:
+elif debug is True:
     ic.enable()
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
