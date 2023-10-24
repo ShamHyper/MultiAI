@@ -15,7 +15,7 @@ from upscalers import upscale, available_models, clear_on_device_caches
 import numpy as np
 
 class init:
-    ver = "[Beta]MultiAI v0.9.1"
+    ver = "[Beta]MultiAI v0.9.2"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -216,6 +216,7 @@ class multi:
         ic()
         ic("Start upscaling...")
         ic("Model:" + model_ups)
+        ic("Scale factor:" + scale_factor)
         tmp_img_ndr = Image.fromarray(upsc_image_input)
         upsc_image_output = upscale(model_ups, tmp_img_ndr, scale_factor)
         return upsc_image_output
