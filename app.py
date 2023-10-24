@@ -34,6 +34,7 @@ with gr.Blocks(
             upsc_image_input = gr.Image()
             upsc_image_output = gr.Image(width=200, height=240)
         with gr.Row():
+            model_ups = gr.Dropdown(label="Model", choices=available_models())
             scale_factor = gr.Slider(
                 value=4.0,
                 label="Scale factor (4x factor max recommended)",
@@ -41,6 +42,8 @@ with gr.Blocks(
                 maximum=10.0,
             )
             upsc_button = gr.Button("Start upscaling")
+        with gr.Row():
+            upsc_clear_cache = gr.Button("Clear torch, cuda and models cache")
     with gr.Tab("NSFW Detector"):
         with gr.Row():
             gr.Label("Detect NSFW images from dir")
@@ -71,7 +74,9 @@ with gr.Blocks(
     detector_button.click(multi.detector, inputs=[detector_input, detector_slider], outputs=detector_output)
     detector_clear_button.click(multi.detector_clear, outputs=clearp)
     
-    upsc_button.click(multi.uspc, inputs=[upsc_image_input, scale_factor], outputs=upsc_image_output)
+    upsc_button.click(multi.uspc, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)
+    upsc_clear_cache.click(clear_on_device_caches)
+    
   
 if init.debug is True:
     ic(multiai.queue())

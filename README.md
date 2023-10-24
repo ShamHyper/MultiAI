@@ -38,3 +38,5 @@
 *RemBG library - https://github.com/danielgatis/rembg*
 
 *NSFW Detection - https://github.com/GantMan/nsfw_model*
+
+*Upscaling - https://github.com/kmewhort/upscalers*

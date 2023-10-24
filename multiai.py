@@ -11,11 +11,11 @@ from rembg import remove
 from nsfw_detector import predict
 import urllib.request
 
-from upscalers import upscale
+from upscalers import upscale, available_models, clear_on_device_caches
 import numpy as np
 
 class init:
-    ver = "[Beta]MultiAI v0.9.0"
+    ver = "[Beta]MultiAI v0.9.1"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -212,9 +212,12 @@ class multi:
         outputs = "Done!"
         return outputs
     
-    def uspc(upsc_image_input, scale_factor):
+    def uspc(upsc_image_input, scale_factor, model_ups):
+        ic()
+        ic("Start upscaling...")
+        ic("Model:" + model_ups)
         tmp_img_ndr = Image.fromarray(upsc_image_input)
-        upsc_image_output = upscale('ESRGAN_4x', tmp_img_ndr, scale_factor)
+        upsc_image_output = upscale(model_ups, tmp_img_ndr, scale_factor)
         return upsc_image_output
     
     init.clear_cache()
