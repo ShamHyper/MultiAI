@@ -70,7 +70,7 @@ git clone https://github.com/ShamHyper/MultiAI.git
 ![2](https://i.imgur.com/4OQmALL.png?raw=true)
 ![3](https://i.imgur.com/zveO3a7.png?raw=true)
 ## Credits
-*Built with Gradio*
+*Built with Gradio - https://www.gradio.app/*
 
 *u2net model - https://github.com/xuebinqin/U-2-Net*
 
