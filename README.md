@@ -14,11 +14,11 @@
 
 **4. Install [CUDA 11.8](https://developer.nvidia.com/cuda-toolkit)**
 
-**3. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
+**5. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
 
-**4. Unarchive ZIP**
+**6. Unarchive ZIP**
 
-**5. Run *run.bat***
+**7. Run *run.bat***
 ## Configuration (config.json)
 ```json
     {
