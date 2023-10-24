@@ -1,10 +1,16 @@
 # MultiAI [![wakatime](https://wakatime.com/badge/github/ShamHyper/MultiAI.svg)](https://wakatime.com/badge/github/ShamHyper/MultiAI)
-### What AIs supporting now?
+### AIs
 **1. BgRemoverLite - https://github.com/ShamHyper/BgRemoverLite**
 
 **2. Image upscaler**
 
 **3. NSFW Detector**
+## System requirements
+**1. Windows 10-11**
+
+**2. NVIDIA GPU with CUDA 11.8 support**
+
+**3. 16gb RAM or 8gb RAM with SWAP**
 ## Installation
 **1. Install [Python 3.9.x - 3.10.x](https://www.python.org/downloads/)**
 
