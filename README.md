@@ -1,5 +1,5 @@
 # MultiAI [![wakatime](https://wakatime.com/badge/github/ShamHyper/MultiAI.svg)](https://wakatime.com/badge/github/ShamHyper/MultiAI)
-### AIs
+## AIs
 **1. BgRemoverLite - https://github.com/ShamHyper/BgRemoverLite**
 
 **2. Image upscaler**
