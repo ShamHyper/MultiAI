@@ -1,4 +1,5 @@
     {
         "debug_mode": "True",
-        "start_in_browser": "True"
+        "start_in_browser": "True",
+        "share_gradio": "False"
     }

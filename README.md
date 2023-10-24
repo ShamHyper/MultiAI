@@ -56,9 +56,13 @@ winget install -e --id Gyan.FFmpeg
         // Boolean ("True" or "False")
         // Enable debug mode
         
-        "start_in_browser": "True" 
+        "start_in_browser": "True",
         // Boolean ("True" or "False")
         // Enable MultiAI starting in browser
+
+        "start_in_browser": "False" 
+        // Boolean ("True" or "False")
+        // Enable MultiAI starting with share link
     }
 ```
 ## Gallery

@@ -15,7 +15,7 @@ from upscalers import upscale, available_models, clear_on_device_caches
 import numpy as np
 
 class init:
-    ver = "[Beta]MultiAI v0.9.2"
+    ver = "[Beta]MultiAI v0.9.3"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -39,6 +39,14 @@ class init:
         inbrowser = False
     elif inbrowser == "True":
         inbrowser = True
+    else:
+        print("Something wrong in config.json. Check them out!")
+
+    share_gradio = data.get("share_gradio")
+    if share_gradio == "False":
+        share_gradio = False
+    elif share_gradio == "True":
+        share_gradio = True
     else:
         print("Something wrong in config.json. Check them out!")
     

@@ -80,7 +80,7 @@ with gr.Blocks(
   
 if init.debug is True:
     ic(multiai.queue())
-    ic(multiai.launch(inbrowser=init.inbrowser))
+    ic(multiai.launch(inbrowser=init.inbrowser, share=init.share_gradio))
 elif init.debug is False:
     multiai.queue()
-    multiai.launch(inbrowser=init.inbrowser)
+    multiai.launch(inbrowser=init.inbrowser, share=init.share_gradio)
