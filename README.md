@@ -67,8 +67,8 @@ git clone https://github.com/ShamHyper/MultiAI.git
 ```
 ## Gallery
 ![1](https://i.imgur.com/mIkIOMB.png?raw=true)
-![2](https://i.imgur.com/zveO3a7.png?raw=true)
-![3](https://i.imgur.com/ljb5HyU.png?raw=true)
+![2](https://i.imgur.com/4OQmALL.png?raw=true)
+![3](https://i.imgur.com/zveO3a7.png?raw=true)
 ## Credits
 *Built with Gradio*
 
