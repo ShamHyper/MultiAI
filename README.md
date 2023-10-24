@@ -26,29 +26,29 @@
 
 **7. Run *run.bat***
 ## Installation (winget and git)
-**0. Install [winget](https://learn.microsoft.com/ru-ru/windows/package-manager/winget/#install-winget)**
+**1. Install [winget](https://learn.microsoft.com/ru-ru/windows/package-manager/winget/#install-winget)**
 
-**1. Install Python**
+**2. Install Python**
 ```py
 winget install -e --id Python.Python.3.9
 # OR, pick one!
 winget install -e --id Python.Python.3.10
 ```
-**2. Install Git**
+**3. Install Git**
 ```py
 winget install -e --id Git.Git
 ```
-**3. Install FFmpeg**
+**4. Install FFmpeg**
 ```py
 winget install -e --id Gyan.FFmpeg
 ```
-**4. Install [CUDA 11.8](https://developer.nvidia.com/cuda-toolkit)**
+**5. Install [CUDA 11.8](https://developer.nvidia.com/cuda-toolkit)**
 
-**5. Clone repository**
+**6. Clone repository**
 ```git
 git clone https://github.com/ShamHyper/MultiAI.git
 ```
-**6. Run *run.bat***
+**7. Run *run.bat***
 ## Configuration (config.json)
 ```json
     {
