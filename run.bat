@@ -46,6 +46,6 @@ if exist %VENV_DIR%\Scripts\python.exe (
 )
 
 :launch
-%PYTHON% multiai.py %*
+%PYTHON% webui.py %*
 
 pause

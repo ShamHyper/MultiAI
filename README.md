@@ -14,6 +14,15 @@
 **4. Unarchive ZIP**
 
 **5. Run *run.bat***
+## Configuration (config.json)
+```json
+    {
+        "debug_mode": "True", // Boolean ("True" or "False")
+        // Enable debug mode
+        "start_in_browser": "True" // Boolean ("True" or "False")
+        // Enable MultiAI starting in browser
+    }
+```
 ## Gallery
 ![1](https://i.imgur.com/mIkIOMB.png?raw=true)
 ![2](https://i.imgur.com/zveO3a7.png?raw=true)
