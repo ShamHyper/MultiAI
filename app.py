@@ -57,4 +57,4 @@ with gr.Blocks(
     detector_clear_button.click(multi.detector_clear, outputs=clearp)
   
 multiai.queue()
-multiai.launch(inbrowser=init.start_in_browser)
+multiai.launch(inbrowser=init.inbrowser)

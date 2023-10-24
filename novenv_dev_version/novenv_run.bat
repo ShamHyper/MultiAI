@@ -1,2 +1,2 @@
 pip install -r ../requirements.txt
-python ../webui.py
+python ../app.py
