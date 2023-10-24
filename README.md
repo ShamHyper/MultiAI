@@ -6,9 +6,13 @@
 
 **3. NSFW Detector**
 ## How to use
-**1. Instal [Python 3.9.x - 3.10.x](https://www.python.org/downloads/)**
+**1. Install [Python 3.9.x - 3.10.x](https://www.python.org/downloads/)**
 
 **2. Install [Git](https://git-scm.com/downloads)**
+
+**3. Install FFmpeg**
+
+**4. Install [CUDA](https://developer.nvidia.com/cuda-downloads)**
 
 **3. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
 
