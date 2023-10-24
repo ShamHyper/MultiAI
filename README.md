@@ -17,9 +17,12 @@
 ## Configuration (config.json)
 ```json
     {
-        "debug_mode": "True", // Boolean ("True" or "False")
+        "debug_mode": "True", 
+        // Boolean ("True" or "False")
         // Enable debug mode
-        "start_in_browser": "True" // Boolean ("True" or "False")
+        
+        "start_in_browser": "True" 
+        // Boolean ("True" or "False")
         // Enable MultiAI starting in browser
     }
 ```

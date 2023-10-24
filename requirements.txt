@@ -9,6 +9,3 @@ protobuf==3.19.0
 nsfw_detector==1.1.1
 tqdm==4.66.1
 json
-
-
-
