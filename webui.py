@@ -1,4 +1,3 @@
-import gradio as gr
 from multiai import *
 
 with gr.Blocks(

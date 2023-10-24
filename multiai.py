@@ -1,22 +1,20 @@
+import gradio as gr
 import shutil
 import os
+from tqdm import tqdm
+from icecream import ic
+import json
 
 from PIL import Image, UnidentifiedImageError
 from rembg import remove
 
 from nsfw_detector import predict
-
-from tqdm import tqdm
-
 import urllib.request
 
-import json
-
-from icecream import ic
 
 
 class init:
-    ver = "[Beta]MultiAI v0.8.0"
+    ver = "[Beta]MultiAI v0.8.1"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
