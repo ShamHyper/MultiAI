@@ -2,8 +2,6 @@ icecream==2.1.3
 gradio==3.42.0
 tqdm
 
-upscalers==0.5.3
-timm==0.4.12
 basicsr
 einops==0.7.0
 piexif==1.1.3
@@ -11,6 +9,9 @@ ldm==0.1.3
 realesrgan
 Roboto
 safetensors==0.4.0
+timm==0.4.12
+torch
+upscalers==0.5.3
 
 numpy==1.24.3
 pillow==10.0
