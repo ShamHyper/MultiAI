@@ -2,8 +2,9 @@
 ### What AIs supporting now?
 **1. BgRemoverLite - https://github.com/ShamHyper/BgRemoverLite**
 
-**2. NSFW Detector**
+**2. Image upscaler**
 
+**3. NSFW Detector**
 ## How to use
 **1. Instal [Python 3.9.x - 3.10.x](https://www.python.org/downloads/)**
 
