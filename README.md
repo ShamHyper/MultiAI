@@ -5,7 +5,7 @@
 **2. Image upscaler**
 
 **3. NSFW Detector**
-## How to use
+## Installation
 **1. Install [Python 3.9.x - 3.10.x](https://www.python.org/downloads/)**
 
 **2. Install [Git](https://git-scm.com/downloads)**
