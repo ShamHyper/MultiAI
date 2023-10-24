@@ -10,7 +10,6 @@ realesrgan
 Roboto
 safetensors==0.4.0
 timm==0.4.12
-torch
 upscalers==0.5.3
 
 numpy==1.24.3
