@@ -14,7 +14,7 @@ import urllib.request
 
 
 class init:
-    ver = "[Beta]MultiAI v0.8.1"
+    ver = "[Beta]MultiAI v0.8.2"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -33,16 +33,16 @@ class init:
     elif debug is True:
         ic.enable()
         
-    start_in_browser = data.get("start_in_browser")
-    if start_in_browser == "False":
-        start_in_browser = False
-    elif start_in_browser == "True":
-        start_in_browser = True
+    inbrowser = data.get("start_in_browser")
+    if inbrowser == "False":
+        inbrowser = False
+    elif inbrowser == "True":
+        inbrowser = True
     else:
         print("Something wrong in config.json. Check them out!")
     
     ic()
-    ic(f"Start in browser: {start_in_browser}")
+    ic(f"Start in browser: {inbrowser}")
     ic(f"Debug mode: {debug}")
 
     current_directory = os.path.dirname(os.path.abspath(__file__))
