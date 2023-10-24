@@ -27,6 +27,20 @@ with gr.Blocks(
         with gr.Row():
             clearp_bgr_button = gr.Button("Clear outputs")
             clearp_bgr = gr.Textbox(label="Clearing progress")
+    with gr.Tab("Upscaler"):
+        with gr.Row():
+            gr.Label("Upscale image up to 10x size")
+        with gr.Row():
+            upsc_image_input = gr.Image()
+            upsc_image_output = gr.Image(width=200, height=240)
+        with gr.Row():
+            scale_factor = gr.Slider(
+                value=4.0,
+                label="Scale factor (4x factor max recommended)",
+                minimum=1.1,
+                maximum=10.0,
+            )
+            upsc_button = gr.Button("Start upscaling")
     with gr.Tab("NSFW Detector"):
         with gr.Row():
             gr.Label("Detect NSFW images from dir")
@@ -48,6 +62,7 @@ with gr.Blocks(
         with gr.Row():
             detector_clear_button = gr.Button("Clear outputs")
             clearp = gr.Textbox(label="Clearing progress")
+            
 
     rembg_button.click(multi.rem_bg_def, inputs=image_input, outputs=image_output)
     rembg_batch_button.click(multi.rem_bg_def_batch, inputs=image_input_dir, outputs=image_output_dir)
@@ -55,6 +70,12 @@ with gr.Blocks(
 
     detector_button.click(multi.detector, inputs=[detector_input, detector_slider], outputs=detector_output)
     detector_clear_button.click(multi.detector_clear, outputs=clearp)
+    
+    upsc_button.click(multi.uspc, inputs=[upsc_image_input, scale_factor], outputs=upsc_image_output)
   
-multiai.queue()
-multiai.launch(inbrowser=init.inbrowser)
+if init.debug is True:
+    ic(multiai.queue())
+    ic(multiai.launch(inbrowser=init.inbrowser))
+elif init.debug is False:
+    multiai.queue()
+    multiai.launch(inbrowser=init.inbrowser)

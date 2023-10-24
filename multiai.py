@@ -1,5 +1,5 @@
 import gradio as gr
-import shutil
+import shutil as sh
 import os
 from tqdm import tqdm
 from icecream import ic
@@ -11,10 +11,11 @@ from rembg import remove
 from nsfw_detector import predict
 import urllib.request
 
-
+from upscalers import upscale
+import numpy as np
 
 class init:
-    ver = "[Beta]MultiAI v0.8.2"
+    ver = "[Beta]MultiAI v0.9.0"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -57,9 +58,9 @@ class init:
         ic("Clearing cache...")
         try:
             cache1 = os.path.join(init.current_directory, ".ruff_cache")
-            shutil.rmtree(cache1)
+            sh.rmtree(cache1)
             cache1 = os.path.join(init.current_directory, "__pycache__")
-            shutil.rmtree(cache1)
+            sh.rmtree(cache1)
         except PermissionError:
             ic()
             ic("PermissionError")
@@ -156,10 +157,10 @@ class multi:
                 value_sfw = result[x]["neutral"]
 
                 if (value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.5) and value_sfw < THRESHOLD:
-                    shutil.copyfile(file, f'./detector_outputs_nsfw/{file.split("/")[-1]}')
+                    sh.copyfile(file, f'./detector_outputs_nsfw/{file.split("/")[-1]}')
                     nsfw += 1
                 else:
-                    shutil.copyfile(file, f'./detector_outputs_plain/{file.split("/")[-1]}')
+                    sh.copyfile(file, f'./detector_outputs_plain/{file.split("/")[-1]}')
                     plain += 1
                 ic()
                 ic(result)
@@ -185,9 +186,9 @@ class multi:
         ic()
         ic("Removing dirs...")
         outputs_dir1 = os.path.join(init.current_directory, "detector_outputs_nsfw")
-        shutil.rmtree(outputs_dir1)
+        sh.rmtree(outputs_dir1)
         outputs_dir2 = os.path.join(init.current_directory, "detector_outputs_plain")
-        shutil.rmtree(outputs_dir2)
+        sh.rmtree(outputs_dir2)
         folder_path1 = "detector_outputs_nsfw"
         os.makedirs(folder_path1)
         file = open(f"{folder_path1}/outputs will be here.txt", "w")
@@ -203,13 +204,18 @@ class multi:
         ic()
         ic("Removing dirs...")
         outputs_dir = os.path.join(init.current_directory, "rembg_outputs")
-        shutil.rmtree(outputs_dir)
+        sh.rmtree(outputs_dir)
         folder_path = "rembg_outputs"
         os.makedirs(folder_path)
         file = open(f"{folder_path}/outputs will be here.txt", "w")
         file.close()
         outputs = "Done!"
         return outputs
+    
+    def uspc(upsc_image_input, scale_factor):
+        tmp_img_ndr = Image.fromarray(upsc_image_input)
+        upsc_image_output = upscale('ESRGAN_4x', tmp_img_ndr, scale_factor)
+        return upsc_image_output
     
     init.clear_cache()
     
