@@ -11,7 +11,7 @@
 **2. NVIDIA GPU with CUDA 11.8 support**
 
 **3. 16gb RAM or 8gb RAM with SWAP**
-## Installation
+## Installation (legacy)
 **1. Install [Python 3.9.x - 3.10.x](https://www.python.org/downloads/)**
 
 **2. Install [Git](https://git-scm.com/downloads)**
@@ -25,7 +25,7 @@
 **6. Unarchive ZIP**
 
 **7. Run *run.bat***
-## Installation (winget)
+## Installation (winget and git)
 **0. Install [winget](https://learn.microsoft.com/ru-ru/windows/package-manager/winget/#install-winget)**
 
 **1. Install Python**
@@ -44,11 +44,11 @@ winget install -e --id Gyan.FFmpeg
 ```
 **4. Install [CUDA 11.8](https://developer.nvidia.com/cuda-toolkit)**
 
-**5. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
-
-**6. Unarchive ZIP**
-
-**7. Run *run.bat***
+**5. Clone repository**
+```git
+git clone https://github.com/ShamHyper/MultiAI.git
+```
+**6. Run *run.bat***
 ## Configuration (config.json)
 ```json
     {
