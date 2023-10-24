@@ -10,8 +10,32 @@
 
 **2. Install [Git](https://git-scm.com/downloads)**
 
-**3. Install FFmpeg**
+**3. Install [FFmpeg](https://ffmpeg.org/download.html)**
 
+**4. Install [CUDA 11.8](https://developer.nvidia.com/cuda-toolkit)**
+
+**5. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
+
+**6. Unarchive ZIP**
+
+**7. Run *run.bat***
+## Installation (winget)
+**0. Install [winget](https://learn.microsoft.com/ru-ru/windows/package-manager/winget/#install-winget)**
+
+**1. Install Python**
+```py
+winget install -e --id Python.Python.3.9
+# OR, pick one!
+winget install -e --id Python.Python.3.10
+```
+**2. Install Git**
+```py
+winget install -e --id Git.Git
+```
+**3. Install FFmpeg**
+```py
+winget install -e --id Gyan.FFmpeg
+```
 **4. Install [CUDA 11.8](https://developer.nvidia.com/cuda-toolkit)**
 
 **5. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
