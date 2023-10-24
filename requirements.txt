@@ -4,13 +4,13 @@ tqdm==4.66.1
 
 upscalers==0.5.3
 timm==0.4.12
-basicsr
-einops
-piexif
-ldm
-realesrgan
-Roboto
-safetensors
+basicsr==1.4.2
+einops==0.7.0
+piexif==1.1.3
+ldm==0.1.3
+realesrgan==0.3.0
+Roboto==0.2.1
+safetensors==0.4.0
 
 numpy==1.24.3
 pillow==10.0
