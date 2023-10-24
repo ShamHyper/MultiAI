@@ -216,7 +216,7 @@ class multi:
         ic()
         ic("Start upscaling...")
         ic("Model:" + model_ups)
-        ic("Scale factor:" + scale_factor)
+        ic("Scale factor:" + str(scale_factor))
         tmp_img_ndr = Image.fromarray(upsc_image_input)
         upsc_image_output = upscale(model_ups, tmp_img_ndr, scale_factor)
         return upsc_image_output
