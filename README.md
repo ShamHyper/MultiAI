@@ -12,7 +12,7 @@
 
 **3. Install FFmpeg**
 
-**4. Install [CUDA 11.8](https://developer.nvidia.com/cuda-downloads)**
+**4. Install [CUDA 11.8](https://developer.nvidia.com/cuda-toolkit)**
 
 **3. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
 
