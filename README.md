@@ -1,4 +1,6 @@
-# MultiAI [![wakatime](https://wakatime.com/badge/github/ShamHyper/MultiAI.svg)](https://wakatime.com/badge/github/ShamHyper/MultiAI)
+![0](https://i.imgur.com/Ui4dvUh.png?raw=true)
+
+[![wakatime](https://wakatime.com/badge/github/ShamHyper/MultiAI.svg)](https://wakatime.com/badge/github/ShamHyper/MultiAI)
 ## AIs
 **1. [BgRemoverLite](https://github.com/ShamHyper/BgRemoverLite)**
 
