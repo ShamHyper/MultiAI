@@ -15,7 +15,7 @@ from upscalers import upscale, available_models, clear_on_device_caches
 import numpy as np
 
 class init:
-    ver = "[Beta]MultiAI v0.9.3"
+    ver = "[Beta]MultiAI v0.9.4-pre"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
