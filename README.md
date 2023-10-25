@@ -68,7 +68,7 @@ git clone https://github.com/ShamHyper/MultiAI.git
         // Boolean ("True" or "False")
         // Enable MultiAI starting in browser
 
-        "start_in_browser": "False",
+        "share_gradio": "False",
         // Boolean ("True" or "False")
         // Enable MultiAI starting with share link
 
