@@ -16,7 +16,7 @@ from upscalers import upscale
 from clip_interrogator import Config, Interrogator
 
 class init:
-    ver = "[Beta]MultiAI v1.2.0"
+    ver = "[Beta]MultiAI v1.2.1"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -283,44 +283,36 @@ class multi:
     def spc(file_spc, clip_checked):
         img = Image.fromarray(file_spc, 'RGB')
         img.save('tmp.png')
-        dir_img_fromarray = init.current_directory+r"\tmp.png"
-        
-        result = predict.classify(init.model, dir_img_fromarray)
-        ic()
-        keys_list = list(result.keys())
-        ic()
-        x = keys_list[0]
-        ic()
+        dir_img_fromarray = os.path.join(os.getcwd(), "tmp.png")
 
-        value_drawings = result[x]["drawings"]
-        value_porn = result[x]["porn"]
-        value_hentai = result[x]["hentai"]
-        value_sexy = result[x]["sexy"]
-        value_neutral = result[x]["neutral"]
-        
-        total_sum = value_drawings + value_porn + value_hentai + value_sexy + value_neutral
-        value_drawings_precent = (value_drawings / total_sum) * 100
-        value_porn_precent = (value_porn / total_sum) * 100
-        value_hentai_precent = (value_hentai / total_sum) * 100
-        value_sexy_precent = (value_sexy / total_sum) * 100
-        value_neutral_precent = (value_neutral / total_sum) * 100
-        
-        clip = Image.open(dir_img_fromarray).convert('RGB')
-        
-        if clip_checked is True:
-            spc_output = str(f"Prompt:\n{init.ci.interrogate(clip)}\n\nDrawings: {round(value_drawings_precent, 1)}%\nPorn: {round(value_porn_precent, 1)}%\nHentai: {round(value_hentai_precent, 1)}%\nSexy: {round(value_sexy_precent, 1)}%\nNeutral: {round(value_neutral_precent, 1)}%")
-        elif clip_checked is False:
-            spc_output = str(f"Drawings: {round(value_drawings_precent, 1)}%\nPorn: {round(value_porn_precent, 1)}%\nHentai: {round(value_hentai_precent, 1)}%\nSexy: {round(value_sexy_precent, 1)}%\nNeutral: {round(value_neutral_precent, 1)}%")
+        result = predict.classify(model, dir_img_fromarray)
+        ic(result.keys())
+        x = next(iter(result.keys()))
+        ic(x)
+
+        values = result[x]
+        total_sum = sum(values.values())
+        percentages = {k: round((v / total_sum) * 100, 1) for k, v in values.items()}
+
+        spc_output = ""
+        if clip_checked:
+            clip = Image.open(dir_img_fromarray).convert('RGB')
+            spc_output += f"Prompt:\n{ci.interrogate(clip)}\n\n"
+
+        spc_output += f"Drawings: {percentages['drawings']}%\n"
+        spc_output += f"Porn: {percentages['porn']}%\n"
+        spc_output += f"Hentai: {percentages['hentai']}%\n"
+        spc_output += f"Sexy: {percentages['sexy']}%\n"
+        spc_output += f"Neutral: {percentages['neutral']}%"
 
         tmp_file = "tmp.png"
         try:
             os.remove(tmp_file)
         except FileNotFoundError:
-            ic()
             ic("FileNotFoundError")
             pass
 
-        return(spc_output)
+        return spc_output
         
     if init.clear_need is True:
         if init.debug is True:
