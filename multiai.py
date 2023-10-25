@@ -15,7 +15,7 @@ from upscalers import upscale, available_models, clear_on_device_caches
 import numpy as np
 
 class init:
-    ver = "[Beta]MultiAI v0.9.4-pre"
+    ver = "[Beta]MultiAI v1.0.0"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -49,6 +49,14 @@ class init:
         share_gradio = True
     else:
         print("Something wrong in config.json. Check them out!")
+        
+    clear_need = data.get("clear_need")
+    if clear_need == "False":
+        clear_need = False
+    elif clear_need == "True":
+        clear_need = True
+    else:
+        print("Something wrong in config.json. Check them out!")
     
     ic()
     ic(f"Start in browser: {inbrowser}")
@@ -62,7 +70,6 @@ class init:
     url = "https://s3.amazonaws.com/ir_public/nsfwjscdn/nsfw_mobilenet2.224x224.h5"
     
     def clear_cache():
-        ic()
         ic("Clearing cache...")
         try:
             cache1 = os.path.join(init.current_directory, ".ruff_cache")
@@ -70,13 +77,10 @@ class init:
             cache1 = os.path.join(init.current_directory, "__pycache__")
             sh.rmtree(cache1)
         except PermissionError:
-            ic()
-            ic("PermissionError")
             pass
         except FileNotFoundError:
-            ic()
-            ic("FileNotFoundError")
-            pass    
+            pass
+        return("Done")
     
 class multi:
     def check_file(filename):
@@ -229,6 +233,11 @@ class multi:
         upsc_image_output = upscale(model_ups, tmp_img_ndr, scale_factor)
         return upsc_image_output
     
-    init.clear_cache()
+    if init.clear_need is True:
+        if init.debug is True:
+            ic(init.clear_cache())
+        elif init.debug is False:
+            init.clear_cache()
+        
     
     

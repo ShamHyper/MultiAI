@@ -77,7 +77,6 @@ with gr.Blocks(
     upsc_button.click(multi.uspc, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)
     upsc_clear_cache.click(clear_on_device_caches)
     
-  
 if init.debug is True:
     ic(multiai.queue())
     ic(multiai.launch(inbrowser=init.inbrowser, share=init.share_gradio))

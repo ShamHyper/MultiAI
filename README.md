@@ -54,7 +54,7 @@ git clone https://github.com/ShamHyper/MultiAI.git
 
 **7.1. Next time run *run.bat***
 ## Configuration (config.json)
-```json
+```js
     {
         "debug_mode": "True", 
         // Boolean ("True" or "False")
@@ -64,9 +64,13 @@ git clone https://github.com/ShamHyper/MultiAI.git
         // Boolean ("True" or "False")
         // Enable MultiAI starting in browser
 
-        "start_in_browser": "False" 
+        "start_in_browser": "False",
         // Boolean ("True" or "False")
         // Enable MultiAI starting with share link
+
+        "clear_need": "True"
+        // Boolean ("True" or "False")
+        // Enable cache clear function on MultiAI start
     }
 ```
 ## Support
