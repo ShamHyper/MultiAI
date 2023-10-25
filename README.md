@@ -8,7 +8,7 @@
 
 **3. NSFW Detector**
 
-**4. NSFW Specifier**
+**4. Image Analyzer**
 ## System requirements
 **1. Windows 10-11**
 
@@ -96,3 +96,5 @@ git clone https://github.com/ShamHyper/MultiAI.git
 *NSFW Detection - https://github.com/GantMan/nsfw_model*
 
 *Upscaling - https://github.com/kmewhort/upscalers*
+
+*Clip-interrogator - https://github.com/pharmapsychotic/clip-interrogator*

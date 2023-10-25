@@ -1,3 +1,5 @@
+import gradio as gr
+from upscalers import available_models, clear_on_device_caches
 from multiai import *
 
 with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) as multiai:
@@ -62,13 +64,14 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
         with gr.Row():
             detector_clear_button = gr.Button("Clear outputs")
             clearp = gr.Textbox(label="Clearing progress")
-    with gr.Tab("NSFW Specifier"):
+    with gr.Tab("Image Analyzer"):
         with gr.Row():
-            gr.Label("Specifiy NSFW images")
+            gr.Label("Analyze images")
         with gr.Row():
             file_spc = gr.Image()
             spc_output = gr.Textbox(label="Stats", placeholder="Press start to get specifications of image")
         with gr.Row():
+            clip_checked = gr.Checkbox(value=False, label="Use CLIP for generate prompt (slow if a weak PC)")
             spc_button = gr.Button("Click here to start")
             
 
@@ -82,7 +85,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     upsc_button.click(multi.uspc, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)
     upsc_clear_cache.click(clear_on_device_caches)
     
-    spc_button.click(multi.spc, inputs=file_spc, outputs=spc_output)
+    spc_button.click(multi.spc, inputs=[file_spc, clip_checked], outputs=spc_output)
     
 if init.debug is True:
     ic(multiai.queue())

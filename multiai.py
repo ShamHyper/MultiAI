@@ -1,4 +1,3 @@
-import gradio as gr
 import shutil as sh
 import os
 from tqdm import tqdm
@@ -11,8 +10,9 @@ from rembg import remove
 from nsfw_detector import predict
 import urllib.request
 
-from upscalers import upscale, available_models, clear_on_device_caches
-import numpy as np
+from upscalers import upscale
+
+from clip_interrogator import Config, Interrogator
 
 class init:
     ver = "[Beta]MultiAI v1.1.0"
@@ -69,6 +69,29 @@ class init:
     modelname = "nsfw_mobilenet2.224x224.h5"
     url = "https://s3.amazonaws.com/ir_public/nsfwjscdn/nsfw_mobilenet2.224x224.h5"
     
+    def check_file(filename):
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        files_in_directory = os.listdir(current_directory)
+
+        if filename in files_in_directory:
+            ic()
+            ic("NSFW Model 1 detected")
+        else:
+            ic()
+            ic("NSFW Model undected. Downloading...")
+            urllib.request.urlretrieve(init.url, init.modelname)
+    
+    check_file(modelname)
+    ic()
+    ic("Loading model...")
+    model = predict.load_model("nsfw_mobilenet2.224x224.h5")
+    ic()
+    ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
+    
+    ic()
+    ic("Loading clip model and cfgs...")
+    ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
+    
     def clear_cache():
         ic("Clearing cache...")
         try:
@@ -83,17 +106,6 @@ class init:
         return("Done")
     
 class multi:
-    def check_file(filename):
-        files_in_directory = os.listdir(init.current_directory)
-
-        if filename in files_in_directory:
-            ic()
-            ic("NSFW Model 1 detected")
-        else:
-            ic()
-            ic("NSFW Model undected. Downloading...")
-            urllib.request.urlretrieve(init.url, init.modelname)
-
     def rem_bg_def(inputs):
         try:
             outputs = remove(inputs)
@@ -233,19 +245,12 @@ class multi:
         upsc_image_output = upscale(model_ups, tmp_img_ndr, scale_factor)
         return upsc_image_output
     
-    def spc(file_spc):
-        multi.check_file(init.modelname)
-        ic()
-        ic("Loading model...")
-        model = predict.load_model("nsfw_mobilenet2.224x224.h5")
-        ic()
-        ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
-        
+    def spc(file_spc, clip_checked):
         img = Image.fromarray(file_spc, 'RGB')
         img.save('tmp.png')
         dir_img_fromarray = init.current_directory+r"\tmp.png"
         
-        result = predict.classify(model, dir_img_fromarray)
+        result = predict.classify(init.model, dir_img_fromarray)
         ic()
         keys_list = list(result.keys())
         ic()
@@ -265,11 +270,13 @@ class multi:
         value_sexy_precent = (value_sexy / total_sum) * 100
         value_neutral_precent = (value_neutral / total_sum) * 100
         
-        spc_output = str(f"Drawings: {round(value_drawings_precent, 1)}%\nPorn: {round(value_porn_precent, 1)}%\nHentai: {round(value_hentai_precent, 1)}%\nSexy: {round(value_sexy_precent, 1)}%\nNeutral: {round(value_neutral_precent, 1)}%")
-
-        ic()
-        ic(result)
+        clip = Image.open(dir_img_fromarray).convert('RGB')
         
+        if clip_checked is True:
+            spc_output = str(f"Prompt: {init.ci.interrogate(clip)}\n\nDrawings: {round(value_drawings_precent, 1)}%\nPorn: {round(value_porn_precent, 1)}%\nHentai: {round(value_hentai_precent, 1)}%\nSexy: {round(value_sexy_precent, 1)}%\nNeutral: {round(value_neutral_precent, 1)}%")
+        elif clip_checked is False:
+            spc_output = str(f"Drawings: {round(value_drawings_precent, 1)}%\nPorn: {round(value_porn_precent, 1)}%\nHentai: {round(value_hentai_precent, 1)}%\nSexy: {round(value_sexy_precent, 1)}%\nNeutral: {round(value_neutral_precent, 1)}%")
+
         tmp_file = "tmp.png"
         try:
             os.remove(tmp_file)
@@ -280,7 +287,6 @@ class multi:
 
         return(spc_output)
         
-    
     if init.clear_need is True:
         if init.debug is True:
             ic(init.clear_cache())
