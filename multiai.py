@@ -15,7 +15,7 @@ from upscalers import upscale
 from clip_interrogator import Config, Interrogator
 
 class init:
-    ver = "[Beta]MultiAI v1.1.1"
+    ver = "[Beta]MultiAI v1.1.2"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -273,7 +273,7 @@ class multi:
         clip = Image.open(dir_img_fromarray).convert('RGB')
         
         if clip_checked is True:
-            spc_output = str(f"Prompt: {init.ci.interrogate(clip)}\n\nDrawings: {round(value_drawings_precent, 1)}%\nPorn: {round(value_porn_precent, 1)}%\nHentai: {round(value_hentai_precent, 1)}%\nSexy: {round(value_sexy_precent, 1)}%\nNeutral: {round(value_neutral_precent, 1)}%")
+            spc_output = str(f"Prompt:\n{init.ci.interrogate(clip)}\n\nDrawings: {round(value_drawings_precent, 1)}%\nPorn: {round(value_porn_precent, 1)}%\nHentai: {round(value_hentai_precent, 1)}%\nSexy: {round(value_sexy_precent, 1)}%\nNeutral: {round(value_neutral_precent, 1)}%")
         elif clip_checked is False:
             spc_output = str(f"Drawings: {round(value_drawings_precent, 1)}%\nPorn: {round(value_porn_precent, 1)}%\nHentai: {round(value_hentai_precent, 1)}%\nSexy: {round(value_sexy_precent, 1)}%\nNeutral: {round(value_neutral_precent, 1)}%")
 
