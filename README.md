@@ -26,11 +26,13 @@
 
 **4. Install [CUDA 11.8](https://developer.nvidia.com/cuda-toolkit)**
 
-**5. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
+**5. Restart your PC**
 
-**6. Unarchive ZIP**
+**6. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
 
-**7. Run *install.bat* for first time**
+**7. Unarchive ZIP**
+
+**8. Run *install.bat* for first time**
 
 **7.1. Next time run *run.bat***
 ## Installation (recomended)
@@ -49,6 +51,8 @@ winget install -e --id Git.Git
 winget install -e --id Gyan.FFmpeg
 ```
 **5. Install [CUDA 11.8](https://developer.nvidia.com/cuda-toolkit)**
+
+**5. Restart your PC**
 
 **6. Clone repository**
 ```git
