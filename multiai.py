@@ -15,7 +15,7 @@ from upscalers import upscale, available_models, clear_on_device_caches
 import numpy as np
 
 class init:
-    ver = "[Beta]MultiAI v1.0.0"
+    ver = "[Beta]MultiAI v1.1.0"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -233,11 +233,56 @@ class multi:
         upsc_image_output = upscale(model_ups, tmp_img_ndr, scale_factor)
         return upsc_image_output
     
+    def spc(file_spc):
+        multi.check_file(init.modelname)
+        ic()
+        ic("Loading model...")
+        model = predict.load_model("nsfw_mobilenet2.224x224.h5")
+        ic()
+        ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
+        
+        img = Image.fromarray(file_spc, 'RGB')
+        img.save('tmp.png')
+        dir_img_fromarray = init.current_directory+r"\tmp.png"
+        
+        result = predict.classify(model, dir_img_fromarray)
+        ic()
+        keys_list = list(result.keys())
+        ic()
+        x = keys_list[0]
+        ic()
+
+        value_drawings = result[x]["drawings"]
+        value_porn = result[x]["porn"]
+        value_hentai = result[x]["hentai"]
+        value_sexy = result[x]["sexy"]
+        value_neutral = result[x]["neutral"]
+        
+        total_sum = value_drawings + value_porn + value_hentai + value_sexy + value_neutral
+        value_drawings_precent = (value_drawings / total_sum) * 100
+        value_porn_precent = (value_porn / total_sum) * 100
+        value_hentai_precent = (value_hentai / total_sum) * 100
+        value_sexy_precent = (value_sexy / total_sum) * 100
+        value_neutral_precent = (value_neutral / total_sum) * 100
+        
+        spc_output = str(f"Drawings: {round(value_drawings_precent, 1)}%\nPorn: {round(value_porn_precent, 1)}%\nHentai: {round(value_hentai_precent, 1)}%\nSexy: {round(value_sexy_precent, 1)}%\nNeutral: {round(value_neutral_precent, 1)}%")
+
+        ic()
+        ic(result)
+        
+        tmp_file = "tmp.png"
+        try:
+            os.remove(tmp_file)
+        except FileNotFoundError:
+            ic()
+            ic("FileNotFoundError")
+            pass
+
+        return(spc_output)
+        
+    
     if init.clear_need is True:
         if init.debug is True:
             ic(init.clear_cache())
         elif init.debug is False:
-            init.clear_cache()
-        
-    
-    
+            init.clear_cache()   

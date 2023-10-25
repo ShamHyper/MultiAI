@@ -1,7 +1,6 @@
 from multiai import *
 
-with gr.Blocks(
-    title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) as multiai:
+with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) as multiai:
     ic()
     ic("Staring gradio...")
     gr.Markdown(init.ver)
@@ -48,8 +47,7 @@ with gr.Blocks(
         with gr.Row():
             gr.Label("Detect NSFW images from dir")
         with gr.Row():
-            detector_input = gr.Textbox(
-                label="Enter dir", placeholder="Enter dir like this: D:\Python\MultiAI")
+            detector_input = gr.Textbox(label="Enter dir", placeholder="Enter dir like this: D:\Python\MultiAI")
             detector_slider = gr.Slider(
                 value=0.36,
                 label="Threshold (larger number = simpler detection | smaller number = stricter one)",
@@ -58,13 +56,20 @@ with gr.Blocks(
             )
         with gr.Row():
             detector_button = gr.Button("Click here to start")
-            detector_output = gr.Textbox(
-                label="Output", placeholder="NSFW Detector outputs will be here")
+            detector_output = gr.Textbox(label="Output", placeholder="NSFW Detector outputs will be here")
         with gr.Row():
             gr.Label("Clear outputs")
         with gr.Row():
             detector_clear_button = gr.Button("Clear outputs")
             clearp = gr.Textbox(label="Clearing progress")
+    with gr.Tab("NSFW Specifier"):
+        with gr.Row():
+            gr.Label("Specifiy NSFW images")
+        with gr.Row():
+            file_spc = gr.Image()
+            spc_output = gr.Textbox(label="Stats", placeholder="Press start to get specifications of image")
+        with gr.Row():
+            spc_button = gr.Button("Click here to start")
             
 
     rembg_button.click(multi.rem_bg_def, inputs=image_input, outputs=image_output)
@@ -76,6 +81,8 @@ with gr.Blocks(
     
     upsc_button.click(multi.uspc, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)
     upsc_clear_cache.click(clear_on_device_caches)
+    
+    spc_button.click(multi.spc, inputs=file_spc, outputs=spc_output)
     
 if init.debug is True:
     ic(multiai.queue())
