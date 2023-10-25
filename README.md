@@ -16,7 +16,7 @@
 
 **2. NVIDIA GPU with CUDA 11.8 support**
 
-**3. 16gb RAM or 8gb RAM with SWAP**
+**3. 16gb RAM**
 ## Installation (legacy)
 **1. Install [Python 3.10.x](https://www.python.org/downloads/)**
 
