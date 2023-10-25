@@ -3,6 +3,7 @@ import os
 from tqdm import tqdm
 from icecream import ic
 import json
+import asyncio
 
 from PIL import Image, UnidentifiedImageError
 from rembg import remove
@@ -15,7 +16,7 @@ from upscalers import upscale
 from clip_interrogator import Config, Interrogator
 
 class init:
-    ver = "[Beta]MultiAI v1.1.2"
+    ver = "[Beta]MultiAI v1.2.0"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -57,6 +58,14 @@ class init:
         clear_need = True
     else:
         print("Something wrong in config.json. Check them out!")
+        
+    async_model_loading = data.get("async_model_loading")
+    if async_model_loading == "False":
+        async_model_loading = False
+    elif async_model_loading == "True":
+        async_model_loading = True
+    else:
+        print("Something wrong in config.json. Check them out!")
     
     ic()
     ic(f"Start in browser: {inbrowser}")
@@ -82,15 +91,6 @@ class init:
             urllib.request.urlretrieve(init.url, init.modelname)
     
     check_file(modelname)
-    ic()
-    ic("Loading model...")
-    model = predict.load_model("nsfw_mobilenet2.224x224.h5")
-    ic()
-    ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
-    
-    ic()
-    ic("Loading clip model and cfgs...")
-    ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
     
     def clear_cache():
         ic("Clearing cache...")
@@ -104,6 +104,41 @@ class init:
         except FileNotFoundError:
             pass
         return("Done")
+    
+
+if init.async_model_loading is False:
+    ic()
+    
+    ic("Loading NSFW model...")
+    model = predict.load_model("nsfw_mobilenet2.224x224.h5")
+    ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
+    
+    ic("Loading clip model and cfgs...")
+    ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
+    ic("Clip model loaded!")
+
+elif init.async_model_loading is True:
+    ic("Loading models async!")
+    async def load_nsfw_model():
+        ic("Loading NSFW model...")
+        model = await asyncio.to_thread(predict.load_model, "nsfw_mobilenet2.224x224.h5")
+        ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
+        return model
+
+    async def load_clip_model():
+        ic("Loading clip model and cfgs...")
+        ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
+        ic("Clip model loaded!")
+        return ci
+
+    async def main():
+        nsfw_model_task = asyncio.create_task(load_nsfw_model())
+        clip_model_task = asyncio.create_task(load_clip_model())
+
+        await nsfw_model_task
+        await clip_model_task
+
+    asyncio.run(main())
     
 class multi:
     def rem_bg_def(inputs):

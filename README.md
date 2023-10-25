@@ -72,9 +72,13 @@ git clone https://github.com/ShamHyper/MultiAI.git
         // Boolean ("True" or "False")
         // Enable MultiAI starting with share link
 
-        "clear_need": "True"
+        "clear_need": "True",
         // Boolean ("True" or "False")
         // Enable cache clear function on MultiAI start
+
+        "async_model_loading" : "False"
+        // EXPERIMENTAL! It is better not to use it yet!
+        // Boolean ("True" or "False")
     }
 ```
 ## Support
