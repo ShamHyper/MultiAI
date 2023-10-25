@@ -62,7 +62,7 @@ git clone https://github.com/ShamHyper/MultiAI.git
     {
         "debug_mode": "True", 
         // Boolean ("True" or "False")
-        // Enable debug mode
+        // Enable debug mode (write debug info)
         
         "start_in_browser": "True",
         // Boolean ("True" or "False")
@@ -76,9 +76,13 @@ git clone https://github.com/ShamHyper/MultiAI.git
         // Boolean ("True" or "False")
         // Enable cache clear function on MultiAI start
 
-        "async_model_loading" : "False"
-        // EXPERIMENTAL! It is better not to use it yet!
+        "async_model_loading" : "False",
         // Boolean ("True" or "False")
+        // EXPERIMENTAL! It is better not to use it yet!
+
+        "preload_models" : "False"
+        // Boolean ("True" or "False")
+        // Load models on start of run.bat (True) or load models on running Image Analyzer (False)
     }
 ```
 ## Support

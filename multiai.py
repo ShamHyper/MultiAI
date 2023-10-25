@@ -16,7 +16,7 @@ from upscalers import upscale
 from clip_interrogator import Config, Interrogator
 
 class init:
-    ver = "[Beta]MultiAI v1.2.1"
+    ver = "[Beta]MultiAI v1.3.0"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -66,6 +66,14 @@ class init:
         async_model_loading = True
     else:
         print("Something wrong in config.json. Check them out!")
+        
+    preload_models = data.get("preload_models")
+    if preload_models == "False":
+        preload_models = False
+    elif preload_models == "True":
+        preload_models = True
+    else:
+        print("Something wrong in config.json. Check them out!")
     
     ic()
     ic(f"Start in browser: {inbrowser}")
@@ -106,39 +114,41 @@ class init:
         return("Done")
     
 
-if init.async_model_loading is False:
-    ic()
-    
-    ic("Loading NSFW model...")
-    model = predict.load_model("nsfw_mobilenet2.224x224.h5")
-    ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
-    
-    ic("Loading clip model and cfgs...")
-    ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
-    ic("Clip model loaded!")
-
-elif init.async_model_loading is True:
-    ic("Loading models async!")
-    async def load_nsfw_model():
+if init.preload_models is True:
+    if init.async_model_loading is False:
+        ic()
+        
         ic("Loading NSFW model...")
-        model = await asyncio.to_thread(predict.load_model, "nsfw_mobilenet2.224x224.h5")
+        init.check_file(init.modelname)
+        model = predict.load_model("nsfw_mobilenet2.224x224.h5")
         ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
-        return model
-
-    async def load_clip_model():
+        
         ic("Loading clip model and cfgs...")
         ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
         ic("Clip model loaded!")
-        return ci
 
-    async def main():
-        nsfw_model_task = asyncio.create_task(load_nsfw_model())
-        clip_model_task = asyncio.create_task(load_clip_model())
+    elif init.async_model_loading is True: #EXPERIMENTAL! #EXPERIMENTAL! #EXPERIMENTAL! #EXPERIMENTAL!
+        ic("Loading models async!")
+        async def load_nsfw_model():
+            ic("Loading NSFW model...")
+            model = await asyncio.to_thread(predict.load_model, "nsfw_mobilenet2.224x224.h5")
+            ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
+            return model
 
-        await nsfw_model_task
-        await clip_model_task
+        async def load_clip_model():
+            ic("Loading clip model and cfgs...")
+            ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
+            ic("Clip model loaded!")
+            return ci
 
-    asyncio.run(main())
+        async def main():
+            nsfw_model_task = asyncio.create_task(load_nsfw_model())
+            clip_model_task = asyncio.create_task(load_clip_model())
+
+            await nsfw_model_task
+            await clip_model_task
+
+        asyncio.run(main())
     
 class multi:
     def rem_bg_def(inputs):
@@ -188,12 +198,12 @@ class multi:
         return outputs
 
     def detector(detector_input, detector_slider):
-        multi.check_file(init.modelname)
-        ic()
-        ic("Loading model...")
-        model = predict.load_model("nsfw_mobilenet2.224x224.h5")
-        ic()
-        ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
+        if init.preload_models is False:
+            ic()
+            init.check_file(init.modelname)
+            ic("Loading NSFW model...")
+            model = predict.load_model("nsfw_mobilenet2.224x224.h5")
+            ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
         FOLDER_NAME = str(detector_input)
         THRESHOLD = detector_slider
         nsfw = 0
@@ -203,12 +213,13 @@ class multi:
 
         for file in tqdm(dirarr):
             try:
+                ic()
                 result = predict.classify(model, file)
-                ic()
+                ic(result)
                 keys_list = list(result.keys())
-                ic()
+                ic(keys_list)
                 x = keys_list[0]
-                ic()
+                ic(x)
 
                 value_nsfw_1 = result[x]["porn"]
                 value_nsfw_2 = result[x]["hentai"]
@@ -281,6 +292,12 @@ class multi:
         return upsc_image_output
     
     def spc(file_spc, clip_checked):
+        if init.preload_models is False:
+            ic()
+            init.check_file(init.modelname)
+            ic("Loading NSFW model...")
+            model = predict.load_model("nsfw_mobilenet2.224x224.h5")
+            ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
         img = Image.fromarray(file_spc, 'RGB')
         img.save('tmp.png')
         dir_img_fromarray = os.path.join(os.getcwd(), "tmp.png")
@@ -295,7 +312,11 @@ class multi:
         percentages = {k: round((v / total_sum) * 100, 1) for k, v in values.items()}
 
         spc_output = ""
-        if clip_checked:
+        if clip_checked is True:
+            if init.preload_models is False:
+                ic("Loading clip model and cfgs...")
+                ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
+                ic("Clip model loaded!")
             clip = Image.open(dir_img_fromarray).convert('RGB')
             spc_output += f"Prompt:\n{ci.interrogate(clip)}\n\n"
 
