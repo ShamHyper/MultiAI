@@ -34,7 +34,7 @@
 
 **8. Run *install.bat* for first time**
 
-**7.1. Next time run *run.bat***
+**8.1. Next time run *run.bat***
 ## Installation (recomended)
 **1. Install [winget](https://learn.microsoft.com/windows/package-manager/winget/#install-winget)**
 
