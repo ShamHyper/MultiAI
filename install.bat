@@ -41,6 +41,12 @@ goto :show_stdout_stderr
 :activate_venv
 set PYTHON="%VENV_DIR%\Scripts\Python.exe"
 echo venv %PYTHON%
+if exist %VENV_DIR%\Scripts\python.exe (
+    %VENV_DIR%\Scripts\python.exe -m pip install -r requirements.txt
+)
+if exist %VENV_DIR%\Scripts\python.exe (
+    %VENV_DIR%\Scripts\python.exe -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+)
 
 :launch
 %PYTHON% app.py %*
