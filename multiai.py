@@ -15,7 +15,7 @@ from upscalers import upscale
 from clip_interrogator import Config, Interrogator
 
 class init:
-    ver = "[Beta]MultiAI v1.1.0"
+    ver = "[Beta]MultiAI v1.1.1"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
