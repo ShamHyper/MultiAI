@@ -24,7 +24,9 @@
 
 **6. Unarchive ZIP**
 
-**7. Run *run.bat***
+**7. Run *install.bat* for first time**
+
+**7.1. Next time run *run.bat***
 ## Installation (winget and git)
 **1. Install [winget](https://learn.microsoft.com/ru-ru/windows/package-manager/winget/#install-winget)**
 
@@ -48,7 +50,9 @@ winget install -e --id Gyan.FFmpeg
 ```git
 git clone https://github.com/ShamHyper/MultiAI.git
 ```
-**7. Run *run.bat***
+**7. Run *install.bat* for first time**
+
+**7.1. Next time run *run.bat***
 ## Configuration (config.json)
 ```json
     {
@@ -65,6 +69,10 @@ git clone https://github.com/ShamHyper/MultiAI.git
         // Enable MultiAI starting with share link
     }
 ```
+## Support
+1. If you see errors like this: ```ModuleNotFoundError: No module named "certifi"```, run install.bat for fix them. If that didn't help, open a new issue
+2. If you encounter errors during the execution of the program, open a new issue
+3. If your console window freezes during the install process.bat, restart it with administrator rights. It is also highly recommended to run run.bat from the administrator.
 ## Gallery
 ![1](https://i.imgur.com/mIkIOMB.png?raw=true)
 ![2](https://i.imgur.com/4OQmALL.png?raw=true)
