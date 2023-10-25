@@ -1,5 +1,7 @@
 ![0](https://i.imgur.com/Ui4dvUh.png?raw=true)
 
+[![1](https://i.imgur.com/8Hva6OY.png)](https://www.donationalerts.com/r/shamhyper0)
+
 [![wakatime](https://wakatime.com/badge/github/ShamHyper/MultiAI.svg)](https://wakatime.com/badge/github/ShamHyper/MultiAI)
 ## AIs
 **1. [BgRemoverLite](https://github.com/ShamHyper/BgRemoverLite)**
@@ -80,10 +82,10 @@ git clone https://github.com/ShamHyper/MultiAI.git
 2. If you encounter errors during the execution of the program, open a new issue
 3. If your console window freezes during the install process.bat, restart it with administrator rights. It is also highly recommended to run run.bat from the administrator.
 ## Gallery
-![1](https://i.imgur.com/mIkIOMB.png?raw=true)
-![2](https://i.imgur.com/4OQmALL.png?raw=true)
-![3](https://i.imgur.com/zveO3a7.png?raw=true)
-![4](https://i.imgur.com/wR1fGIn.png?raw=true)
+![2](https://i.imgur.com/mIkIOMB.png?raw=true)
+![3](https://i.imgur.com/4OQmALL.png?raw=true)
+![4](https://i.imgur.com/zveO3a7.png?raw=true)
+![5](https://i.imgur.com/wR1fGIn.png?raw=true)
 ## Credits
 *Built with Gradio - https://www.gradio.app/*
 
