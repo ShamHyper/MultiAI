@@ -32,7 +32,7 @@
 
 **7.1. Next time run *run.bat***
 ## Installation (winget and git)
-**1. Install [winget](https://learn.microsoft.com/ru-ru/windows/package-manager/winget/#install-winget)**
+**1. Install [winget](https://learn.microsoft.com/windows/package-manager/winget/#install-winget)**
 
 **2. Install Python**
 ```py
