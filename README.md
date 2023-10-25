@@ -16,7 +16,7 @@
 
 **3. 16gb RAM or 8gb RAM with SWAP**
 ## Installation (legacy)
-**1. Install [Python 3.9.x - 3.10.x](https://www.python.org/downloads/)**
+**1. Install [Python 3.10.x](https://www.python.org/downloads/)**
 
 **2. Install [Git](https://git-scm.com/downloads)**
 
@@ -36,8 +36,6 @@
 
 **2. Install Python**
 ```py
-winget install -e --id Python.Python.3.9
-# OR, pick one!
 winget install -e --id Python.Python.3.10
 ```
 **3. Install Git**
