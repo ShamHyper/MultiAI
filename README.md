@@ -32,9 +32,7 @@
 
 **7. Unarchive ZIP**
 
-**8. Run *install.bat* for first time**
-
-**8.1. Next time run *run.bat***
+**8. Run *install.bat* for first time. Next time run *run.bat***
 ## Installation (recomended)
 **1. Install [winget](https://learn.microsoft.com/windows/package-manager/winget/#install-winget)**
 
@@ -58,9 +56,7 @@ winget install -e --id Gyan.FFmpeg
 ```git
 git clone https://github.com/ShamHyper/MultiAI.git
 ```
-**8. Run *install.bat* for first time**
-
-**8.1. Next time run *run.bat***
+**8. Run *install.bat* for first time. Next time run *run.bat***
 ## Configuration (config.json)
 ```js
     {
