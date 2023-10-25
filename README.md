@@ -52,15 +52,15 @@ winget install -e --id Gyan.FFmpeg
 ```
 **5. Install [CUDA 11.8](https://developer.nvidia.com/cuda-toolkit)**
 
-**5. Restart your PC**
+**6. Restart your PC**
 
-**6. Clone repository**
+**7. Clone repository**
 ```git
 git clone https://github.com/ShamHyper/MultiAI.git
 ```
-**7. Run *install.bat* for first time**
+**8. Run *install.bat* for first time**
 
-**7.1. Next time run *run.bat***
+**8.1. Next time run *run.bat***
 ## Configuration (config.json)
 ```js
     {
