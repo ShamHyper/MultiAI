@@ -35,7 +35,7 @@
 **7. Unarchive ZIP**
 
 **8. Run *install.bat* for first time. Next time run *run.bat***
-## Installation (recomended)
+## Installation (recommended)
 **1. Install [winget](https://learn.microsoft.com/windows/package-manager/winget/#install-winget)**
 
 **2. Install Python**
