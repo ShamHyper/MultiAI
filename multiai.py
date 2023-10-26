@@ -17,7 +17,7 @@ import torch
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 
 class init:
-    ver = "[Beta]MultiAI v1.4.1"
+    ver = "[Beta]MultiAI v1.4.2"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
