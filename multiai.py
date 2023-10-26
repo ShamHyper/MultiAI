@@ -17,7 +17,7 @@ import torch
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 
 class init:
-    ver = "[Beta]MultiAI v1.4.0"
+    ver = "[Beta]MultiAI v1.4.1"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -319,7 +319,7 @@ class multi:
         prompt = prompt_input
 
         nlp = pipeline('text-generation', model=model, tokenizer=tokenizer)
-        outs = nlp(prompt, max_length=pg_max_length, num_return_sequences=pg_prompts, do_sample=True, repetition_penalty=1.2, temperature=0.7, top_k=4, early_stopping=True)
+        outs = nlp(prompt, max_length=pg_max_length, num_return_sequences=pg_prompts, do_sample=True, repetition_penalty=1.2, temperature=0.7, top_k=4, early_stopping=False)
 
         for i in tqdm(range(len(outs))):
             outs[i] = str(outs[i]['generated_text']).replace('  ', '').rstrip(',')
