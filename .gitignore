@@ -1,6 +1,12 @@
 __pycache__/
 __pycache__
+
 cache
 cache/
+
 .ruff_cache
 .ruff_cache/
+
+*.png
+*.jpg
+*.jpeg

@@ -11,6 +11,8 @@
 **3. NSFW Detector**
 
 **4. Image Analyzer**
+
+**5. Prompt Generator**
 ## System requirements
 **1. Windows 10-11**
 
@@ -76,10 +78,6 @@ git clone https://github.com/ShamHyper/MultiAI.git
         // Boolean ("True" or "False")
         // Enable cache clear function on MultiAI start
 
-        "async_model_loading" : "False",
-        // Boolean ("True" or "False")
-        // EXPERIMENTAL! It is better not to use it yet!
-
         "preload_models" : "False"
         // Boolean ("True" or "False")
         // Load models on start of run.bat (True) or load models on running Image Analyzer (False)
@@ -90,10 +88,16 @@ git clone https://github.com/ShamHyper/MultiAI.git
 2. If you encounter errors during the execution of the program, open a new issue
 3. If your console window freezes during the install process.bat, restart it with administrator rights. It is also highly recommended to run run.bat from the administrator.
 ## Gallery
+**1. [BgRemoverLite](https://github.com/ShamHyper/BgRemoverLite)**
 ![2](https://i.imgur.com/mIkIOMB.png?raw=true)
+**2. Image upscaler**
 ![3](https://i.imgur.com/4OQmALL.png?raw=true)
+**3. NSFW Detector**
 ![4](https://i.imgur.com/zveO3a7.png?raw=true)
+**4. Image Analyzer**
 ![5](https://i.imgur.com/wR1fGIn.png?raw=true)
+**5. Prompt Generator**
+![6](https://i.imgur.com/hRVhMKa.png?raw=true)
 ## Credits
 *Built with Gradio - https://www.gradio.app/*
 
@@ -106,3 +110,5 @@ git clone https://github.com/ShamHyper/MultiAI.git
 *Upscaling - https://github.com/kmewhort/upscalers*
 
 *Clip-interrogator - https://github.com/pharmapsychotic/clip-interrogator*
+
+*Fast Anime PromptGen - https://huggingface.co/FredZhang7/anime-anything-promptgen-v2*

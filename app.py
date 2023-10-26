@@ -73,6 +73,27 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
         with gr.Row():
             clip_checked = gr.Checkbox(value=False, label="Use CLIP for generate prompt (slow if a weak PC)")
             spc_button = gr.Button("Click here to start")
+    with gr.Tab("Prompt Generator"):
+        with gr.Row():
+            gr.Label("Generate prompt from your input")
+        with gr.Row():
+            prompt_input = gr.Textbox(label="Your input", placeholder="Type something...")
+            promptgen_output = gr.Textbox(label="Output prompts", placeholder="Your output will be here...")
+        with gr.Row():
+            pg_prompts = gr.Slider(
+                value=1,
+                label="Prompts",
+                minimum=1,
+                maximum=1000,
+            )
+            pg_max_length = gr.Slider(
+                value=76,
+                label="Max Length of prompt",
+                minimum=1,
+                maximum=1000,
+            )
+        with gr.Row():
+            promptgen_button = gr.Button(label="Start")
             
 
     rembg_button.click(multi.rem_bg_def, inputs=image_input, outputs=image_output)
@@ -86,6 +107,8 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     upsc_clear_cache.click(clear_on_device_caches)
     
     spc_button.click(multi.spc, inputs=[file_spc, clip_checked], outputs=spc_output)
+    
+    promptgen_button.click(multi.prompt_generator, inputs=[prompt_input, pg_prompts, pg_max_length], outputs=promptgen_output)
     
 if init.debug is True:
     multiai.queue()

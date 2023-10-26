@@ -3,7 +3,6 @@ import os
 from tqdm import tqdm
 from icecream import ic
 import json
-import asyncio
 
 from PIL import Image, UnidentifiedImageError
 from rembg import remove
@@ -14,9 +13,11 @@ import urllib.request
 from upscalers import upscale
 
 from clip_interrogator import Config, Interrogator
+import torch
+from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 
 class init:
-    ver = "[Beta]MultiAI v1.3.0"
+    ver = "[Beta]MultiAI v1.4.0"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -56,14 +57,6 @@ class init:
         clear_need = False
     elif clear_need == "True":
         clear_need = True
-    else:
-        print("Something wrong in config.json. Check them out!")
-        
-    async_model_loading = data.get("async_model_loading")
-    if async_model_loading == "False":
-        async_model_loading = False
-    elif async_model_loading == "True":
-        async_model_loading = True
     else:
         print("Something wrong in config.json. Check them out!")
         
@@ -115,40 +108,22 @@ class init:
     
 
 if init.preload_models is True:
-    if init.async_model_loading is False:
-        ic()
-        
-        ic("Loading NSFW model...")
-        init.check_file(init.modelname)
-        model = predict.load_model("nsfw_mobilenet2.224x224.h5")
-        ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
-        
-        ic("Loading clip model and cfgs...")
-        ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
-        ic("Clip model loaded!")
-
-    elif init.async_model_loading is True: #EXPERIMENTAL! #EXPERIMENTAL! #EXPERIMENTAL! #EXPERIMENTAL!
-        ic("Loading models async!")
-        async def load_nsfw_model():
-            ic("Loading NSFW model...")
-            model = await asyncio.to_thread(predict.load_model, "nsfw_mobilenet2.224x224.h5")
-            ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
-            return model
-
-        async def load_clip_model():
-            ic("Loading clip model and cfgs...")
-            ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
-            ic("Clip model loaded!")
-            return ci
-
-        async def main():
-            nsfw_model_task = asyncio.create_task(load_nsfw_model())
-            clip_model_task = asyncio.create_task(load_clip_model())
-
-            await nsfw_model_task
-            await clip_model_task
-
-        asyncio.run(main())
+    ic()
+    
+    ic("Loading NSFW model...")
+    init.check_file(init.modelname)
+    model = predict.load_model("nsfw_mobilenet2.224x224.h5")
+    ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
+    
+    ic("Loading clip model and cfgs...")
+    ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
+    ic("Clip model loaded!")
+    
+    ic("Loading promptgen models...")
+    tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
+    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+    model = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
+    ic("Promptgen models loaded!")
     
 class multi:
     def rem_bg_def(inputs):
@@ -334,6 +309,22 @@ class multi:
             pass
 
         return spc_output
+    
+    def prompt_generator(prompt_input, pg_prompts, pg_max_length):
+        if init.preload_models is False:
+            tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
+            tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+            model = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
+
+        prompt = prompt_input
+
+        nlp = pipeline('text-generation', model=model, tokenizer=tokenizer)
+        outs = nlp(prompt, max_length=pg_max_length, num_return_sequences=pg_prompts, do_sample=True, repetition_penalty=1.2, temperature=0.7, top_k=4, early_stopping=True)
+
+        for i in tqdm(range(len(outs))):
+            outs[i] = str(outs[i]['generated_text']).replace('  ', '').rstrip(',')
+        promptgen_output = ('\n\n'.join(outs) + '\n')  
+        return promptgen_output
         
     if init.clear_need is True:
         if init.debug is True:
