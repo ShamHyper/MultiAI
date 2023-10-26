@@ -13,7 +13,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             image_input = gr.Image()
             image_output = gr.Image(width=200, height=240)
         with gr.Row():
-            rembg_button = gr.Button("Remove one background")
+            rembg_button = gr.Button("🖼️ Remove one background")
         with gr.Row():
             gr.Label("Remove background from all images in dir")
         with gr.Row():
@@ -22,11 +22,11 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             image_output_dir = gr.Textbox(
                 label="Output", placeholder="BrRemoverLite outputs will be here")
         with gr.Row():
-            rembg_batch_button = gr.Button("Remove some backgrounds")
+            rembg_batch_button = gr.Button("🖼️ Remove some backgrounds")
         with gr.Row():
             gr.Label("Clear outputs")
         with gr.Row():
-            clearp_bgr_button = gr.Button("Clear outputs")
+            clearp_bgr_button = gr.Button("🧹 Clear outputs")
             clearp_bgr = gr.Textbox(label="Clearing progress")
     with gr.Tab("Upscaler"):
         with gr.Row():
@@ -42,9 +42,9 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
                 minimum=1.1,
                 maximum=10.0,
             )
-            upsc_button = gr.Button("Start upscaling")
+            upsc_button = gr.Button("📈 Start upscaling")
         with gr.Row():
-            upsc_clear_cache = gr.Button("Clear torch, cuda and models cache")
+            upsc_clear_cache = gr.Button("🧹 Clear torch, cuda and models cache")
     with gr.Tab("NSFW Detector"):
         with gr.Row():
             gr.Label("Detect NSFW images from dir")
@@ -57,12 +57,12 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
                 maximum=0.9999,
             )
         with gr.Row():
-            detector_button = gr.Button("Click here to start")
+            detector_button = gr.Button("👟 Click here to start")
             detector_output = gr.Textbox(label="Output", placeholder="NSFW Detector outputs will be here")
         with gr.Row():
             gr.Label("Clear outputs")
         with gr.Row():
-            detector_clear_button = gr.Button("Clear outputs")
+            detector_clear_button = gr.Button("🧹 Clear outputs")
             clearp = gr.Textbox(label="Clearing progress")
     with gr.Tab("Image Analyzer"):
         with gr.Row():
@@ -72,7 +72,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             spc_output = gr.Textbox(label="Stats", placeholder="Press start to get specifications of image")
         with gr.Row():
             clip_checked = gr.Checkbox(value=False, label="Use CLIP for generate prompt (slow if a weak PC)")
-            spc_button = gr.Button("Click here to start")
+            spc_button = gr.Button("👟 Click here to start")
     with gr.Tab("Prompt Generator"):
         with gr.Row():
             gr.Label("Generate prompt from your input")
@@ -93,7 +93,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
                 maximum=1000,
             )
         with gr.Row():
-            promptgen_button = gr.Button(label="Start")
+            promptgen_button = gr.Button("⭐ Start")
             
 
     rembg_button.click(multi.rem_bg_def, inputs=image_input, outputs=image_output)

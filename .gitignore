@@ -1,5 +1,5 @@
-__pycache__/
 __pycache__
+__pycache__/
 
 cache
 cache/
@@ -10,3 +10,12 @@ cache/
 *.png
 *.jpg
 *.jpeg
+
+.vscode
+.vscode/
+
+tmp
+tmp/
+
+venv
+venv/
