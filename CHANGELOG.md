@@ -1,4 +1,7 @@
 # Changelog
+## 1.4.3
+- Code optimizations (20% improve)
+- Loading timer for debug mode
 ## 1.4.2
 - Added emojis for buttons to better understand the interface
 - News about Python 3.11+, details in the README

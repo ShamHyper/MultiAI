@@ -1,3 +1,5 @@
+import time
+start_time = time.time()
 import shutil as sh
 import os
 from tqdm import tqdm
@@ -13,11 +15,10 @@ import urllib.request
 from upscalers import upscale
 
 from clip_interrogator import Config, Interrogator
-import torch
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 
 class init:
-    ver = "[Beta]MultiAI v1.4.2"
+    ver = "[Beta]MultiAI v1.4.3"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -105,14 +106,13 @@ class init:
         except FileNotFoundError:
             pass
         return("Done")
-    
 
 if init.preload_models is True:
     ic()
     
     ic("Loading NSFW model...")
     init.check_file(init.modelname)
-    model = predict.load_model("nsfw_mobilenet2.224x224.h5")
+    model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
     ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
     
     ic("Loading clip model and cfgs...")
@@ -122,8 +122,12 @@ if init.preload_models is True:
     ic("Loading promptgen models...")
     tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
     tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-    model = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
+    model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
     ic("Promptgen models loaded!")
+    
+end_time = time.time()
+total_time = round(end_time - start_time)
+ic(f"Executing init time: {total_time}s")
     
 class multi:
     def rem_bg_def(inputs):
@@ -271,13 +275,13 @@ class multi:
             ic()
             init.check_file(init.modelname)
             ic("Loading NSFW model...")
-            model = predict.load_model("nsfw_mobilenet2.224x224.h5")
+            model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
             ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
         img = Image.fromarray(file_spc, 'RGB')
         img.save('tmp.png')
         dir_img_fromarray = os.path.join(os.getcwd(), "tmp.png")
 
-        result = predict.classify(model, dir_img_fromarray)
+        result = predict.classify(model_nsfw, dir_img_fromarray)
         ic(result.keys())
         x = next(iter(result.keys()))
         ic(x)
@@ -314,11 +318,11 @@ class multi:
         if init.preload_models is False:
             tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
             tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-            model = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
+            model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
 
         prompt = prompt_input
 
-        nlp = pipeline('text-generation', model=model, tokenizer=tokenizer)
+        nlp = pipeline('text-generation', model=model_tokinezer, tokenizer=tokenizer)
         outs = nlp(prompt, max_length=pg_max_length, num_return_sequences=pg_prompts, do_sample=True, repetition_penalty=1.2, temperature=0.7, top_k=4, early_stopping=False)
 
         for i in tqdm(range(len(outs))):

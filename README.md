@@ -74,13 +74,16 @@ git clone https://github.com/ShamHyper/MultiAI.git
         // Boolean ("True" or "False")
         // Enable MultiAI starting with share link
 
-        "clear_need": "True",
+        "clear_need": "False",
         // Boolean ("True" or "False")
         // Enable cache clear function on MultiAI start
 
         "preload_models" : "False"
         // Boolean ("True" or "False")
         // Load models on start of run.bat (True) or load models on running Image Analyzer (False)
+        // True: launch time on first time - ~106s and ~32s if models cached
+        // False: launch time - ~5s
+        // Tested on i9-13900KF + RTX 4080 + DDR4 2x16 3866
     }
 ```
 ## Support

@@ -1,6 +1,6 @@
+from multiai import *
 import gradio as gr
 from upscalers import available_models, clear_on_device_caches
-from multiai import *
 
 with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) as multiai:
     ic()
