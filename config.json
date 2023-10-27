@@ -1,6 +1,5 @@
     {
         "debug_mode": "True",
         "start_in_browser": "True",
-        "share_gradio": "False",
-        "preload_models" : "False"
+        "share_gradio": "False"
     }

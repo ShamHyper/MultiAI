@@ -19,7 +19,7 @@ from clip_interrogator import Config, Interrogator
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 
 class init:
-    ver = "[Beta]MultiAI v1.4.5"
+    ver = "[Beta]MultiAI v1.4.6"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -53,15 +53,7 @@ class init:
         share_gradio = True
     else:
         print("Something wrong in config.json. Check them out!")
-        
-    preload_models = data.get("preload_models")
-    if preload_models == "False":
-        preload_models = False
-    elif preload_models == "True":
-        preload_models = True
-    else:
-        print("Something wrong in config.json. Check them out!")
-    
+  
     ic()
     ic(f"Start in browser: {inbrowser}")
     ic(f"Debug mode: {debug}")
@@ -87,24 +79,6 @@ class init:
     
     check_file(modelname)
 
-if init.preload_models is True:
-    ic()
-    
-    ic("Loading NSFW model...")
-    init.check_file(init.modelname)
-    model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
-    ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
-    
-    ic("Loading clip model and cfgs...")
-    ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
-    ic("Clip model loaded!")
-    
-    ic("Loading promptgen models...")
-    tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
-    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-    model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
-    ic("Promptgen models loaded!")
-    
 end_time = time.time()
 total_time = round(end_time - start_time)
 ic(f"Executing init time: {total_time}s")
@@ -141,12 +115,11 @@ class multi:
         return outputs
 
     def detector(detector_input, detector_slider):
-        if init.preload_models is False:
-            ic()
-            init.check_file(init.modelname)
-            ic("Loading NSFW model...")
-            model = predict.load_model("nsfw_mobilenet2.224x224.h5")
-            ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
+        ic()
+        init.check_file(init.modelname)
+        ic("Loading NSFW model...")
+        model = predict.load_model("nsfw_mobilenet2.224x224.h5")
+        ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
         FOLDER_NAME = str(detector_input)
         THRESHOLD = detector_slider
         nsfw = 0
@@ -237,12 +210,11 @@ class multi:
         return upsc_image_output
     
     def spc(file_spc, clip_checked):
-        if init.preload_models is False:
-            ic()
-            init.check_file(init.modelname)
-            ic("Loading NSFW model...")
-            model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
-            ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
+        ic()
+        init.check_file(init.modelname)
+        ic("Loading NSFW model...")
+        model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
+        ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
         img = Image.fromarray(file_spc, 'RGB')
         img.save('tmp.png')
         dir_img_fromarray = os.path.join(os.getcwd(), "tmp.png")
@@ -258,10 +230,9 @@ class multi:
 
         spc_output = ""
         if clip_checked is True:
-            if init.preload_models is False:
-                ic("Loading clip model and cfgs...")
-                ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
-                ic("Clip model loaded!")
+            ic("Loading clip model and cfgs...")
+            ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
+            ic("Clip model loaded!")
             clip = Image.open(dir_img_fromarray).convert('RGB')
             spc_output += f"Prompt:\n{ci.interrogate(clip)}\n\n"
 
@@ -282,10 +253,9 @@ class multi:
         return spc_output
     
     def prompt_generator(prompt_input, pg_prompts, pg_max_length, randomize_temp):
-        if init.preload_models is False:
-            tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
-            tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-            model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
+        tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
+        tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+        model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
 
         prompt = prompt_input
         if randomize_temp is True:
@@ -293,6 +263,8 @@ class multi:
             ic(tempreture_pg)
         elif randomize_temp is False:
             tempreture_pg = 0.7
+            ic("Temperature default")
+            ic(tempreture_pg)
 
         nlp = pipeline('text-generation', model=model_tokinezer, tokenizer=tokenizer)
         outs = nlp(prompt, 
