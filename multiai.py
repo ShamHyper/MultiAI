@@ -17,7 +17,7 @@ from clip_interrogator import Config, Interrogator
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 
 class init:
-    ver = "[Beta]MultiAI v1.4.6"
+    ver = "[Beta]MultiAI v1.5.0"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
