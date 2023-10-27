@@ -18,7 +18,7 @@ from clip_interrogator import Config, Interrogator
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 
 class init:
-    ver = "[Beta]MultiAI v1.4.3"
+    ver = "[Beta]MultiAI v1.4.4"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -50,14 +50,6 @@ class init:
         share_gradio = False
     elif share_gradio == "True":
         share_gradio = True
-    else:
-        print("Something wrong in config.json. Check them out!")
-        
-    clear_need = data.get("clear_need")
-    if clear_need == "False":
-        clear_need = False
-    elif clear_need == "True":
-        clear_need = True
     else:
         print("Something wrong in config.json. Check them out!")
         
@@ -93,19 +85,6 @@ class init:
             urllib.request.urlretrieve(init.url, init.modelname)
     
     check_file(modelname)
-    
-    def clear_cache():
-        ic("Clearing cache...")
-        try:
-            cache1 = os.path.join(init.current_directory, ".ruff_cache")
-            sh.rmtree(cache1)
-            cache1 = os.path.join(init.current_directory, "__pycache__")
-            sh.rmtree(cache1)
-        except PermissionError:
-            pass
-        except FileNotFoundError:
-            pass
-        return("Done")
 
 if init.preload_models is True:
     ic()
@@ -328,10 +307,4 @@ class multi:
         for i in tqdm(range(len(outs))):
             outs[i] = str(outs[i]['generated_text']).replace('  ', '').rstrip(',')
         promptgen_output = ('\n\n'.join(outs) + '\n')  
-        return promptgen_output
-        
-    if init.clear_need is True:
-        if init.debug is True:
-            ic(init.clear_cache())
-        elif init.debug is False:
-            init.clear_cache()   
+        return promptgen_output 

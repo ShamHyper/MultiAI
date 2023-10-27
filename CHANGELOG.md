@@ -1,4 +1,7 @@
 # Changelog
+## 1.4.4
+- Removed clearing function
+- Remove clear_need in config.json
 ## 1.4.3
 - Code optimizations (20% improve)
 - Loading timer for debug mode

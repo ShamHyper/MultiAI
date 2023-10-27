@@ -74,10 +74,6 @@ git clone https://github.com/ShamHyper/MultiAI.git
         // Boolean ("True" or "False")
         // Enable MultiAI starting with share link
 
-        "clear_need": "False",
-        // Boolean ("True" or "False")
-        // Enable cache clear function on MultiAI start
-
         "preload_models" : "False"
         // Boolean ("True" or "False")
         // Load models on start of run.bat (True) or load models on running Image Analyzer (False)
