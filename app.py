@@ -80,6 +80,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             prompt_input = gr.Textbox(label="Your input", placeholder="Type something...")
             promptgen_output = gr.Textbox(label="Output prompts", placeholder="Your output will be here...")
         with gr.Row():
+            randomize_temp = gr.Checkbox(value=True, label="Randomize prompt temperature")
             pg_prompts = gr.Slider(
                 value=1,
                 label="Prompts",
@@ -108,7 +109,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     
     spc_button.click(multi.spc, inputs=[file_spc, clip_checked], outputs=spc_output)
     
-    promptgen_button.click(multi.prompt_generator, inputs=[prompt_input, pg_prompts, pg_max_length], outputs=promptgen_output)
+    promptgen_button.click(multi.prompt_generator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
     
 if init.debug is True:
     multiai.queue()

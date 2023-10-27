@@ -5,6 +5,7 @@ import os
 from tqdm import tqdm
 from icecream import ic
 import json
+import random
 
 from PIL import Image, UnidentifiedImageError
 from rembg import remove
@@ -18,7 +19,7 @@ from clip_interrogator import Config, Interrogator
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 
 class init:
-    ver = "[Beta]MultiAI v1.4.4"
+    ver = "[Beta]MultiAI v1.4.5"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -114,17 +115,9 @@ class multi:
             outputs = remove(inputs)
             ic()
             ic("Removing bg...")
-        except PermissionError:
+        except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
             ic()
-            ic("PermissionError")
-            pass
-        except FileNotFoundError:
-            ic()
-            ic("FileNotFoundError")
-            pass
-        except UnidentifiedImageError:
-            ic()
-            ic("UnidentifiedImageError")
+            ic(f"Error: {e}")
             pass
         return outputs
 
@@ -140,17 +133,9 @@ class multi:
                 input_image = Image.open(inputs)
                 output_image = remove(input_image)
                 output_image.save(outputs)
-            except PermissionError:
+            except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
                 ic()
-                ic("PermissionError")
-                pass
-            except FileNotFoundError:
-                ic()
-                ic("FileNotFoundError")
-                pass
-            except UnidentifiedImageError:
-                ic()
-                ic("UnidentifiedImageError")
+                ic(f"Error: {e}")
                 pass
         outputs = init.current_directory + r"\rembg_outputs"
         return outputs
@@ -193,7 +178,9 @@ class multi:
                 ic()
                 ic(result)
 
-            except (PermissionError, FileNotFoundError, UnidentifiedImageError, ValueError):
+            except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
+                ic()
+                ic(f"Error: {e}")
                 pass
 
         outputs = (
@@ -287,22 +274,35 @@ class multi:
         tmp_file = "tmp.png"
         try:
             os.remove(tmp_file)
-        except FileNotFoundError:
-            ic("FileNotFoundError")
+        except FileNotFoundError as e:
+            ic()
+            ic(f"Error: {e}")
             pass
 
         return spc_output
     
-    def prompt_generator(prompt_input, pg_prompts, pg_max_length):
+    def prompt_generator(prompt_input, pg_prompts, pg_max_length, randomize_temp):
         if init.preload_models is False:
             tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
             tokenizer.add_special_tokens({'pad_token': '[PAD]'})
             model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
 
         prompt = prompt_input
+        if randomize_temp is True:
+            tempreture_pg = (random.randint(4, 9)/10)
+            ic(tempreture_pg)
+        elif randomize_temp is False:
+            tempreture_pg = 0.7
 
         nlp = pipeline('text-generation', model=model_tokinezer, tokenizer=tokenizer)
-        outs = nlp(prompt, max_length=pg_max_length, num_return_sequences=pg_prompts, do_sample=True, repetition_penalty=1.2, temperature=0.7, top_k=4, early_stopping=False)
+        outs = nlp(prompt, 
+                   max_length=pg_max_length, 
+                   num_return_sequences=pg_prompts, 
+                   do_sample=True, 
+                   repetition_penalty=1.2, 
+                   temperature=tempreture_pg, 
+                   top_k=4, 
+                   early_stopping=False)
 
         for i in tqdm(range(len(outs))):
             outs[i] = str(outs[i]['generated_text']).replace('  ', '').rstrip(',')
