@@ -99,7 +99,7 @@ git clone https://github.com/ShamHyper/MultiAI.git
 **5. Prompt Generator**
 ![6](https://i.imgur.com/hRVhMKa.png?raw=true)
 ## About Python 3.11 - 3.12
-*So far, most of the bible libraries used in my project have not been updated to 3.11 - 3.12 or are working incorrectly. I tried to adapt the project for the new version, but for now I advise you to stay within 3.10 (in extreme cases, 3.9 will also work)*
+*So far, most of the libraries used in my project have not been updated to 3.11 - 3.12 or are working incorrectly. I tried to adapt the project for the new version, but for now I advise you to stay within 3.10 (in extreme cases, 3.9 will also work)*
 ## Credits
 *Built with Gradio - https://www.gradio.app/*
 
