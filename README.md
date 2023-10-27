@@ -26,7 +26,7 @@
 
 **3. Install [FFmpeg](https://ffmpeg.org/download.html)**
 
-**4. Install [CUDA 11.8](https://developer.nvidia.com/cuda-toolkit)**
+**4. Install [CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Windows)**
 
 **5. Restart your PC**
 
@@ -50,7 +50,7 @@ winget install -e --id Git.Git
 ```py
 winget install -e --id Gyan.FFmpeg
 ```
-**5. Install [CUDA 11.8](https://developer.nvidia.com/cuda-toolkit)**
+**5. Install [CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Windows)**
 
 **6. Restart your PC**
 
