@@ -82,7 +82,7 @@ git clone https://github.com/ShamHyper/MultiAI.git
         // Boolean ("True" or "False")
         // Load models on start of run.bat (True) or load models on running Image Analyzer (False)
         // True: launch time on first time - ~106s and ~32s if models cached
-        // False: launch time - ~5s
+        // False: launch time - ~3s
         // Tested on i9-13900KF + RTX 4080 + DDR4 2x16 3866
     }
 ```
