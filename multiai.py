@@ -1,5 +1,3 @@
-import time
-start_time = time.time()
 import shutil as sh
 import os
 from tqdm import tqdm
@@ -77,12 +75,23 @@ class init:
             ic("NSFW Model undected. Downloading...")
             urllib.request.urlretrieve(init.url, init.modelname)
     
-    check_file(modelname)
-
-end_time = time.time()
-total_time = round(end_time - start_time)
-ic(f"Executing init time: {total_time}s")
+    #########################
+    # Model loading section #
+    #########################
     
+    ic("Loading NSFW model...")
+    check_file(modelname)
+    model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
+    ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
+
+    ic("Loading clip model and cfgs...")
+    ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
+    ic("Clip model loaded!")
+
+    tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
+    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+    model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
+           
 class multi:
     def rem_bg_def(inputs):
         try:
@@ -117,9 +126,6 @@ class multi:
     def detector(detector_input, detector_slider):
         ic()
         init.check_file(init.modelname)
-        ic("Loading NSFW model...")
-        model = predict.load_model("nsfw_mobilenet2.224x224.h5")
-        ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
         FOLDER_NAME = str(detector_input)
         THRESHOLD = detector_slider
         nsfw = 0
@@ -130,7 +136,7 @@ class multi:
         for file in tqdm(dirarr):
             try:
                 ic()
-                result = predict.classify(model, file)
+                result = predict.classify(init.model_nsfw, file)
                 ic(result)
                 keys_list = list(result.keys())
                 ic(keys_list)
@@ -211,15 +217,11 @@ class multi:
     
     def spc(file_spc, clip_checked):
         ic()
-        init.check_file(init.modelname)
-        ic("Loading NSFW model...")
-        model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
-        ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
         img = Image.fromarray(file_spc, 'RGB')
         img.save('tmp.png')
         dir_img_fromarray = os.path.join(os.getcwd(), "tmp.png")
 
-        result = predict.classify(model_nsfw, dir_img_fromarray)
+        result = predict.classify(init.model_nsfw, dir_img_fromarray)
         ic(result.keys())
         x = next(iter(result.keys()))
         ic(x)
@@ -230,11 +232,8 @@ class multi:
 
         spc_output = ""
         if clip_checked is True:
-            ic("Loading clip model and cfgs...")
-            ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
-            ic("Clip model loaded!")
             clip = Image.open(dir_img_fromarray).convert('RGB')
-            spc_output += f"Prompt:\n{ci.interrogate(clip)}\n\n"
+            spc_output += f"Prompt:\n{init.ci.interrogate(clip)}\n\n"
 
         spc_output += f"Drawings: {percentages['drawings']}%\n"
         spc_output += f"Porn: {percentages['porn']}%\n"
@@ -253,10 +252,6 @@ class multi:
         return spc_output
     
     def prompt_generator(prompt_input, pg_prompts, pg_max_length, randomize_temp):
-        tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
-        tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-        model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
-
         prompt = prompt_input
         if randomize_temp is True:
             tempreture_pg = (random.randint(4, 9)/10)
@@ -266,7 +261,7 @@ class multi:
             ic("Temperature default")
             ic(tempreture_pg)
 
-        nlp = pipeline('text-generation', model=model_tokinezer, tokenizer=tokenizer)
+        nlp = pipeline('text-generation', model=init.model_tokinezer, tokenizer=init.tokenizer)
         outs = nlp(prompt, 
                    max_length=pg_max_length, 
                    num_return_sequences=pg_prompts, 

@@ -1,3 +1,5 @@
+import time
+start_time = time.time()
 from multiai import *
 import gradio as gr
 from upscalers import available_models, clear_on_device_caches
@@ -110,6 +112,10 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     spc_button.click(multi.spc, inputs=[file_spc, clip_checked], outputs=spc_output)
     
     promptgen_button.click(multi.prompt_generator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
+
+end_time = time.time()
+total_time = round(end_time - start_time)
+ic(f"Executing init time: {total_time}s")
     
 if init.debug is True:
     multiai.queue()

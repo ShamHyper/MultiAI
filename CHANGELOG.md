@@ -1,4 +1,8 @@
 # Changelog
+## 1.5.0
+- *New* system of loading models (35s preloading, but faster working)
+- Code optimization
+- Fixed lying debug timer
 ## 1.4.6
 - Deleted preload models because this function is corrupted and unuseful
 - Planned optimization of loading models in 1.5+
