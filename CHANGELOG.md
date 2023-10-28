@@ -6,7 +6,6 @@
 - Debug-timer optimizations
 ## 1.4.x
 - Deleted preload models because this function is corrupted and unuseful
-- Planned optimization of loading models in 1.5+
 - Added checkbox in **Prompt Generator** - randomize temperature of prompt. Temperature controls the level of "creativity" of the AI on a scale from 0 to 1, the default value is 0.7. The lower, the more impersonal the text will be. The higher — the more unusual the text will be. I set the value from 0.4 to 0.9 when enabling the "randomizer". This will help to avoid duplicate prompts when generating with the same text.
 - Removed clearing function
 - Removed clear_need in config.json
