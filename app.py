@@ -113,13 +113,12 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     
     promptgen_button.click(multi.prompt_generator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
 
-end_time = time.time()
-total_time = round(end_time - start_time)
-ic(f"Executing init time: {total_time}s")
-    
 if init.debug is True:
     multiai.queue()
     ic(multiai.launch(inbrowser=init.inbrowser, share=init.share_gradio))
+    end_time = time.time()
+    total_time = round(end_time - start_time)
+    ic(f"Executing init time: {total_time}s")
 elif init.debug is False:
     multiai.queue()
     multiai.launch(inbrowser=init.inbrowser, share=init.share_gradio)
