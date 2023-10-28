@@ -14,7 +14,7 @@
 - Added emojis for buttons to better understand the interface
 - News about Python 3.11+, details in the README
 - Fixed console warnings that slowed down the promt generator
-- Added a new AI - the promptov generator. With it, you can generate prompta, complementing your own (examples in the screenshots in the README)
+- Added a new AI - **prompt generator**. With it, you can generate prompta, complementing your own (examples in the screenshots in the README)
 ## 1.3.x
 - Optimization of the detector functions has been carried out
 - Added the ability to choose whether to load AI models during program startup or during the execution of a specific AI. For more information, see config.json
