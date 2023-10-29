@@ -12,7 +12,9 @@
 
 **4. Image Analyzer**
 
-**5. Prompt Generator**
+**5. Video Analyzer**
+
+**6. Prompt Generator**
 ## System requirements
 **1. Windows 10-11**
 
@@ -88,8 +90,10 @@ git clone https://github.com/ShamHyper/MultiAI.git
 ![4](https://i.imgur.com/zveO3a7.png?raw=true)
 **4. Image Analyzer**
 ![5](https://i.imgur.com/wR1fGIn.png?raw=true)
-**5. Prompt Generator**
-![6](https://i.imgur.com/hRVhMKa.png?raw=true)
+**5. Video Analyzer**
+![6](https://i.imgur.com/cssEq5K.png?raw=true)
+**6. Prompt Generator**
+![7](https://i.imgur.com/hRVhMKa.png?raw=true)
 ## About Python 3.11 - 3.12
 *So far, most of the libraries used in my project have not been updated to 3.11 - 3.12 or are working incorrectly. I tried to adapt the project for the new version, but for now I advise you to stay within 3.10 (in extreme cases, 3.9 will also work)*
 ## Credits

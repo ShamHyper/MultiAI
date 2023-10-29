@@ -1,4 +1,3 @@
-icecream==2.1.3
 gradio==3.42.0
 tqdm
 
@@ -23,3 +22,5 @@ nsfw_detector==1.1.1
 
 clip-interrogator==0.6.0
 transformers==4.34.1
+
+opencv-python==4.8.1.78

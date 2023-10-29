@@ -5,8 +5,6 @@ import gradio as gr
 from upscalers import available_models, clear_on_device_caches
 
 with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) as multiai:
-    ic()
-    ic("Staring gradio...")
     gr.Markdown(init.ver)
     with gr.Tab("BgRemoverLite"):
         with gr.Row():
@@ -75,6 +73,14 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
         with gr.Row():
             clip_checked = gr.Checkbox(value=False, label="Use CLIP for generate prompt (slow if a weak PC)")
             spc_button = gr.Button("👟 Click here to start")
+    with gr.Tab("Video Analyzer"):
+        with gr.Row():
+            gr.Label("Analyze images")
+        with gr.Row():
+            file_Vspc = gr.Video()
+            Vspc_output = gr.Textbox(label="Stats", placeholder="Press start to get specifications of Video")
+        with gr.Row():
+            Vspc_button = gr.Button("👟 Click here to start")        
     with gr.Tab("Prompt Generator"):
         with gr.Row():
             gr.Label("Generate prompt from your input")
@@ -111,14 +117,16 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     
     spc_button.click(multi.spc, inputs=[file_spc, clip_checked], outputs=spc_output)
     
+    Vspc_button.click(multi.Vspc, inputs=file_Vspc, outputs=Vspc_output)
+    
     promptgen_button.click(multi.prompt_generator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
 
 if init.debug is True:
-    multiai.queue()
-    ic(multiai.launch(inbrowser=init.inbrowser, share=init.share_gradio))
     end_time = time.time()
     total_time = round(end_time - start_time)
-    ic(f"Executing init time: {total_time}s")
+    print(f"Executing init time: {total_time}s")
+    multiai.queue()
+    multiai.launch(inbrowser=init.inbrowser, share=init.share_gradio)
 elif init.debug is False:
     multiai.queue()
     multiai.launch(inbrowser=init.inbrowser, share=init.share_gradio)

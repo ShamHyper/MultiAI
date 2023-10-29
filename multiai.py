@@ -1,7 +1,6 @@
 import shutil as sh
 import os
 from tqdm import tqdm
-from icecream import ic
 import json
 import random
 
@@ -16,8 +15,10 @@ from upscalers import upscale
 from clip_interrogator import Config, Interrogator
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 
+import cv2
+
 class init:
-    ver = "MultiAI v1.5.1"
+    ver = "MultiAI v1.6.0"
     print(f"Initializing {ver} launch...")
 
     with open("config.json") as json_file:
@@ -30,12 +31,7 @@ class init:
         debug = True
     else:
         print("Something wrong in config.json. Check them out!")
-        
-    if debug is False:
-        ic.disable()
-    elif debug is True:
-        ic.enable()
-        
+            
     inbrowser = data.get("start_in_browser")
     if inbrowser == "False":
         inbrowser = False
@@ -51,14 +47,8 @@ class init:
         share_gradio = True
     else:
         print("Something wrong in config.json. Check them out!")
-  
-    ic()
-    ic(f"Start in browser: {inbrowser}")
-    ic(f"Debug mode: {debug}")
 
     current_directory = os.path.dirname(os.path.abspath(__file__))
-    ic()
-    ic(current_directory)
 
     modelname = "nsfw_mobilenet2.224x224.h5"
     url = "https://s3.amazonaws.com/ir_public/nsfwjscdn/nsfw_mobilenet2.224x224.h5"
@@ -68,39 +58,30 @@ class init:
         files_in_directory = os.listdir(current_directory)
 
         if filename in files_in_directory:
-            ic()
-            ic("NSFW Model 1 detected")
+            print("NSFW Model detected")
         else:
-            ic()
-            ic("NSFW Model undected. Downloading...")
+            print("NSFW Model undected. Downloading...")
             urllib.request.urlretrieve(init.url, init.modelname)
     
     #########################
     # Model loading section #
     #########################
     
-    ic("Loading NSFW model...")
     check_file(modelname)
     model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
-    ic("Model nsfw_mobilenet2.224x224.h5 loaded!")
-
-    ic("Loading clip model and cfgs...")
-    ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
-    ic("Clip model loaded!")
 
     tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
     tokenizer.add_special_tokens({'pad_token': '[PAD]'})
     model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
+    
+    ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
            
 class multi:
     def rem_bg_def(inputs):
         try:
             outputs = remove(inputs)
-            ic()
-            ic("Removing bg...")
         except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-            ic()
-            ic(f"Error: {e}")
+            print(f"Error: {e}")
             pass
         return outputs
 
@@ -117,14 +98,12 @@ class multi:
                 output_image = remove(input_image)
                 output_image.save(outputs)
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-                ic()
-                ic(f"Error: {e}")
+                print(f"Error: {e}")
                 pass
         outputs = init.current_directory + r"\rembg_outputs"
         return outputs
 
     def detector(detector_input, detector_slider):
-        ic()
         init.check_file(init.modelname)
         FOLDER_NAME = str(detector_input)
         THRESHOLD = detector_slider
@@ -135,13 +114,9 @@ class multi:
 
         for file in tqdm(dirarr):
             try:
-                ic()
                 result = predict.classify(init.model_nsfw, file)
-                ic(result)
                 keys_list = list(result.keys())
-                ic(keys_list)
                 x = keys_list[0]
-                ic(x)
 
                 value_nsfw_1 = result[x]["porn"]
                 value_nsfw_2 = result[x]["hentai"]
@@ -154,12 +129,8 @@ class multi:
                 else:
                     sh.copyfile(file, f'./detector_outputs_plain/{file.split("/")[-1]}')
                     plain += 1
-                ic()
-                ic(result)
-
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-                ic()
-                ic(f"Error: {e}")
+                print(f"Error: {e}")
                 pass
 
         outputs = (
@@ -177,8 +148,6 @@ class multi:
         return outputs
 
     def detector_clear():
-        ic()
-        ic("Removing dirs...")
         outputs_dir1 = os.path.join(init.current_directory, "detector_outputs_nsfw")
         sh.rmtree(outputs_dir1)
         outputs_dir2 = os.path.join(init.current_directory, "detector_outputs_plain")
@@ -195,8 +164,6 @@ class multi:
         return outputs
 
     def clearp_bgr_def():
-        ic()
-        ic("Removing dirs...")
         outputs_dir = os.path.join(init.current_directory, "rembg_outputs")
         sh.rmtree(outputs_dir)
         folder_path = "rembg_outputs"
@@ -207,24 +174,17 @@ class multi:
         return outputs
     
     def uspc(upsc_image_input, scale_factor, model_ups):
-        ic()
-        ic("Start upscaling...")
-        ic("Model:" + model_ups)
-        ic("Scale factor:" + str(scale_factor))
         tmp_img_ndr = Image.fromarray(upsc_image_input)
         upsc_image_output = upscale(model_ups, tmp_img_ndr, scale_factor)
         return upsc_image_output
     
     def spc(file_spc, clip_checked):
-        ic()
         img = Image.fromarray(file_spc, 'RGB')
         img.save('tmp.png')
         dir_img_fromarray = os.path.join(os.getcwd(), "tmp.png")
 
         result = predict.classify(init.model_nsfw, dir_img_fromarray)
-        ic(result.keys())
         x = next(iter(result.keys()))
-        ic(x)
 
         values = result[x]
         total_sum = sum(values.values())
@@ -233,7 +193,7 @@ class multi:
         spc_output = ""
         if clip_checked is True:
             clip = Image.open(dir_img_fromarray).convert('RGB')
-            spc_output += f"Prompt:\n{init.ci.interrogate(clip)}\n\n"
+            spc_output += f"Prompt:\n{init.ci.interrogate(clip)}\n\n" 
 
         spc_output += f"Drawings: {percentages['drawings']}%\n"
         spc_output += f"Porn: {percentages['porn']}%\n"
@@ -245,8 +205,7 @@ class multi:
         try:
             os.remove(tmp_file)
         except FileNotFoundError as e:
-            ic()
-            ic(f"Error: {e}")
+            print(f"Error: {e}")
             pass
 
         return spc_output
@@ -255,11 +214,8 @@ class multi:
         prompt = prompt_input
         if randomize_temp is True:
             tempreture_pg = (random.randint(4, 9)/10)
-            ic(tempreture_pg)
         elif randomize_temp is False:
             tempreture_pg = 0.7
-            ic("Temperature default")
-            ic(tempreture_pg)
 
         nlp = pipeline('text-generation', model=init.model_tokinezer, tokenizer=init.tokenizer)
         outs = nlp(prompt, 
@@ -275,3 +231,49 @@ class multi:
             outs[i] = str(outs[i]['generated_text']).replace('  ', '').rstrip(',')
         promptgen_output = ('\n\n'.join(outs) + '\n')  
         return promptgen_output 
+    
+    def Vspc(file_Vspc):
+        output_dir = 'tmp_pngs'
+        os.makedirs(output_dir, exist_ok=True)
+
+        cap = cv2.VideoCapture(file_Vspc)
+
+        frame_count = 0
+
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret:
+                break
+            output_file = os.path.join(output_dir, f'{frame_count + 1}.png')
+            cv2.imwrite(output_file, frame)
+            frame_count += 1
+            
+        dir_tmp = "tmp_pngs"
+        total_sum = 0
+        file_count = 0
+            
+        for file_name in tqdm(os.listdir(dir_tmp)):
+            file_path = os.path.join(dir_tmp, file_name)
+            
+            result = predict.classify(init.model_nsfw, file_path)
+            x = next(iter(result.keys()))
+            values = result[x]
+            file_sum = sum(values.values())
+            total_sum += file_sum 
+            file_count += 1  
+
+        avg_sum = total_sum / file_count 
+        percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
+            
+        Vspc_output = ""
+        Vspc_output += f"Drawings: {percentages['drawings']}%\n"
+        Vspc_output += f"Porn: {percentages['porn']}%\n"
+        Vspc_output += f"Hentai: {percentages['hentai']}%\n"
+        Vspc_output += f"Sexy: {percentages['sexy']}%\n"
+        Vspc_output += f"Neutral: {percentages['neutral']}%"
+            
+        rm_tmp = os.path.join(init.current_directory, dir_tmp)
+        sh.rmtree(rm_tmp)
+        cap.release()
+        cv2.destroyAllWindows()
+        return Vspc_output
