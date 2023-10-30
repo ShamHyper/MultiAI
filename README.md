@@ -75,6 +75,12 @@ git clone https://github.com/ShamHyper/MultiAI.git
         "share_gradio": "False",
         // Boolean ("True" or "False")
         // Enable MultiAI starting with share link
+
+        "preload_clip": "False"
+        // Boolean ("True" or "False")
+        // Preloading CLIP model
+        // False loading time: ~10s
+        // True loading time: ~35s
     }
 ```
 ## Support

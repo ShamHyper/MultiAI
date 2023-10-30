@@ -1,5 +1,6 @@
 gradio==3.42.0
 tqdm
+clear==2.0.0
 
 basicsr
 einops==0.7.0

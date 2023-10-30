@@ -2,6 +2,7 @@ import time
 start_time = time.time()
 from multiai import *
 import gradio as gr
+from clear import clear
 from upscalers import available_models, clear_on_device_caches
 
 with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) as multiai:
@@ -122,11 +123,21 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     promptgen_button.click(multi.prompt_generator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
 
 if init.debug is True:
+    nsfw_load()
+    tokenizer_load()
+    if init.preload_clip is True:
+        ci_load()
     end_time = time.time()
     total_time = round(end_time - start_time)
+    clear()
     print(f"Executing init time: {total_time}s")
     multiai.queue()
     multiai.launch(inbrowser=init.inbrowser, share=init.share_gradio)
 elif init.debug is False:
+    nsfw_load()
+    tokenizer_load()
+    if init.preload_clip is True:
+        ci_load()
+    clear()
     multiai.queue()
     multiai.launch(inbrowser=init.inbrowser, share=init.share_gradio)

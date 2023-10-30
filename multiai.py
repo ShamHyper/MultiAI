@@ -1,3 +1,4 @@
+print("Loading libs...")
 import shutil as sh
 import os
 from tqdm import tqdm
@@ -18,9 +19,9 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 import cv2
 
 class init:
-    ver = "MultiAI v1.6.0"
+    ver = "MultiAI v1.6.1"
     print(f"Initializing {ver} launch...")
-
+    
     with open("config.json") as json_file:
         data = json.load(json_file)
 
@@ -47,6 +48,14 @@ class init:
         share_gradio = True
     else:
         print("Something wrong in config.json. Check them out!")
+        
+    preload_clip = data.get("preload_clip")
+    if preload_clip == "False":
+        preload_clip = False
+    elif preload_clip == "True":
+        preload_clip = True
+    else:
+        print("Something wrong in config.json. Check them out!")
 
     current_directory = os.path.dirname(os.path.abspath(__file__))
 
@@ -54,8 +63,7 @@ class init:
     url = "https://s3.amazonaws.com/ir_public/nsfwjscdn/nsfw_mobilenet2.224x224.h5"
     
     def check_file(filename):
-        current_directory = os.path.dirname(os.path.abspath(__file__))
-        files_in_directory = os.listdir(current_directory)
+        files_in_directory = os.listdir(init.current_directory)
 
         if filename in files_in_directory:
             print("NSFW Model detected")
@@ -63,18 +71,37 @@ class init:
             print("NSFW Model undected. Downloading...")
             urllib.request.urlretrieve(init.url, init.modelname)
     
-    #########################
-    # Model loading section #
-    #########################
-    
-    check_file(modelname)
+#########################
+# Model loading section #
+#########################
+
+def nsfw_load():
+    global model_nsfw
+    init.check_file(init.modelname)
     model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
 
+def tokenizer_load():
+    global tokenizer, model_tokinezer
     tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
     tokenizer.add_special_tokens({'pad_token': '[PAD]'})
     model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
-    
-    ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
+
+def ci_load():
+    global ci, ci_status
+    try:
+        if ci_status != True:
+            ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
+            ci_status = True
+        elif ci_status == True:
+            print("CLIP already loaded!")
+    except NameError:
+            ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
+            ci_status = True
+    return ci, ci_status
+
+#########################
+# Model loading section #
+#########################
            
 class multi:
     def rem_bg_def(inputs):
@@ -114,7 +141,7 @@ class multi:
 
         for file in tqdm(dirarr):
             try:
-                result = predict.classify(init.model_nsfw, file)
+                result = predict.classify(model_nsfw, file)
                 keys_list = list(result.keys())
                 x = keys_list[0]
 
@@ -183,7 +210,7 @@ class multi:
         img.save('tmp.png')
         dir_img_fromarray = os.path.join(os.getcwd(), "tmp.png")
 
-        result = predict.classify(init.model_nsfw, dir_img_fromarray)
+        result = predict.classify(model_nsfw, dir_img_fromarray)
         x = next(iter(result.keys()))
 
         values = result[x]
@@ -192,8 +219,9 @@ class multi:
 
         spc_output = ""
         if clip_checked is True:
+            ci_load()
             clip = Image.open(dir_img_fromarray).convert('RGB')
-            spc_output += f"Prompt:\n{init.ci.interrogate(clip)}\n\n" 
+            spc_output += f"Prompt:\n{ci.interrogate(clip)}\n\n" 
 
         spc_output += f"Drawings: {percentages['drawings']}%\n"
         spc_output += f"Porn: {percentages['porn']}%\n"
@@ -217,7 +245,7 @@ class multi:
         elif randomize_temp is False:
             tempreture_pg = 0.7
 
-        nlp = pipeline('text-generation', model=init.model_tokinezer, tokenizer=init.tokenizer)
+        nlp = pipeline('text-generation', model=model_tokinezer, tokenizer=tokenizer)
         outs = nlp(prompt, 
                    max_length=pg_max_length, 
                    num_return_sequences=pg_prompts, 
@@ -255,7 +283,7 @@ class multi:
         for file_name in tqdm(os.listdir(dir_tmp)):
             file_path = os.path.join(dir_tmp, file_name)
             
-            result = predict.classify(init.model_nsfw, file_path)
+            result = predict.classify(model_nsfw, file_path)
             x = next(iter(result.keys()))
             values = result[x]
             file_sum = sum(values.values())
