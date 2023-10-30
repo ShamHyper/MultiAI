@@ -3,6 +3,9 @@
 - New AI - **Video Analyzer**. Analyze Video like in **Image Analyzer**, but analyze per-frame of video and give you avg. percentages specs. of them
 - Fixes for debug launch-timer
 - Removed IceCream logging for GitHub. Now this only dev-version function
+- Better model loading
+- Better console outputs
+- "preload_clip" option in config.json
 ## 1.5.x
 - *New* system of loading models (35s preloading, but faster working)
 - Code optimization
