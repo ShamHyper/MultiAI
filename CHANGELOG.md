@@ -5,7 +5,7 @@
 - Removed IceCream logging for GitHub. Now this only dev-version function
 - Better model loading
 - Better console outputs
-- "preload_clip" option in config.json
+- "preload_models" option in config.json
 ## 1.5.x
 - *New* system of loading models (35s preloading, but faster working)
 - Code optimization

@@ -19,7 +19,7 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 import cv2
 
 class init:
-    ver = "MultiAI v1.6.1"
+    ver = "MultiAI v1.6.2"
     print(f"Initializing {ver} launch...")
     
     with open("config.json") as json_file:
@@ -49,11 +49,11 @@ class init:
     else:
         print("Something wrong in config.json. Check them out!")
         
-    preload_clip = data.get("preload_clip")
-    if preload_clip == "False":
-        preload_clip = False
-    elif preload_clip == "True":
-        preload_clip = True
+    preload_models = data.get("preload_models")
+    if preload_models == "False":
+        preload_models = False
+    elif preload_models == "True":
+        preload_models = True
     else:
         print("Something wrong in config.json. Check them out!")
 
@@ -74,17 +74,38 @@ class init:
 #########################
 # Model loading section #
 #########################
-
+   
 def nsfw_load():
-    global model_nsfw
-    init.check_file(init.modelname)
-    model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
+    global model_nsfw, nsfw_status
+    try:
+        if nsfw_status != True:
+            init.check_file(init.modelname)
+            model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
+            nsfw_status = True
+        elif nsfw_status == True:
+            print("NSFW model already loaded!")
+    except NameError:
+            init.check_file(init.modelname)
+            model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
+            nsfw_status = True
+    return model_nsfw, nsfw_status
 
 def tokenizer_load():
-    global tokenizer, model_tokinezer
-    tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
-    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-    model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
+    global tokenizer, tokenizer_status, model_tokinezer
+    try:
+        if tokenizer_status != True:
+            tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
+            tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+            model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
+            tokenizer_status = True
+        elif tokenizer_status == True:
+            print("Tokinezer already loaded!")
+    except NameError:
+            tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
+            tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+            model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
+            tokenizer_status = True
+    return tokenizer, tokenizer_status, model_tokinezer
 
 def ci_load():
     global ci, ci_status
@@ -131,6 +152,7 @@ class multi:
         return outputs
 
     def detector(detector_input, detector_slider):
+        nsfw_load()
         init.check_file(init.modelname)
         FOLDER_NAME = str(detector_input)
         THRESHOLD = detector_slider
@@ -210,6 +232,7 @@ class multi:
         img.save('tmp.png')
         dir_img_fromarray = os.path.join(os.getcwd(), "tmp.png")
 
+        nsfw_load()
         result = predict.classify(model_nsfw, dir_img_fromarray)
         x = next(iter(result.keys()))
 
@@ -239,6 +262,7 @@ class multi:
         return spc_output
     
     def prompt_generator(prompt_input, pg_prompts, pg_max_length, randomize_temp):
+        tokenizer_load()
         prompt = prompt_input
         if randomize_temp is True:
             tempreture_pg = (random.randint(4, 9)/10)
@@ -263,7 +287,7 @@ class multi:
     def Vspc(file_Vspc):
         output_dir = 'tmp_pngs'
         os.makedirs(output_dir, exist_ok=True)
-
+        nsfw_load()
         cap = cv2.VideoCapture(file_Vspc)
 
         frame_count = 0

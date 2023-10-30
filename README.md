@@ -76,11 +76,11 @@ git clone https://github.com/ShamHyper/MultiAI.git
         // Boolean ("True" or "False")
         // Enable MultiAI starting with share link
 
-        "preload_clip": "False"
+        "preload_models": "False"
         // Boolean ("True" or "False")
-        // Preloading CLIP model
-        // False loading time: ~10s
-        // True loading time: ~35s
+        // Preloading AI models
+        // False loading time: ~5-10s
+        // True loading time: ~40-60s
     }
 ```
 ## Support

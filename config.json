@@ -2,5 +2,5 @@
         "debug_mode": "True",
         "start_in_browser": "True",
         "share_gradio": "False",
-        "preload_clip": "False"
+        "preload_models": "False"
     }
