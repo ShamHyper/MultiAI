@@ -19,7 +19,7 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 import cv2
 
 class init:
-    ver = "MultiAI v1.6.2"
+    ver = "MultiAI v1.6.3"
     print(f"Initializing {ver} launch...")
     
     with open("config.json") as json_file:
@@ -299,11 +299,11 @@ class multi:
             output_file = os.path.join(output_dir, f'{frame_count + 1}.png')
             cv2.imwrite(output_file, frame)
             frame_count += 1
-            
+        
         dir_tmp = "tmp_pngs"
         total_sum = 0
         file_count = 0
-            
+        
         for file_name in tqdm(os.listdir(dir_tmp)):
             file_path = os.path.join(dir_tmp, file_name)
             
@@ -316,16 +316,17 @@ class multi:
 
         avg_sum = total_sum / file_count 
         percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
-            
-        Vspc_output = ""
-        Vspc_output += f"Drawings: {percentages['drawings']}%\n"
-        Vspc_output += f"Porn: {percentages['porn']}%\n"
-        Vspc_output += f"Hentai: {percentages['hentai']}%\n"
-        Vspc_output += f"Sexy: {percentages['sexy']}%\n"
-        Vspc_output += f"Neutral: {percentages['neutral']}%"
-            
+        
+        if percentages['porn'] > 70:
+            sh.move(file_Vspc, 'video_analyze_nsfw')
+        else:
+            sh.move(file_Vspc, 'video_analyze_plain')
+        
         rm_tmp = os.path.join(init.current_directory, dir_tmp)
         sh.rmtree(rm_tmp)
         cap.release()
         cv2.destroyAllWindows()
-        return Vspc_output
+        
+        bth_Vspc_output = "Test"
+        
+        return bth_Vspc_output
