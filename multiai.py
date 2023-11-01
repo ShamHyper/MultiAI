@@ -399,11 +399,14 @@ class multi:
                     sh.move(os.path.join(video_dir, dir_Vspc), 'video_analyze_nsfw')
                 else:
                     sh.move(os.path.join(video_dir, dir_Vspc), 'video_analyze_plain')
-
-                rm_tmp = os.path.join(os.getcwd(), output_dir)
-                sh.rmtree(rm_tmp)
             except (Exception, PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
                 pass
+            
+        try:
+            rm_tmp = os.path.join(init.current_directory, "tmp_pngs")
+            sh.rmtree(rm_tmp)
+        except (Exception, PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
+            pass
 
         bth_Vspc_output = "Ready!"
 
@@ -425,7 +428,7 @@ class multi:
             os.makedirs(folder_path2)
             file = open(f"{folder_path2}/outputs will be here.txt", "w")
             file.close()
-        except Exception:
+        except (Exception, PermissionError, FileNotFoundError):
             folder_path1 = "video_analyze_nsfw"
             os.makedirs(folder_path1)
             file = open(f"{folder_path1}/outputs will be here.txt", "w")
