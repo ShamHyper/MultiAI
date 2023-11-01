@@ -19,7 +19,7 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 import cv2
 
 class init:
-    ver = "MultiAI v1.6.6"
+    ver = "MultiAI v1.6.8"
     print(f"Initializing {ver} launch...")
     
     with open("config.json") as json_file:
@@ -331,7 +331,7 @@ class multi:
         
         return bth_Vspc_output
     
-    def bth_Vspc(video_dir, vbth_slider):
+    def bth_Vspc(video_dir, vbth_slider, threshold_Vspc_slider):
         output_dir = 'tmp_pngs'
         os.makedirs(output_dir, exist_ok=True)
         nsfw_load()
@@ -369,9 +369,15 @@ class multi:
 
             avg_sum = total_sum / file_count 
             percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
+            THRESHOLD = threshold_Vspc_slider
+            
+            value_nsfw_1 = percentages["porn"]
+            value_nsfw_2 = percentages["hentai"]
+            value_nsfw_3 = percentages["sexy"]
+            value_sfw = percentages["neutral"]
         
             try:
-                if percentages['porn'] > 50 or percentages['hentai'] > 50 or percentages['sexy'] > 70 :
+                if (value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.5) and value_sfw < THRESHOLD:
                     sh.move(os.path.join(video_dir, dir_Vspc), 'video_analyze_nsfw')
                 else:
                     sh.move(os.path.join(video_dir, dir_Vspc), 'video_analyze_plain')
