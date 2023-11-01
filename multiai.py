@@ -383,7 +383,7 @@ class multi:
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
                 pass
             
-        bth_Vspc_output = "Test"
+        bth_Vspc_output = "Ready!"
             
         return bth_Vspc_output
 
