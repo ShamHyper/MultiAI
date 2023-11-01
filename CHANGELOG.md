@@ -7,6 +7,7 @@
 - Better console outputs
 - "preload_models" option in config.json
 - Added batch for **Video Analyzer**
+- Lazy mode batch **Video Analyzer** (use only per 5th frame to analyze)
 ## 1.5.x
 - *New* system of loading models (35s preloading, but faster working)
 - Code optimization

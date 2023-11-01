@@ -19,7 +19,7 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 import cv2
 
 class init:
-    ver = "MultiAI v1.6.4"
+    ver = "MultiAI v1.6.5"
     print(f"Initializing {ver} launch...")
     
     with open("config.json") as json_file:
@@ -355,7 +355,10 @@ class multi:
                 total_sum = 0
                 file_count = 0
                 
-                for file_name in tqdm(os.listdir(dir_tmp)):
+                for i, file_name in enumerate(tqdm(os.listdir(dir_tmp))):
+                    if i % 5 != 0:
+                        continue
+                        
                     file_path = os.path.join(dir_tmp, file_name)
                     
                     result = predict.classify(model_nsfw, file_path)
@@ -363,7 +366,7 @@ class multi:
                     values = result[x]
                     file_sum = sum(values.values())
                     total_sum += file_sum 
-                    file_count += 1  
+                    file_count += 1
 
                 avg_sum = total_sum / file_count 
                 percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
