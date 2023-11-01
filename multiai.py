@@ -19,7 +19,7 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 import cv2
 
 class init:
-    ver = "MultiAI v1.6.3"
+    ver = "MultiAI v1.6.4"
     print(f"Initializing {ver} launch...")
     
     with open("config.json") as json_file:
@@ -368,7 +368,7 @@ class multi:
                 avg_sum = total_sum / file_count 
                 percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
                 
-                if percentages['porn'] > 70:
+                if percentages['porn'] > 30 or percentages['hentai'] > 30 or percentages['sexy'] > 50 :
                     sh.move(os.path.join(video_dir, dir_Vspc), 'video_analyze_nsfw')
                 else:
                     sh.move(os.path.join(video_dir, dir_Vspc), 'video_analyze_plain')
