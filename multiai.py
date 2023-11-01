@@ -17,9 +17,10 @@ from clip_interrogator import Config, Interrogator
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 
 import cv2
+from numba import cuda
 
 class init:
-    ver = "MultiAI v1.6.8"
+    ver = "MultiAI v1.6.9"
     print(f"Initializing {ver} launch...")
     
     with open("config.json") as json_file:
@@ -330,67 +331,82 @@ class multi:
         bth_Vspc_output = "Test"
         
         return bth_Vspc_output
-    
+  
+    def process_frame(frame):
+        result_frame = frame    
+        return result_frame
+  
     def bth_Vspc(video_dir, vbth_slider, threshold_Vspc_slider):
-        output_dir = 'tmp_pngs'
-        os.makedirs(output_dir, exist_ok=True)
         nsfw_load()
-        
         video_files = os.listdir(video_dir)
-        
-        for dir_Vspc in tqdm(video_files):
-            cap = cv2.VideoCapture(os.path.join(video_dir, dir_Vspc))
+        output_dirs = []
+
+        for i, dir_Vspc in tqdm(enumerate(video_files)):
+            print(f"[{i}]Generating frames...")
+            output_dir = f'{os.path.join("tmp_pngs", "output_dir")}_{i}'
+            output_dirs.append(output_dir)
+            os.makedirs(output_dir, exist_ok=True)
+
             frame_count = 0
+            cap = cv2.VideoCapture(os.path.join(video_dir, dir_Vspc))
 
             while cap.isOpened():
                 ret, frame = cap.read()
                 if not ret:
                     break
+
+                frame_gpu = cuda.to_device(frame)
+                processed_frame_gpu = multi.process_frame(frame_gpu)
+
+                processed_frame = processed_frame_gpu.copy_to_host()
+
                 output_file = os.path.join(output_dir, f'{frame_count + 1}.png')
-                cv2.imwrite(output_file, frame)
+                cv2.imwrite(output_file, processed_frame)
+
                 frame_count += 1
-            
-            dir_tmp = "tmp_pngs"
+
+            cap.release()
+
+        for output_dir in tqdm(output_dirs):
+            print(f"[{i}]Predicting frames...")
             total_sum = 0
             file_count = 0
-            
-            for i, file_name in enumerate(os.listdir(dir_tmp)):
+
+            for i, file_name in enumerate(os.listdir(output_dir)):
                 if i % vbth_slider != 0:
                     continue
-                    
-                file_path = os.path.join(dir_tmp, file_name)
-                
+
+                file_path = os.path.join(output_dir, file_name)
+
                 result = predict.classify(model_nsfw, file_path)
                 x = next(iter(result.keys()))
                 values = result[x]
                 file_sum = sum(values.values())
-                total_sum += file_sum 
+                total_sum += file_sum
                 file_count += 1
 
-            avg_sum = total_sum / file_count 
-            percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
+            avg_sum = total_sum / file_count
+            percentages = {k: round((v / avg_sum) * 100, 1) for k, v in values.items()}
             THRESHOLD = threshold_Vspc_slider
-            
+
             value_nsfw_1 = percentages["porn"]
             value_nsfw_2 = percentages["hentai"]
             value_nsfw_3 = percentages["sexy"]
             value_sfw = percentages["neutral"]
-        
+
             try:
                 if (value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.5) and value_sfw < THRESHOLD:
                     sh.move(os.path.join(video_dir, dir_Vspc), 'video_analyze_nsfw')
                 else:
                     sh.move(os.path.join(video_dir, dir_Vspc), 'video_analyze_plain')
-                
-                rm_tmp = os.path.join(os.getcwd(), dir_tmp)
+
+                rm_tmp = os.path.join(os.getcwd(), output_dir)
                 sh.rmtree(rm_tmp)
-                cap.release()
-                cv2.destroyAllWindows()
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
                 pass
-            
+
         bth_Vspc_output = "Ready!"
-            
+
         return bth_Vspc_output
 
     def bth_Vspc_clear():
