@@ -76,7 +76,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             spc_button = gr.Button("👟 Click here to start")
     with gr.Tab("Video Analyzer"):
         with gr.Row():
-            gr.Label("Analyze images")
+            gr.Label("Analyze Video")
         with gr.Row():
             file_Vspc = gr.Video()
             Vspc_output = gr.Textbox(label="Stats", placeholder="Press start to get specifications of Video")
