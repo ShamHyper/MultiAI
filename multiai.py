@@ -341,9 +341,9 @@ class multi:
         video_files = os.listdir(video_dir)
         output_dirs = []
 
-        for i, dir_Vspc in tqdm(enumerate(video_files)):
-            print(f"[{i}]Generating frames...")
-            output_dir = f'{os.path.join("tmp_pngs", "output_dir")}_{i}'
+        for i_enn, dir_Vspc in tqdm(enumerate(video_files)):
+            print(f"[{i_enn}]Generating frames...")
+            output_dir = f'{os.path.join("tmp_pngs", "output_dir")}_{i_enn}'
             output_dirs.append(output_dir)
             os.makedirs(output_dir, exist_ok=True)
 
@@ -367,13 +367,13 @@ class multi:
 
             cap.release()
 
-        for i, output_dir in tqdm(enumerate(output_dirs)):
-            print(f"[{i}]Predicting frames...")
+        for i1, output_dir in tqdm(enumerate(output_dirs)):
+            print(f"[{i1}]Predicting frames...")
             total_sum = 0
             file_count = 0
 
-            for i, file_name in enumerate(os.listdir(output_dir)):
-                if i % vbth_slider != 0:
+            for i2, file_name in enumerate(os.listdir(output_dir)):
+                if i2 % vbth_slider != 0:
                     continue
 
                 file_path = os.path.join(output_dir, file_name)
@@ -396,12 +396,12 @@ class multi:
 
             try:
                 if (value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.5) and value_sfw < THRESHOLD:
-                    sh.move(os.path.join(video_dir, dir_Vspc), 'video_analyze_nsfw')
+                    sh.move(os.path.join(video_dir, video_files[i_enn]), 'video_analyze_nsfw')
                 else:
-                    sh.move(os.path.join(video_dir, dir_Vspc), 'video_analyze_plain')
+                    sh.move(os.path.join(video_dir, video_files[i_enn]), 'video_analyze_plain')
             except (Exception, PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
                 pass
-            
+        
         try:
             rm_tmp = os.path.join(init.current_directory, "tmp_pngs")
             sh.rmtree(rm_tmp)
