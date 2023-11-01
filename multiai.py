@@ -414,6 +414,8 @@ class multi:
         sh.rmtree(outputs_dir1)
         outputs_dir2 = os.path.join(init.current_directory, "video_analyze_plain")
         sh.rmtree(outputs_dir2)
+        outputs_dir3 = os.path.join(init.current_directory, "tmp_pngs")
+        sh.rmtree(outputs_dir3)
         folder_path1 = "video_analyze_nsfw"
         os.makedirs(folder_path1)
         file = open(f"{folder_path1}/outputs will be here.txt", "w")
@@ -422,4 +424,4 @@ class multi:
         os.makedirs(folder_path2)
         file = open(f"{folder_path2}/outputs will be here.txt", "w")
         file.close()
-        return 
+        return
