@@ -20,7 +20,7 @@ import cv2
 from numba import cuda
 
 class init:
-    ver = "MultiAI v1.6.9"
+    ver = "MultiAI v1.6.10"
     print(f"Initializing {ver} launch...")
     
     with open("config.json") as json_file:
@@ -335,20 +335,19 @@ class multi:
     def process_frame(frame):
         result_frame = frame    
         return result_frame
-  
+
     def bth_Vspc(video_dir, vbth_slider, threshold_Vspc_slider):
         nsfw_load()
+        output_dir = 'tmp_pngs'
+        i1 = 0
+        os.makedirs(output_dir, exist_ok=True)
         video_files = os.listdir(video_dir)
-        output_dirs = []
-
-        for i_enn, dir_Vspc in tqdm(enumerate(video_files)):
-            print(f"[{i_enn}]Generating frames...")
-            output_dir = f'{os.path.join("tmp_pngs", "output_dir")}_{i_enn}'
-            output_dirs.append(output_dir)
-            os.makedirs(output_dir, exist_ok=True)
-
-            frame_count = 0
+        
+        for dir_Vspc in tqdm(video_files):
+            i1 += 1
+            print(f"[{i1}]Predicting frames...")
             cap = cv2.VideoCapture(os.path.join(video_dir, dir_Vspc))
+            frame_count = 0
 
             while cap.isOpened():
                 ret, frame = cap.read()
@@ -366,53 +365,49 @@ class multi:
                 frame_count += 1
 
             cap.release()
-
-        for i1, output_dir in tqdm(enumerate(output_dirs)):
-            print(f"[{i1}]Predicting frames...")
+            
             total_sum = 0
             file_count = 0
-
-            for i2, file_name in enumerate(os.listdir(output_dir)):
-                if i2 % vbth_slider != 0:
+            
+            for i, file_name in enumerate(os.listdir(output_dir)):
+                if i % vbth_slider != 0:
                     continue
-
+                    
                 file_path = os.path.join(output_dir, file_name)
-
+                
                 result = predict.classify(model_nsfw, file_path)
                 x = next(iter(result.keys()))
                 values = result[x]
                 file_sum = sum(values.values())
-                total_sum += file_sum
+                total_sum += file_sum 
                 file_count += 1
 
-            avg_sum = total_sum / file_count
-            percentages = {k: round((v / avg_sum) * 100, 1) for k, v in values.items()}
+            avg_sum = total_sum / file_count 
+            percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
             THRESHOLD = threshold_Vspc_slider
-
+            
             value_nsfw_1 = percentages["porn"]
             value_nsfw_2 = percentages["hentai"]
             value_nsfw_3 = percentages["sexy"]
             value_sfw = percentages["neutral"]
-
-            try:
-                if (value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.5) and value_sfw < THRESHOLD:
-                    sh.move(os.path.join(video_dir, video_files[i_enn]), 'video_analyze_nsfw')
-                else:
-                    sh.move(os.path.join(video_dir, video_files[i_enn]), 'video_analyze_plain')
-            except (Exception, PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-                pass
         
-        try:
-            rm_tmp = os.path.join(init.current_directory, "tmp_pngs")
-            sh.rmtree(rm_tmp)
-        except (Exception, PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-            pass
-
+            if (value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.5) and value_sfw < THRESHOLD:
+                video_path = os.path.join(video_dir, dir_Vspc)
+                sh.copy(video_path, 'video_analyze_nsfw')
+            else:
+                video_path = os.path.join(video_dir, dir_Vspc)
+                sh.copy(video_path, 'video_analyze_plain')
+            cap.release()
+            cv2.destroyAllWindows()
+            
+        rm_tmp = os.path.join(init.current_directory, output_dir)
+        sh.rmtree(rm_tmp)
         bth_Vspc_output = "Ready!"
-
+            
         return bth_Vspc_output
 
     def bth_Vspc_clear():
+        output_dir = 'tmp_pngs'
         try:
             outputs_dir1 = os.path.join(init.current_directory, "video_analyze_nsfw")
             sh.rmtree(outputs_dir1)
@@ -428,13 +423,18 @@ class multi:
             os.makedirs(folder_path2)
             file = open(f"{folder_path2}/outputs will be here.txt", "w")
             file.close()
-        except (Exception, PermissionError, FileNotFoundError):
-            folder_path1 = "video_analyze_nsfw"
-            os.makedirs(folder_path1)
-            file = open(f"{folder_path1}/outputs will be here.txt", "w")
-            file.close()
-            folder_path2 = "video_analyze_plain"
-            os.makedirs(folder_path2)
-            file = open(f"{folder_path2}/outputs will be here.txt", "w")
-            file.close()
+            rm_tmp = os.path.join(init.current_directory, output_dir)
+            sh.rmtree(rm_tmp)
+        except (Exception, PermissionError, FileNotFoundError, FileExistsError):
+            try:
+                folder_path1 = "video_analyze_nsfw"
+                os.makedirs(folder_path1)
+                file = open(f"{folder_path1}/outputs will be here.txt", "w")
+                file.close()
+                folder_path2 = "video_analyze_plain"
+                os.makedirs(folder_path2)
+                file = open(f"{folder_path2}/outputs will be here.txt", "w")
+                file.close()
+            except FileExistsError:
+                pass
         return
