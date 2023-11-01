@@ -367,7 +367,7 @@ class multi:
 
             cap.release()
 
-        for output_dir in tqdm(output_dirs):
+        for i, output_dir in tqdm(enumerate(output_dirs)):
             print(f"[{i}]Predicting frames...")
             total_sum = 0
             file_count = 0
@@ -410,18 +410,28 @@ class multi:
         return bth_Vspc_output
 
     def bth_Vspc_clear():
-        outputs_dir1 = os.path.join(init.current_directory, "video_analyze_nsfw")
-        sh.rmtree(outputs_dir1)
-        outputs_dir2 = os.path.join(init.current_directory, "video_analyze_plain")
-        sh.rmtree(outputs_dir2)
-        outputs_dir3 = os.path.join(init.current_directory, "tmp_pngs")
-        sh.rmtree(outputs_dir3)
-        folder_path1 = "video_analyze_nsfw"
-        os.makedirs(folder_path1)
-        file = open(f"{folder_path1}/outputs will be here.txt", "w")
-        file.close()
-        folder_path2 = "video_analyze_plain"
-        os.makedirs(folder_path2)
-        file = open(f"{folder_path2}/outputs will be here.txt", "w")
-        file.close()
+        try:
+            outputs_dir1 = os.path.join(init.current_directory, "video_analyze_nsfw")
+            sh.rmtree(outputs_dir1)
+            outputs_dir2 = os.path.join(init.current_directory, "video_analyze_plain")
+            sh.rmtree(outputs_dir2)
+            outputs_dir3 = os.path.join(init.current_directory, "tmp_pngs")
+            sh.rmtree(outputs_dir3)
+            folder_path1 = "video_analyze_nsfw"
+            os.makedirs(folder_path1)
+            file = open(f"{folder_path1}/outputs will be here.txt", "w")
+            file.close()
+            folder_path2 = "video_analyze_plain"
+            os.makedirs(folder_path2)
+            file = open(f"{folder_path2}/outputs will be here.txt", "w")
+            file.close()
+        except Exception:
+            folder_path1 = "video_analyze_nsfw"
+            os.makedirs(folder_path1)
+            file = open(f"{folder_path1}/outputs will be here.txt", "w")
+            file.close()
+            folder_path2 = "video_analyze_plain"
+            os.makedirs(folder_path2)
+            file = open(f"{folder_path2}/outputs will be here.txt", "w")
+            file.close()
         return
