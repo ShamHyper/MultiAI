@@ -81,7 +81,15 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             file_Vspc = gr.Video()
             Vspc_output = gr.Textbox(label="Stats", placeholder="Press start to get specifications of Video")
         with gr.Row():
-            Vspc_button = gr.Button("👟 Click here to start")        
+            Vspc_button = gr.Button("👟 Click here to start")   
+        with gr.Row():
+            gr.Label("Analyze Videos in dir")     
+        with gr.Row():
+            video_dir = gr.Textbox(label="Videos dir", placeholder="Enter dir like this: D:\Python\MultiAI")
+            bth_Vspc_output = gr.Textbox(label="Output", placeholder="Output will be here...")
+        with gr.Row():
+            start_dir_videos = gr.Button("⭐ Start")
+            clear_videos = gr.Button("🧹 Clear outputs")
     with gr.Tab("Prompt Generator"):
         with gr.Row():
             gr.Label("Generate prompt from your input")
@@ -119,6 +127,8 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     spc_button.click(multi.spc, inputs=[file_spc, clip_checked], outputs=spc_output)
     
     Vspc_button.click(multi.Vspc, inputs=file_Vspc, outputs=Vspc_output)
+    start_dir_videos.click(multi.bth_Vspc, inputs=video_dir, outputs=bth_Vspc_output)   
+    clear_videos.click(multi.bth_Vspc_clear)   
     
     promptgen_button.click(multi.prompt_generator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
 

@@ -6,6 +6,7 @@
 - Better model loading
 - Better console outputs
 - "preload_models" option in config.json
+- Added batch for video analyze
 ## 1.5.x
 - *New* system of loading models (35s preloading, but faster working)
 - Code optimization

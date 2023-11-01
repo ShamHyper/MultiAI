@@ -331,49 +331,71 @@ class multi:
         
         return bth_Vspc_output
     
-    def bth_Vspc(dir_Vspc):
+    def bth_Vspc(video_dir):
         output_dir = 'tmp_pngs'
         os.makedirs(output_dir, exist_ok=True)
         nsfw_load()
-        cap = cv2.VideoCapture(dir_Vspc)
-
-        frame_count = 0
-
-        while cap.isOpened():
-            ret, frame = cap.read()
-            if not ret:
-                break
-            output_file = os.path.join(output_dir, f'{frame_count + 1}.png')
-            cv2.imwrite(output_file, frame)
-            frame_count += 1
         
-        dir_tmp = "tmp_pngs"
-        total_sum = 0
-        file_count = 0
+        video_files = os.listdir(video_dir)
         
-        for file_name in tqdm(os.listdir(dir_tmp)):
-            file_path = os.path.join(dir_tmp, file_name)
+        for dir_Vspc in video_files:
+            try:
+                cap = cv2.VideoCapture(os.path.join(video_dir, dir_Vspc))
+                frame_count = 0
+
+                while cap.isOpened():
+                    ret, frame = cap.read()
+                    if not ret:
+                        break
+                    output_file = os.path.join(output_dir, f'{frame_count + 1}.png')
+                    cv2.imwrite(output_file, frame)
+                    frame_count += 1
+                
+                dir_tmp = "tmp_pngs"
+                total_sum = 0
+                file_count = 0
+                
+                for file_name in tqdm(os.listdir(dir_tmp)):
+                    file_path = os.path.join(dir_tmp, file_name)
+                    
+                    result = predict.classify(model_nsfw, file_path)
+                    x = next(iter(result.keys()))
+                    values = result[x]
+                    file_sum = sum(values.values())
+                    total_sum += file_sum 
+                    file_count += 1  
+
+                avg_sum = total_sum / file_count 
+                percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
+                
+                if percentages['porn'] > 70:
+                    sh.move(os.path.join(video_dir, dir_Vspc), 'video_analyze_nsfw')
+                else:
+                    sh.move(os.path.join(video_dir, dir_Vspc), 'video_analyze_plain')
+                
+                rm_tmp = os.path.join(os.getcwd(), dir_tmp)
+                sh.rmtree(rm_tmp)
+                cap.release()
+                cv2.destroyAllWindows()
+            except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
+                print(f"Error: {e}")
+                pass
             
-            result = predict.classify(model_nsfw, file_path)
-            x = next(iter(result.keys()))
-            values = result[x]
-            file_sum = sum(values.values())
-            total_sum += file_sum 
-            file_count += 1  
-
-        avg_sum = total_sum / file_count 
-        percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
-        
-        if percentages['porn'] > 70:
-            sh.move(file_Vspc, 'video_analyze_nsfw')
-        else:
-            sh.move(file_Vspc, 'video_analyze_plain')
-        
-        rm_tmp = os.path.join(init.current_directory, dir_tmp)
-        sh.rmtree(rm_tmp)
-        cap.release()
-        cv2.destroyAllWindows()
-        
         bth_Vspc_output = "Test"
-        
+            
         return bth_Vspc_output
+
+    def bth_Vspc_clear():
+        outputs_dir1 = os.path.join(init.current_directory, "video_analyze_nsfw")
+        sh.rmtree(outputs_dir1)
+        outputs_dir2 = os.path.join(init.current_directory, "video_analyze_plain")
+        sh.rmtree(outputs_dir2)
+        folder_path1 = "video_analyze_nsfw"
+        os.makedirs(folder_path1)
+        file = open(f"{folder_path1}/outputs will be here.txt", "w")
+        file.close()
+        folder_path2 = "video_analyze_plain"
+        os.makedirs(folder_path2)
+        file = open(f"{folder_path2}/outputs will be here.txt", "w")
+        file.close()
+        return 
