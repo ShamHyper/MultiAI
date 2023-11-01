@@ -55,7 +55,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
                 value=0.36,
                 label="Threshold (larger number = simpler detection | smaller number = stricter one)",
                 minimum=0.0001,
-                maximum=0.9999,
+                maximum=0.9999
             )
         with gr.Row():
             detector_button = gr.Button("👟 Click here to start")
@@ -86,6 +86,15 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             gr.Label("Analyze Videos in dir")     
         with gr.Row():
             video_dir = gr.Textbox(label="Videos dir", placeholder="Enter dir like this: D:\Python\MultiAI")
+            vbth_slider = gr.Slider(
+            value=1,
+            step=1,
+            label="Frame-skip (larger number = simpler detection | smaller number = stricter one)",
+            minimum=1,
+            maximum=100,
+            info="If an error appears, decrease the value"
+        )  
+        with gr.Row():
             bth_Vspc_output = gr.Textbox(label="Output", placeholder="Output will be here...")
         with gr.Row():
             start_dir_videos = gr.Button("⭐ Start")
@@ -102,13 +111,13 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
                 value=1,
                 label="Prompts",
                 minimum=1,
-                maximum=1000,
+                maximum=1000
             )
             pg_max_length = gr.Slider(
                 value=76,
                 label="Max Length of prompt",
                 minimum=1,
-                maximum=1000,
+                maximum=1000
             )
         with gr.Row():
             promptgen_button = gr.Button("⭐ Start")
@@ -127,7 +136,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     spc_button.click(multi.spc, inputs=[file_spc, clip_checked], outputs=spc_output)
     
     Vspc_button.click(multi.Vspc, inputs=file_Vspc, outputs=Vspc_output)
-    start_dir_videos.click(multi.bth_Vspc, inputs=video_dir, outputs=bth_Vspc_output)   
+    start_dir_videos.click(multi.bth_Vspc, inputs=[video_dir,vbth_slider], outputs=bth_Vspc_output)   
     clear_videos.click(multi.bth_Vspc_clear)   
     
     promptgen_button.click(multi.prompt_generator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)

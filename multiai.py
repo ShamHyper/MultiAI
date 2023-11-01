@@ -19,7 +19,7 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 import cv2
 
 class init:
-    ver = "MultiAI v1.6.5"
+    ver = "MultiAI v1.6.6"
     print(f"Initializing {ver} launch...")
     
     with open("config.json") as json_file:
@@ -331,47 +331,47 @@ class multi:
         
         return bth_Vspc_output
     
-    def bth_Vspc(video_dir):
+    def bth_Vspc(video_dir, vbth_slider):
         output_dir = 'tmp_pngs'
         os.makedirs(output_dir, exist_ok=True)
         nsfw_load()
         
         video_files = os.listdir(video_dir)
         
-        for dir_Vspc in video_files:
-            try:
-                cap = cv2.VideoCapture(os.path.join(video_dir, dir_Vspc))
-                frame_count = 0
+        for dir_Vspc in tqdm(video_files):
+            cap = cv2.VideoCapture(os.path.join(video_dir, dir_Vspc))
+            frame_count = 0
 
-                while cap.isOpened():
-                    ret, frame = cap.read()
-                    if not ret:
-                        break
-                    output_file = os.path.join(output_dir, f'{frame_count + 1}.png')
-                    cv2.imwrite(output_file, frame)
-                    frame_count += 1
-                
-                dir_tmp = "tmp_pngs"
-                total_sum = 0
-                file_count = 0
-                
-                for i, file_name in enumerate(tqdm(os.listdir(dir_tmp))):
-                    if i % 5 != 0:
-                        continue
-                        
-                    file_path = os.path.join(dir_tmp, file_name)
+            while cap.isOpened():
+                ret, frame = cap.read()
+                if not ret:
+                    break
+                output_file = os.path.join(output_dir, f'{frame_count + 1}.png')
+                cv2.imwrite(output_file, frame)
+                frame_count += 1
+            
+            dir_tmp = "tmp_pngs"
+            total_sum = 0
+            file_count = 0
+            
+            for i, file_name in enumerate(os.listdir(dir_tmp)):
+                if i % vbth_slider != 0:
+                    continue
                     
-                    result = predict.classify(model_nsfw, file_path)
-                    x = next(iter(result.keys()))
-                    values = result[x]
-                    file_sum = sum(values.values())
-                    total_sum += file_sum 
-                    file_count += 1
-
-                avg_sum = total_sum / file_count 
-                percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
+                file_path = os.path.join(dir_tmp, file_name)
                 
-                if percentages['porn'] > 30 or percentages['hentai'] > 30 or percentages['sexy'] > 50 :
+                result = predict.classify(model_nsfw, file_path)
+                x = next(iter(result.keys()))
+                values = result[x]
+                file_sum = sum(values.values())
+                total_sum += file_sum 
+                file_count += 1
+
+            avg_sum = total_sum / file_count 
+            percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
+        
+            try:
+                if percentages['porn'] > 50 or percentages['hentai'] > 50 or percentages['sexy'] > 70 :
                     sh.move(os.path.join(video_dir, dir_Vspc), 'video_analyze_nsfw')
                 else:
                     sh.move(os.path.join(video_dir, dir_Vspc), 'video_analyze_plain')
@@ -381,7 +381,6 @@ class multi:
                 cap.release()
                 cv2.destroyAllWindows()
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-                print(f"Error: {e}")
                 pass
             
         bth_Vspc_output = "Test"
