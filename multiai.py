@@ -402,7 +402,7 @@ class multi:
 
                 rm_tmp = os.path.join(os.getcwd(), output_dir)
                 sh.rmtree(rm_tmp)
-            except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
+            except (Exception, PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
                 pass
 
         bth_Vspc_output = "Ready!"
