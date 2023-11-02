@@ -83,7 +83,7 @@ def nsfw_load():
             init.check_file(init.modelname)
             model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
             nsfw_status = True
-        elif nsfw_status == True:
+        elif nsfw_status is True:
             print("NSFW model already loaded!")
     except NameError:
             init.check_file(init.modelname)
@@ -99,7 +99,7 @@ def tokenizer_load():
             tokenizer.add_special_tokens({'pad_token': '[PAD]'})
             model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
             tokenizer_status = True
-        elif tokenizer_status == True:
+        elif tokenizer_status is True:
             print("Tokinezer already loaded!")
     except NameError:
             tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
@@ -114,7 +114,7 @@ def ci_load():
         if ci_status != True:
             ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
             ci_status = True
-        elif ci_status == True:
+        elif ci_status is True:
             print("CLIP already loaded!")
     except NameError:
             ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
@@ -153,7 +153,7 @@ class multi:
         return outputs
 
     def detector(detector_input, detector_slider, detector_skeep_dr):
-        if detector_skeep_dr == True:
+        if detector_skeep_dr is True:
             print("")
             print("I will skip drawings!")
             print("")
@@ -175,17 +175,17 @@ class multi:
                 value_nsfw_1 = result[x]["porn"]
                 value_nsfw_2 = result[x]["hentai"]
                 value_nsfw_3 = result[x]["sexy"]
-                value_sfw = result[x]["neutral"]
                 value_draw = result[x]["drawings"]
 
-                if detector_skeep_dr == False:
+                if detector_skeep_dr is False:
                     if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
                         sh.copyfile(file, f'./detector_outputs_nsfw/{file.split("/")[-1]}')
                         nsfw += 1
                     else:
                         sh.copyfile(file, f'./detector_outputs_plain/{file.split("/")[-1]}')
                         plain += 1
-                elif detector_skeep_dr == True:
+                        
+                elif detector_skeep_dr is True:
                     if value_draw > THRESHOLD*0.5 or value_nsfw_2 > THRESHOLD*1.5:
                         pass
                     elif value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
@@ -194,6 +194,7 @@ class multi:
                     else:
                         sh.copyfile(file, f'./detector_outputs_plain/{file.split("/")[-1]}')
                         plain += 1
+                        
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
                 print(f"Error: {e}")
                 pass
@@ -406,9 +407,8 @@ class multi:
             value_nsfw_1 = percentages["porn"]
             value_nsfw_2 = percentages["hentai"]
             value_nsfw_3 = percentages["sexy"]
-            value_sfw = percentages["neutral"]
         
-            if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
+            if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD:
                 video_path = os.path.join(video_dir, dir_Vspc)
                 sh.copy(video_path, 'video_analyze_nsfw')
                 _nsfw += 1
