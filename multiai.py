@@ -400,8 +400,9 @@ class multi:
             cap.release()
             cv2.destroyAllWindows()
             
-        rm_tmp = os.path.join(init.current_directory, output_dir)
-        sh.rmtree(rm_tmp)
+            rm_tmp = os.path.join(init.current_directory, output_dir)
+            sh.rmtree(rm_tmp)
+            os.makedirs(output_dir, exist_ok=True)
         bth_Vspc_output = "Ready!"
             
         return bth_Vspc_output
