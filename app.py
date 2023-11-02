@@ -51,6 +51,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             gr.Label("Detect NSFW images from dir")
         with gr.Row():
             detector_input = gr.Textbox(label="Enter dir", placeholder="Enter dir like this: D:\Python\MultiAI")
+            detector_skeep_dr = gr.Checkbox(value=False, label="🎨 Skip drawings")
             detector_slider = gr.Slider(
                 value=0.36,
                 label="Threshold (larger number = simpler detection | smaller number = stricter one)",
@@ -134,7 +135,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     rembg_batch_button.click(multi.rem_bg_def_batch, inputs=image_input_dir, outputs=image_output_dir)
     clearp_bgr_button.click(multi.clearp_bgr_def, outputs=clearp_bgr)
 
-    detector_button.click(multi.detector, inputs=[detector_input, detector_slider], outputs=detector_output)
+    detector_button.click(multi.detector, inputs=[detector_input, detector_slider, detector_skeep_dr], outputs=detector_output)
     detector_clear_button.click(multi.detector_clear, outputs=clearp)
     
     upsc_button.click(multi.uspc, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)

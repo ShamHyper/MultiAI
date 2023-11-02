@@ -20,7 +20,7 @@ import cv2
 from numba import cuda
 
 class init:
-    ver = "MultiAI v1.6.13"
+    ver = "MultiAI v1.6.14"
     print(f"Initializing {ver} launch...")
     
     with open("config.json") as json_file:
@@ -152,7 +152,11 @@ class multi:
         outputs = init.current_directory + r"\rembg_outputs"
         return outputs
 
-    def detector(detector_input, detector_slider):
+    def detector(detector_input, detector_slider, detector_skeep_dr):
+        if detector_skeep_dr == True:
+            print("")
+            print("I will skip drawings!")
+            print("")
         nsfw_load()
         init.check_file(init.modelname)
         FOLDER_NAME = str(detector_input)
@@ -172,13 +176,24 @@ class multi:
                 value_nsfw_2 = result[x]["hentai"]
                 value_nsfw_3 = result[x]["sexy"]
                 value_sfw = result[x]["neutral"]
+                value_draw = result[x]["drawings"]
 
-                if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
-                    sh.copyfile(file, f'./detector_outputs_nsfw/{file.split("/")[-1]}')
-                    nsfw += 1
-                else:
-                    sh.copyfile(file, f'./detector_outputs_plain/{file.split("/")[-1]}')
-                    plain += 1
+                if detector_skeep_dr == False:
+                    if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
+                        sh.copyfile(file, f'./detector_outputs_nsfw/{file.split("/")[-1]}')
+                        nsfw += 1
+                    else:
+                        sh.copyfile(file, f'./detector_outputs_plain/{file.split("/")[-1]}')
+                        plain += 1
+                elif detector_skeep_dr == True:
+                    if value_draw > THRESHOLD*0.5 or value_nsfw_2 > THRESHOLD*1.5:
+                        pass
+                    elif value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
+                        sh.copyfile(file, f'./detector_outputs_nsfw/{file.split("/")[-1]}')
+                        nsfw += 1
+                    else:
+                        sh.copyfile(file, f'./detector_outputs_plain/{file.split("/")[-1]}')
+                        plain += 1
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
                 print(f"Error: {e}")
                 pass
