@@ -20,7 +20,7 @@ import cv2
 from numba import cuda
 
 class init:
-    ver = "MultiAI v1.6.14"
+    ver = "MultiAI v1.6.15"
     print(f"Initializing {ver} launch...")
     
     with open("config.json") as json_file:
@@ -362,6 +362,8 @@ class multi:
         video_files = os.listdir(video_dir)
         
         for dir_Vspc in tqdm(video_files):
+            _nsfw_factor = False
+            _plain_factor = False
             i1 += 1
             print(f"[{i1}]Predicting frames...")
             cap = cv2.VideoCapture(os.path.join(video_dir, dir_Vspc))
@@ -412,10 +414,12 @@ class multi:
                 video_path = os.path.join(video_dir, dir_Vspc)
                 sh.copy(video_path, 'video_analyze_nsfw')
                 _nsfw += 1
+                _nsfw_factor = True
             else:
                 video_path = os.path.join(video_dir, dir_Vspc)
                 sh.copy(video_path, 'video_analyze_plain')
                 _plain += 1
+                _plain_factor = True
                 
             cap.release()
             cv2.destroyAllWindows()
@@ -423,10 +427,17 @@ class multi:
             rm_tmp = os.path.join(init.current_directory, output_dir)
             sh.rmtree(rm_tmp)
             os.makedirs(output_dir, exist_ok=True)
-              
-            out_cmd = str(percentages)
-            out_cmd += f"\nNSFW: {_nsfw}"
-            out_cmd += f"\nPlain: {_plain}"
+            
+            if _nsfw_factor is True:  
+                out_cmd = str(percentages)
+                out_cmd += f"\n[+]NSFW: {_nsfw}"
+                out_cmd += f"\nPlain: {_plain}"
+                
+            elif _plain_factor is True:
+                out_cmd = str(percentages)
+                out_cmd += f"\nNSFW: {_nsfw}"
+                out_cmd += f"\n[+]Plain: {_plain}"
+                
             print("")
             print(out_cmd)
             print("")
