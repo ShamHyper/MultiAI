@@ -17,10 +17,13 @@ from clip_interrogator import Config, Interrogator
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 
 import cv2
-from numba import cuda
+import torch
+import torchvision
+from torchvision import transforms
+from torchvision.transforms.functional import to_pil_image
 
 class init:
-    ver = "MultiAI v1.6.11"
+    ver = "MultiAI v1.6.12"
     print(f"Initializing {ver} launch...")
     
     with open("config.json") as json_file:
@@ -331,13 +334,14 @@ class multi:
         bth_Vspc_output = "Test"
         
         return bth_Vspc_output
-  
-    def process_frame(frame):
+    
+    def process_frame_legacy(frame):
         result_frame = frame    
         return result_frame
-
+  
     def bth_Vspc(video_dir, vbth_slider, threshold_Vspc_slider):
         nsfw_load()
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         output_dir = 'tmp_pngs'
         i1 = 0
         os.makedirs(output_dir, exist_ok=True)
@@ -346,25 +350,21 @@ class multi:
         for dir_Vspc in tqdm(video_files):
             i1 += 1
             print(f"[{i1}]Predicting frames...")
-            cap = cv2.VideoCapture(os.path.join(video_dir, dir_Vspc))
+
+            video = torchvision.io.read_video(os.path.join(video_dir, dir_Vspc))[0].to(device)
+            num_frames, _, height, width = video.shape
+
             frame_count = 0
-
-            while cap.isOpened():
-                ret, frame = cap.read()
-                if not ret:
-                    break
-
-                frame_gpu = cuda.to_device(frame)
-                processed_frame_gpu = multi.process_frame(frame_gpu)
-
-                processed_frame = processed_frame_gpu.copy_to_host()
-
+            
+            for frame_count in range(num_frames):
+                frame_gpu = video[frame_count].permute(1, 2, 0).unsqueeze(0).to(device)
+                frame_gpu_byte = (frame_gpu * 255).clamp(0, 255).byte() 
+                frame_gpu_byte = frame_gpu_byte[:, :3, :, :]
+                frame_pil = to_pil_image(frame_gpu_byte.squeeze().cpu())
                 output_file = os.path.join(output_dir, f'{frame_count + 1}.png')
-                cv2.imwrite(output_file, processed_frame)
+                frame_pil.save(output_file)
 
                 frame_count += 1
-
-            cap.release()
             
             total_sum = 0
             file_count = 0
@@ -390,8 +390,6 @@ class multi:
             value_nsfw_2 = percentages["hentai"]
             value_nsfw_3 = percentages["sexy"]
             value_sfw = percentages["neutral"]
-            
-            print(percentages)
         
             if (value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.5) and value_sfw < THRESHOLD:
                 video_path = os.path.join(video_dir, dir_Vspc)
@@ -399,9 +397,6 @@ class multi:
             else:
                 video_path = os.path.join(video_dir, dir_Vspc)
                 sh.copy(video_path, 'video_analyze_plain')
-                
-            cap.release()
-            cv2.destroyAllWindows()
             
             rm_tmp = os.path.join(init.current_directory, output_dir)
             sh.rmtree(rm_tmp)
