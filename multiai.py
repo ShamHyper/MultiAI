@@ -412,6 +412,7 @@ class multi:
             out_cmd = str(percentages)
             out_cmd += f"\nNSFW: {_nsfw}"
             out_cmd += f"\nPlain: {_plain}"
+            print("")
             print(out_cmd)
             print("")
             out_cmd = None
