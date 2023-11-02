@@ -20,7 +20,7 @@ import cv2
 from numba import cuda
 
 class init:
-    ver = "MultiAI v1.6.10"
+    ver = "MultiAI v1.6.11"
     print(f"Initializing {ver} launch...")
     
     with open("config.json") as json_file:
@@ -390,6 +390,8 @@ class multi:
             value_nsfw_2 = percentages["hentai"]
             value_nsfw_3 = percentages["sexy"]
             value_sfw = percentages["neutral"]
+            
+            print(percentages)
         
             if (value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.5) and value_sfw < THRESHOLD:
                 video_path = os.path.join(video_dir, dir_Vspc)
@@ -397,12 +399,16 @@ class multi:
             else:
                 video_path = os.path.join(video_dir, dir_Vspc)
                 sh.copy(video_path, 'video_analyze_plain')
+                
             cap.release()
             cv2.destroyAllWindows()
             
             rm_tmp = os.path.join(init.current_directory, output_dir)
             sh.rmtree(rm_tmp)
             os.makedirs(output_dir, exist_ok=True)
+            
+            avg_sum = None
+            percentages = None
         bth_Vspc_output = "Ready!"
             
         return bth_Vspc_output
