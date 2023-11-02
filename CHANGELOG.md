@@ -9,7 +9,6 @@
 - Added batch for **Video Analyzer**
 - Lazy mode batch **Video Analyzer** (skiping per x frames)
 - Threshold slider for **Video Analyzer**
-- CUDA frame generation for **Video Analyzer**
 ## 1.5.x
 - *New* system of loading models (35s preloading, but faster working)
 - Code optimization

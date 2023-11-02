@@ -26,3 +26,4 @@ transformers==4.34.1
 
 opencv-python==4.8.1.78
 av==10.0.0
+numba==0.58.1

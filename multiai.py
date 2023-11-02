@@ -409,7 +409,7 @@ class multi:
             sh.rmtree(rm_tmp)
             os.makedirs(output_dir, exist_ok=True)
               
-            out_cmd = percentages
+            out_cmd = str(percentages)
             out_cmd += f"\nNSFW: {_nsfw}"
             out_cmd += f"\nPlain: {_plain}"
             print(out_cmd)
