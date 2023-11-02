@@ -173,7 +173,7 @@ class multi:
                 value_nsfw_3 = result[x]["sexy"]
                 value_sfw = result[x]["neutral"]
 
-                if (value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.25) and value_sfw < THRESHOLD:
+                if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
                     sh.copyfile(file, f'./detector_outputs_nsfw/{file.split("/")[-1]}')
                     nsfw += 1
                 else:
@@ -393,7 +393,7 @@ class multi:
             value_nsfw_3 = percentages["sexy"]
             value_sfw = percentages["neutral"]
         
-            if (value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.25) and value_sfw < 90:
+            if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
                 video_path = os.path.join(video_dir, dir_Vspc)
                 sh.copy(video_path, 'video_analyze_nsfw')
                 _nsfw += 1
