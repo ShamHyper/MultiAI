@@ -89,15 +89,15 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             bth_Vspc_output = gr.Textbox(label="Output", placeholder="Output will be here...")
         with gr.Row():
             vbth_slider = gr.Slider(
-            value=120,
+            value=90,
             step=1,
-            label="Frame-skip (larger number = simpler detection | smaller number = stricter one)",
+            label="Frame-Skip (larger number = simpler detection | smaller number = stricter one)",
             minimum=1,
             maximum=300,
             info="If an error appears, decrease the value"
         )  
             threshold_Vspc_slider = gr.Slider(
-            value=35,
+            value=25,
             minimum=10,
             maximum=90,
             step=1,
