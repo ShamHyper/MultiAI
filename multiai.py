@@ -20,7 +20,7 @@ import cv2
 from numba import cuda
 
 class init:
-    ver = "MultiAI v1.7.4"
+    ver = "MultiAI v1.7.5"
     print(f"Initializing {ver} launch...")
     
     current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -338,6 +338,7 @@ class multi:
         models.nsfw_load()
         _nsfw = 0
         _plain = 0
+        out_cmd = str("")
         output_dir = 'tmp_pngs'
         i1 = 0
         os.makedirs(output_dir, exist_ok=True)
@@ -411,21 +412,19 @@ class multi:
             os.makedirs(output_dir, exist_ok=True)
             
             if _nsfw_factor == True:  
-                out_cmd = str(percentages)
-                out_cmd += f"\n[+]NSFW: {_nsfw}"
+                out_cmd = f"[+]NSFW: {_nsfw}"
                 out_cmd += f"\nPlain: {_plain}"
                 
             elif _plain_factor == True:
-                out_cmd = str(percentages)
-                out_cmd += f"\nNSFW: {_nsfw}"
+                out_cmd = f"NSFW: {_nsfw}"
                 out_cmd += f"\n[+]Plain: {_plain}"
                 
             print("")
             print(out_cmd)
             print("")
-            out_cmd = None
-            avg_sum = None
-            percentages = None
+            out_cmd = str("")
+            avg_sum = 0
+            percentages = 0
         bth_Vspc_output = "Ready!"
             
         return bth_Vspc_output
