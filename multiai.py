@@ -20,7 +20,7 @@ import cv2
 from numba import cuda
 
 class init:
-    ver = "MultiAI v1.6.15"
+    ver = "MultiAI v1.7.0"
     print(f"Initializing {ver} launch...")
     
     with open("config.json") as json_file:
@@ -137,7 +137,7 @@ class multi:
     def rem_bg_def_batch(inputs):
         temp_dir = inputs
         for filename in tqdm(os.listdir(inputs)):
-            outputs = "rembg_outputs"
+            outputs = "outputs/rembg_outputs"
             inputs = os.path.abspath(temp_dir)
             try:
                 inputs = os.path.join(inputs, filename)
@@ -149,7 +149,7 @@ class multi:
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
                 print(f"Error: {e}")
                 pass
-        outputs = init.current_directory + r"\rembg_outputs"
+        outputs = init.current_directory + r"\outputs" + r"\rembg_outputs"
         return outputs
 
     def detector(detector_input, detector_slider, detector_skeep_dr):
@@ -179,20 +179,20 @@ class multi:
 
                 if detector_skeep_dr is False:
                     if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
-                        sh.copyfile(file, f'./detector_outputs_nsfw/{file.split("/")[-1]}')
+                        sh.copyfile(file, f'./outputs/detector_outputs_nsfw/{file.split("/")[-1]}')
                         nsfw += 1
                     else:
-                        sh.copyfile(file, f'./detector_outputs_plain/{file.split("/")[-1]}')
+                        sh.copyfile(file, f'./outputs/detector_outputs_plain/{file.split("/")[-1]}')
                         plain += 1
                         
                 elif detector_skeep_dr is True:
                     if value_draw > THRESHOLD*0.5 or value_nsfw_2 > THRESHOLD*1.5:
                         pass
                     elif value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
-                        sh.copyfile(file, f'./detector_outputs_nsfw/{file.split("/")[-1]}')
+                        sh.copyfile(file, f'./outputs/detector_outputs_nsfw/{file.split("/")[-1]}')
                         nsfw += 1
                     else:
-                        sh.copyfile(file, f'./detector_outputs_plain/{file.split("/")[-1]}')
+                        sh.copyfile(file, f'./outputs/detector_outputs_plain/{file.split("/")[-1]}')
                         plain += 1
                         
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
@@ -204,25 +204,25 @@ class multi:
             + str(nsfw)
             + "]"
             + "NSFW: "
-            + os.path.abspath("./detector_outputs_nsfw")
+            + os.path.abspath("./outputs/detector_outputs_nsfw")
             + "\n["
             + str(plain)
             + "]"
             + "Plain: "
-            + os.path.abspath("./detector_outputs_plain")
+            + os.path.abspath("./outputs/detector_outputs_plain")
         )
         return outputs
 
     def detector_clear():
-        outputs_dir1 = os.path.join(init.current_directory, "detector_outputs_nsfw")
+        outputs_dir1 = os.path.join(init.current_directory, "outputs/detector_outputs_nsfw")
         sh.rmtree(outputs_dir1)
-        outputs_dir2 = os.path.join(init.current_directory, "detector_outputs_plain")
+        outputs_dir2 = os.path.join(init.current_directory, "outputs/detector_outputs_plain")
         sh.rmtree(outputs_dir2)
-        folder_path1 = "detector_outputs_nsfw"
+        folder_path1 = "outputs/detector_outputs_nsfw"
         os.makedirs(folder_path1)
         file = open(f"{folder_path1}/outputs will be here.txt", "w")
         file.close()
-        folder_path2 = "detector_outputs_plain"
+        folder_path2 = "outputs/detector_outputs_plain"
         os.makedirs(folder_path2)
         file = open(f"{folder_path2}/outputs will be here.txt", "w")
         file.close()
@@ -230,9 +230,9 @@ class multi:
         return outputs
 
     def clearp_bgr_def():
-        outputs_dir = os.path.join(init.current_directory, "rembg_outputs")
+        outputs_dir = os.path.join(init.current_directory, "outputs/rembg_outputs")
         sh.rmtree(outputs_dir)
-        folder_path = "rembg_outputs"
+        folder_path = "outputs/rembg_outputs"
         os.makedirs(folder_path)
         file = open(f"{folder_path}/outputs will be here.txt", "w")
         file.close()
@@ -335,9 +335,9 @@ class multi:
         percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
         
         if percentages['porn'] > 70:
-            sh.move(file_Vspc, 'video_analyze_nsfw')
+            sh.move(file_Vspc, 'outputs/video_analyze_nsfw')
         else:
-            sh.move(file_Vspc, 'video_analyze_plain')
+            sh.move(file_Vspc, 'outputs/video_analyze_plain')
         
         rm_tmp = os.path.join(init.current_directory, dir_tmp)
         sh.rmtree(rm_tmp)
@@ -412,12 +412,12 @@ class multi:
         
             if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD:
                 video_path = os.path.join(video_dir, dir_Vspc)
-                sh.copy(video_path, 'video_analyze_nsfw')
+                sh.copy(video_path, 'outputs/video_analyze_nsfw')
                 _nsfw += 1
                 _nsfw_factor = True
             else:
                 video_path = os.path.join(video_dir, dir_Vspc)
-                sh.copy(video_path, 'video_analyze_plain')
+                sh.copy(video_path, 'outputs/video_analyze_plain')
                 _plain += 1
                 _plain_factor = True
                 
@@ -451,17 +451,17 @@ class multi:
     def bth_Vspc_clear():
         output_dir = 'tmp_pngs'
         try:
-            outputs_dir1 = os.path.join(init.current_directory, "video_analyze_nsfw")
+            outputs_dir1 = os.path.join(init.current_directory, "outputs/video_analyze_nsfw")
             sh.rmtree(outputs_dir1)
-            outputs_dir2 = os.path.join(init.current_directory, "video_analyze_plain")
+            outputs_dir2 = os.path.join(init.current_directory, "outputs/video_analyze_plain")
             sh.rmtree(outputs_dir2)
             outputs_dir3 = os.path.join(init.current_directory, "tmp_pngs")
             sh.rmtree(outputs_dir3)
-            folder_path1 = "video_analyze_nsfw"
+            folder_path1 = "outputs/video_analyze_nsfw"
             os.makedirs(folder_path1)
             file = open(f"{folder_path1}/outputs will be here.txt", "w")
             file.close()
-            folder_path2 = "video_analyze_plain"
+            folder_path2 = "outputs/video_analyze_plain"
             os.makedirs(folder_path2)
             file = open(f"{folder_path2}/outputs will be here.txt", "w")
             file.close()
@@ -469,11 +469,11 @@ class multi:
             sh.rmtree(rm_tmp)
         except (Exception, PermissionError, FileNotFoundError, FileExistsError):
             try:
-                folder_path1 = "video_analyze_nsfw"
+                folder_path1 = "outputs/video_analyze_nsfw"
                 os.makedirs(folder_path1)
                 file = open(f"{folder_path1}/outputs will be here.txt", "w")
                 file.close()
-                folder_path2 = "video_analyze_plain"
+                folder_path2 = "outputs/video_analyze_plain"
                 os.makedirs(folder_path2)
                 file = open(f"{folder_path2}/outputs will be here.txt", "w")
                 file.close()
