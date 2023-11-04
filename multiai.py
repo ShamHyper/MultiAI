@@ -20,7 +20,7 @@ import cv2
 from numba import cuda
 
 class init:
-    ver = "MultiAI v1.7.5"
+    ver = "MultiAI v1.7.6"
     print(f"Initializing {ver} launch...")
     
     current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -340,15 +340,12 @@ class multi:
         _plain = 0
         out_cmd = str("")
         output_dir = 'tmp_pngs'
-        i1 = 0
         os.makedirs(output_dir, exist_ok=True)
         video_files = os.listdir(video_dir)
         
         for dir_Vspc in tqdm(video_files):
             _nsfw_factor = False
             _plain_factor = False
-            i1 += 1
-            print(f"[{i1}]Predicting frames...")
             cap = cv2.VideoCapture(os.path.join(video_dir, dir_Vspc))
             frame_count = 0
 
@@ -373,8 +370,14 @@ class multi:
             file_count = 0
             
             for i, file_name in enumerate(os.listdir(output_dir)):
-                if i % vbth_slider != 0:
-                    continue
+                if vbth_slider != 1:
+                    if i % vbth_slider != 0:
+                        continue
+                elif vbth_slider == 1:
+                    if config.debug == True:
+                        print("Frame-Skip disabled!")
+                    else:
+                        pass
                     
                 file_path = os.path.join(output_dir, file_name)
                 
