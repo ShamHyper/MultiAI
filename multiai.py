@@ -20,7 +20,7 @@ import cv2
 from numba import cuda
 
 class init:
-    ver = "MultiAI v1.7.3"
+    ver = "MultiAI v1.7.4"
     print(f"Initializing {ver} launch...")
     
     current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -77,7 +77,7 @@ class models:
                 init.check_file(init.modelname)
                 model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
                 nsfw_status = True
-            elif nsfw_status is True:
+            elif nsfw_status == True:
                 print("NSFW model already loaded!")
         except NameError:
                 init.check_file(init.modelname)
@@ -93,7 +93,7 @@ class models:
                 tokenizer.add_special_tokens({'pad_token': '[PAD]'})
                 model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
                 tokenizer_status = True
-            elif tokenizer_status is True:
+            elif tokenizer_status == True:
                 print("Tokinezer already loaded!")
         except NameError:
                 tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
@@ -108,7 +108,7 @@ class models:
             if ci_status != True:
                 ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
                 ci_status = True
-            elif ci_status is True:
+            elif ci_status == True:
                 print("CLIP already loaded!")
         except NameError:
                 ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
@@ -143,7 +143,7 @@ class multi:
         return outputs
 
     def detector(detector_input, detector_slider, detector_skeep_dr):
-        if detector_skeep_dr is True:
+        if detector_skeep_dr == True:
             print("")
             print("I will skip drawings!")
             print("")
@@ -167,7 +167,7 @@ class multi:
                 value_nsfw_3 = result[x]["sexy"]
                 value_draw = result[x]["drawings"]
 
-                if detector_skeep_dr is False:
+                if detector_skeep_dr == False:
                     if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
                         sh.copyfile(file, f'./outputs/detector_outputs_nsfw/{file.split("/")[-1]}')
                         nsfw += 1
@@ -175,7 +175,7 @@ class multi:
                         sh.copyfile(file, f'./outputs/detector_outputs_plain/{file.split("/")[-1]}')
                         plain += 1
                         
-                elif detector_skeep_dr is True:
+                elif detector_skeep_dr == True:
                     if value_draw > THRESHOLD*0.5 or value_nsfw_2 > THRESHOLD*1.5:
                         pass
                     elif value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
@@ -190,16 +190,8 @@ class multi:
                 pass
 
         outputs = (
-            "["
-            + str(nsfw)
-            + "]"
-            + "NSFW: "
-            + os.path.abspath("./outputs/detector_outputs_nsfw")
-            + "\n["
-            + str(plain)
-            + "]"
-            + "Plain: "
-            + os.path.abspath("./outputs/detector_outputs_plain")
+            f"[{str(nsfw)}] NSFW: {os.path.abspath('./outputs/detector_outputs_nsfw')}\n"
+            f"[{str(plain)}] Plain: {os.path.abspath('./outputs/detector_outputs_plain')}"
         )
         return outputs
 
@@ -248,7 +240,7 @@ class multi:
         percentages = {k: round((v / total_sum) * 100, 1) for k, v in values.items()}
 
         spc_output = ""
-        if clip_checked is True:
+        if clip_checked == True:
             models.ci_load()
             clip = Image.open(dir_img_fromarray).convert('RGB')
             spc_output += f"Prompt:\n{ci.interrogate(clip)}\n\n" 
@@ -271,9 +263,9 @@ class multi:
     def prompt_generator(prompt_input, pg_prompts, pg_max_length, randomize_temp):
         models.tokenizer_load()
         prompt = prompt_input
-        if randomize_temp is True:
+        if randomize_temp == True:
             tempreture_pg = (random.randint(4, 9)/10)
-        elif randomize_temp is False:
+        elif randomize_temp == False:
             tempreture_pg = 0.7
 
         nlp = pipeline('text-generation', model=model_tokinezer, tokenizer=tokenizer)
@@ -418,12 +410,12 @@ class multi:
             sh.rmtree(rm_tmp)
             os.makedirs(output_dir, exist_ok=True)
             
-            if _nsfw_factor is True:  
+            if _nsfw_factor == True:  
                 out_cmd = str(percentages)
                 out_cmd += f"\n[+]NSFW: {_nsfw}"
                 out_cmd += f"\nPlain: {_plain}"
                 
-            elif _plain_factor is True:
+            elif _plain_factor == True:
                 out_cmd = str(percentages)
                 out_cmd += f"\nNSFW: {_nsfw}"
                 out_cmd += f"\n[+]Plain: {_plain}"

@@ -155,9 +155,9 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     
     clear_all_button.click(init.clear_all, outputs=clear_all_tb)
 
-if config.debug is True:
+if config.debug == True:
     init.delete_tmp_pngs()
-    if config.preload_models is True:
+    if config.preload_models == True:
         init.preloader()
     end_time = time.time()
     total_time = round(end_time - start_time)
@@ -165,9 +165,9 @@ if config.debug is True:
     print(f"Executing init time: {total_time}s")
     multiai.queue()
     multiai.launch(inbrowser=config.inbrowser, share=config.share_gradio)
-elif config.debug is False:
+elif config.debug == False:
     init.delete_tmp_pngs()
-    if config.preload_models is True:
+    if config.preload_models == True:
         init.preloader() 
     clear()
     multiai.queue()
