@@ -20,44 +20,9 @@ import cv2
 from numba import cuda
 
 class init:
-    ver = "MultiAI v1.7.2"
+    ver = "MultiAI v1.7.3"
     print(f"Initializing {ver} launch...")
     
-    with open("config.json") as json_file:
-        data = json.load(json_file)
-
-    debug = data.get("debug_mode")
-    if debug == "False":
-        debug = False
-    elif debug == "True":
-        debug = True
-    else:
-        print("Something wrong in config.json. Check them out!")
-            
-    inbrowser = data.get("start_in_browser")
-    if inbrowser == "False":
-        inbrowser = False
-    elif inbrowser == "True":
-        inbrowser = True
-    else:
-        print("Something wrong in config.json. Check them out!")
-
-    share_gradio = data.get("share_gradio")
-    if share_gradio == "False":
-        share_gradio = False
-    elif share_gradio == "True":
-        share_gradio = True
-    else:
-        print("Something wrong in config.json. Check them out!")
-        
-    preload_models = data.get("preload_models")
-    if preload_models == "False":
-        preload_models = False
-    elif preload_models == "True":
-        preload_models = True
-    else:
-        print("Something wrong in config.json. Check them out!")
-
     current_directory = os.path.dirname(os.path.abspath(__file__))
 
     modelname = "nsfw_mobilenet2.224x224.h5"
@@ -91,6 +56,18 @@ class init:
         multi.bth_Vspc_clear()
         clear_all_tb = "Done!"
         return clear_all_tb
+    
+class config:
+    with open("config.json") as json_file:
+        data = json.load(json_file)
+
+    debug = data.get('debug_mode', 'False').lower() == 'true'
+    inbrowser = data.get('start_in_browser', 'False').lower() == 'true'
+    share_gradio = data.get('share_gradio', 'False').lower() == 'true'
+    preload_models = data.get('preload_models', 'False').lower() == 'true'
+
+    if not (debug or inbrowser or share_gradio or preload_models):
+        print("Something wrong in config.json. Check them out!")
 
 class models:   
     def nsfw_load():
