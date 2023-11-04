@@ -20,7 +20,7 @@ import cv2
 from numba import cuda
 
 class init:
-    ver = "MultiAI v1.7.1"
+    ver = "MultiAI v1.7.2"
     print(f"Initializing {ver} launch...")
     
     with open("config.json") as json_file:
@@ -84,6 +84,13 @@ class init:
         models.ci_load()
         models.nsfw_load()
         models.tokenizer_load()  
+    
+    def clear_all():
+        multi.clearp_bgr_def()
+        multi.detector_clear()
+        multi.bth_Vspc_clear()
+        clear_all_tb = "Done!"
+        return clear_all_tb
 
 class models:   
     def nsfw_load():
@@ -130,8 +137,7 @@ class models:
                 ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
                 ci_status = True
         return ci, ci_status
-
-                
+                  
 class multi:
     def rem_bg_def(inputs):
         try:

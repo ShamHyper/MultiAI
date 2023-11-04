@@ -5,6 +5,7 @@
 - Now all outputs are in the same folders for ease of use
 - Fixed a bug with an uncleaned *tmp_pngs* folder that appeared if the batch process of **Video Analyzer** was interrupted
 - Added separate class for models
+- Added *Clear all outputs* tab
 ## 1.6.x
 - New AI - **Video Analyzer**. Analyze Video like in **Image Analyzer**, but analyze per-frame of video and give you avg. percentages specs. of them
 - Fixes for debug launch-timer

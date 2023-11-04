@@ -129,6 +129,10 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             )
         with gr.Row():
             promptgen_button = gr.Button("⭐ Start")
+    with gr.Tab("Clear all outputs"):
+        with gr.Row():
+            clear_all_button = gr.Button("⭐ Start")
+            clear_all_tb = gr.Textbox(label="Result")
             
 
     rembg_button.click(multi.rem_bg_def, inputs=image_input, outputs=image_output)
@@ -148,6 +152,8 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     clear_videos.click(multi.bth_Vspc_clear)   
     
     promptgen_button.click(multi.prompt_generator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
+    
+    clear_all_button.click(init.clear_all, outputs=clear_all_tb)
 
 if init.debug is True:
     init.delete_tmp_pngs()
