@@ -95,7 +95,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             label="Frame-Skip (larger number = simpler detection | smaller number = stricter one)",
             minimum=1,
             maximum=300,
-            info="If an error appears, decrease the value"
+            info="Set 1 to turn off. If an error appears, decrease the value"
         )  
             threshold_Vspc_slider = gr.Slider(
             value=25,
