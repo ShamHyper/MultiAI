@@ -20,7 +20,7 @@ import cv2
 from numba import cuda
 
 class init:
-    ver = "MultiAI v1.7.7"
+    ver = "MultiAI v1.7.8"
     print(f"Initializing {ver} launch...")
     
     current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -46,14 +46,18 @@ class init:
             pass
     
     def preloader():
+        if config.debug: print("Preloading models...")
         models.ci_load()
         models.nsfw_load()
         models.tokenizer_load()  
+        preloaded_tb = "Done!"
+        return preloaded_tb
     
     def clear_all():
         multi.clearp_bgr_def()
         multi.detector_clear()
         multi.bth_Vspc_clear()
+        if config.debug: print("All outputs cleared!")
         clear_all_tb = "Done!"
         return clear_all_tb
     
@@ -71,9 +75,10 @@ class config:
     inbrowser = data.get('start_in_browser', 'False').lower() == 'true'
     share_gradio = data.get('share_gradio', 'False').lower() == 'true'
     preload_models = data.get('preload_models', 'False').lower() == 'true'
+    clear_on_start = data.get('clear_on_start', 'False').lower() == 'true'
 
-    if not (debug or inbrowser or share_gradio or preload_models):
-        print("Something wrong in config.json. Check them out!")
+    if not (debug or inbrowser or share_gradio or preload_models or clear_on_start):
+        if debug: print("Something wrong in config.json. Check them out!")
 
 class models:   
     def nsfw_load():
@@ -84,7 +89,7 @@ class models:
                 model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
                 nsfw_status = True
             elif nsfw_status == True:
-                print("NSFW model already loaded!")
+                if config.debug: print("NSFW model already loaded!")
         except NameError:
                 init.check_file(init.modelname)
                 model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
@@ -100,7 +105,7 @@ class models:
                 model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
                 tokenizer_status = True
             elif tokenizer_status == True:
-                print("Tokinezer already loaded!")
+                if config.debug: print("Tokinezer already loaded!")
         except NameError:
                 tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
                 tokenizer.add_special_tokens({'pad_token': '[PAD]'})
@@ -115,7 +120,7 @@ class models:
                 ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
                 ci_status = True
             elif ci_status == True:
-                print("CLIP already loaded!")
+                if config.debug: print("CLIP already loaded!")
         except NameError:
                 ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
                 ci_status = True
@@ -126,7 +131,7 @@ class multi:
         try:
             outputs = remove(inputs)
         except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-            print(f"Error: {e}")
+            if config.debug: print(f"Error: {e}")
             pass
         return outputs
 
@@ -143,16 +148,16 @@ class multi:
                 output_image = remove(input_image)
                 output_image.save(outputs)
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-                print(f"Error: {e}")
+                if config.debug: print(f"Error: {e}")
                 pass
         outputs = init.current_directory + r"\outputs" + r"\rembg_outputs"
         return outputs
 
     def detector(detector_input, detector_slider, detector_skeep_dr):
         if detector_skeep_dr == True:
-            print("")
-            print("I will skip drawings!")
-            print("")
+            if config.debug: print("")
+            if config.debug: print("I will skip drawings!")
+            if config.debug: print("")
         models.nsfw_load()
         init.check_file(init.modelname)
         FOLDER_NAME = str(detector_input)
@@ -192,7 +197,7 @@ class multi:
                         plain += 1
                         
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-                print(f"Error: {e}")
+                if config.debug: print(f"Error: {e}")
                 pass
 
         outputs = (
@@ -261,7 +266,7 @@ class multi:
         try:
             os.remove(tmp_file)
         except FileNotFoundError as e:
-            print(f"Error: {e}")
+            if config.debug: print(f"Error: {e}")
             pass
 
         return spc_output
@@ -381,7 +386,7 @@ class multi:
                         continue
                 elif vbth_slider == 1:
                     if config.debug == True:
-                        print("Frame-Skip disabled!")
+                        if config.debug: print("Frame-Skip disabled!")
                     else:
                         pass
                     
@@ -428,9 +433,9 @@ class multi:
                 out_cmd = f"NSFW: {_nsfw}"
                 out_cmd += f"\n[+]Plain: {_plain}"
                 
-            print("")
-            print(out_cmd)
-            print("")
+            if config.debug: print("")
+            if config.debug: print(out_cmd)
+            if config.debug: print("")
             out_cmd = str("")
             avg_sum = 0
             percentages = 0

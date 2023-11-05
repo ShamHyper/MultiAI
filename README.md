@@ -82,15 +82,17 @@ git clone https://github.com/ShamHyper/MultiAI.git
         // Boolean ("True" or "False")
         // Enable MultiAI starting with share link
 
-        "preload_models": "False"
+        "preload_models": "False",
         // Boolean ("True" or "False")
         // Preloading AI models
         // False loading time: ~5-10s
         // True loading time: ~40-60s
+
+        "clear_on_start": "False"
+        // Boolean ("True" or "False")
+        // Clear all outputs on start
     }
 ```
-### Default config.json:
-![cfg](https://i.imgur.com/inechcR.png?raw=true)
 ## Support
 1. If you see errors like this: ```ModuleNotFoundError: No module named "certifi"```, run install.bat for fix them. If that didn't help, open a new issue
 2. If you encounter errors during the execution of the program, open a new issue
