@@ -1,3 +1,9 @@
+---
+title: MultiAI
+app_file: app.py
+sdk: gradio
+sdk_version: 3.42.0
+---
 ![0](https://i.imgur.com/Ui4dvUh.png?raw=true)
 
 [![1](https://i.imgur.com/8Hva6OY.png)](https://www.donationalerts.com/r/shamhyper0)

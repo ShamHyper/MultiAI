@@ -20,7 +20,7 @@ import cv2
 from numba import cuda
 
 class init:
-    ver = "MultiAI v1.7.6"
+    ver = "MultiAI v1.7.7"
     print(f"Initializing {ver} launch...")
     
     current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -58,8 +58,14 @@ class init:
         return clear_all_tb
     
 class config:
-    with open("config.json") as json_file:
-        data = json.load(json_file)
+    if "dev_config.json" in os.listdir():
+        with open("dev_config.json") as json_file:
+            data = json.load(json_file)
+            print("dev_config.json loaded")
+    elif "config.json" in os.listdir():
+        with open("config.json") as json_file:
+            data = json.load(json_file)
+            print("config.json loaded")
 
     debug = data.get('debug_mode', 'False').lower() == 'true'
     inbrowser = data.get('start_in_browser', 'False').lower() == 'true'
