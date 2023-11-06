@@ -7,6 +7,8 @@
 - Added separate class for models
 - Added *Clear all outputs* tab
 - Code optimizations for config
+- New lines for debug (config.json)
+- Threshold slider for *Skip drawings or anime* checkbox
 ## 1.6.x
 - New AI - **Video Analyzer**. Analyze Video like in **Image Analyzer**, but analyze per-frame of video and give you avg. percentages specs. of them
 - Fixes for debug launch-timer

@@ -51,16 +51,24 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             gr.Label("Detect NSFW images from dir")
         with gr.Row():
             detector_input = gr.Textbox(label="Enter dir", placeholder="Enter dir like this: D:\Python\MultiAI")
-            detector_skeep_dr = gr.Checkbox(value=False, label="🎨 Skip drawings")
+            detector_output = gr.Textbox(label="Output", placeholder="NSFW Detector outputs will be here")
+        with gr.Row():
             detector_slider = gr.Slider(
                 value=0.36,
                 label="Threshold (larger number = simpler detection | smaller number = stricter one)",
-                minimum=0.0001,
-                maximum=0.9999
+                minimum=0.01,
+                maximum=0.98
+            )
+        with gr.Row():
+            detector_skeep_dr = gr.Checkbox(value=False, label="🎨 Skip drawings or anime")
+            drawings_threshold = gr.Slider(
+                value=0.10,
+                label="Threshold for 🎨 Skip drawings or anime",
+                minimum=0.01,
+                maximum=0.98
             )
         with gr.Row():
             detector_button = gr.Button("👟 Click here to start")
-            detector_output = gr.Textbox(label="Output", placeholder="NSFW Detector outputs will be here")
         with gr.Row():
             gr.Label("Clear outputs")
         with gr.Row():
@@ -90,17 +98,17 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             bth_Vspc_output = gr.Textbox(label="Output", placeholder="Output will be here...")
         with gr.Row():
             vbth_slider = gr.Slider(
-            value=90,
+            value=80,
             step=1,
             label="Frame-Skip (larger number = simpler detection | smaller number = stricter one)",
             minimum=1,
-            maximum=300,
+            maximum=100,
             info="Set 1 to turn off. If an error appears, decrease the value"
         )  
             threshold_Vspc_slider = gr.Slider(
-            value=25,
-            minimum=10,
-            maximum=90,
+            value=20,
+            minimum=2,
+            maximum=98,
             step=1,
             label="Threshold (larger number = simpler detection | smaller number = stricter one)"
         )
@@ -139,7 +147,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     rembg_batch_button.click(multi.rem_bg_def_batch, inputs=image_input_dir, outputs=image_output_dir)
     clearp_bgr_button.click(multi.clearp_bgr_def, outputs=clearp_bgr)
 
-    detector_button.click(multi.detector, inputs=[detector_input, detector_slider, detector_skeep_dr], outputs=detector_output)
+    detector_button.click(multi.detector, inputs=[detector_input, detector_slider, detector_skeep_dr, drawings_threshold], outputs=detector_output)
     detector_clear_button.click(multi.detector_clear, outputs=clearp)
     
     upsc_button.click(multi.uspc, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)

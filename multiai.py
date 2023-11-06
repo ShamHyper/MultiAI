@@ -20,7 +20,7 @@ import cv2
 from numba import cuda
 
 class init:
-    ver = "MultiAI v1.7.8"
+    ver = "MultiAI v1.7.9"
     print(f"Initializing {ver} launch...")
     
     current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -42,7 +42,7 @@ class init:
         try:
             rm_tmp = os.path.join(init.current_directory, output_dir)
             sh.rmtree(rm_tmp)
-        except (Exception, PermissionError, FileNotFoundError, FileExistsError):
+        except (PermissionError, FileNotFoundError, FileExistsError, Exception):
             pass
     
     def preloader():
@@ -153,7 +153,7 @@ class multi:
         outputs = init.current_directory + r"\outputs" + r"\rembg_outputs"
         return outputs
 
-    def detector(detector_input, detector_slider, detector_skeep_dr):
+    def detector(detector_input, detector_slider, detector_skeep_dr, drawings_threshold):
         if detector_skeep_dr == True:
             if config.debug: print("")
             if config.debug: print("I will skip drawings!")
@@ -162,6 +162,7 @@ class multi:
         init.check_file(init.modelname)
         FOLDER_NAME = str(detector_input)
         THRESHOLD = detector_slider
+        DRAW_THRESHOLD = drawings_threshold
         nsfw = 0
         plain = 0
 
@@ -187,7 +188,8 @@ class multi:
                         plain += 1
                         
                 elif detector_skeep_dr == True:
-                    if value_draw > THRESHOLD*0.5 or value_nsfw_2 > THRESHOLD*1.5:
+                    if value_draw > DRAW_THRESHOLD or value_nsfw_2 > THRESHOLD*1.5:
+                        if config.debug: print(f"I skipped this pic, because value_draw[{value_draw}] > DRAW_THRESHOLD[{DRAW_THRESHOLD}]")
                         pass
                     elif value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
                         sh.copyfile(file, f'./outputs/detector_outputs_nsfw/{file.split("/")[-1]}')
@@ -389,23 +391,26 @@ class multi:
                         if config.debug: print("Frame-Skip disabled!")
                     else:
                         pass
-                    
-                file_path = os.path.join(output_dir, file_name)
+                try:   
+                    file_path = os.path.join(output_dir, file_name)
+                    result = predict.classify(model_nsfw, file_path)
+                    x = next(iter(result.keys()))
+                    values = result[x]
+                    file_sum = sum(values.values())
+                    total_sum += file_sum 
+                    file_count += 1
+                except (AssertionError, Exception):
+                    pass
+            try: 
+                avg_sum = total_sum / file_count 
+                percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
+                THRESHOLD = threshold_Vspc_slider
                 
-                result = predict.classify(model_nsfw, file_path)
-                x = next(iter(result.keys()))
-                values = result[x]
-                file_sum = sum(values.values())
-                total_sum += file_sum 
-                file_count += 1
-
-            avg_sum = total_sum / file_count 
-            percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
-            THRESHOLD = threshold_Vspc_slider
-            
-            value_nsfw_1 = percentages["porn"]
-            value_nsfw_2 = percentages["hentai"]
-            value_nsfw_3 = percentages["sexy"]
+                value_nsfw_1 = percentages["porn"]
+                value_nsfw_2 = percentages["hentai"]
+                value_nsfw_3 = percentages["sexy"]
+            except (ZeroDivisionError, Exception):
+                pass
         
             if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD:
                 video_path = os.path.join(video_dir, dir_Vspc)
@@ -462,7 +467,7 @@ class multi:
             file.close()
             rm_tmp = os.path.join(init.current_directory, output_dir)
             sh.rmtree(rm_tmp)
-        except (Exception, PermissionError, FileNotFoundError, FileExistsError):
+        except (PermissionError, FileNotFoundError, FileExistsError, Exception):
             try:
                 folder_path1 = "outputs/video_analyze_nsfw"
                 os.makedirs(folder_path1)
@@ -472,7 +477,7 @@ class multi:
                 os.makedirs(folder_path2)
                 file = open(f"{folder_path2}/outputs will be here.txt", "w")
                 file.close()
-            except FileExistsError:
+            except (PermissionError, FileNotFoundError, FileExistsError, Exception):
                 pass
         return
         
