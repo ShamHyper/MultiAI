@@ -7,6 +7,9 @@ from upscalers import available_models, clear_on_device_caches
 
 with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) as multiai:
     gr.Markdown(init.ver)
+    
+##################################################################################################################################
+    
     with gr.Tab("BgRemoverLite"):
         with gr.Row():
             gr.Label("Remove background from single image")
@@ -29,6 +32,9 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
         with gr.Row():
             clearp_bgr_button = gr.Button("🧹 Clear outputs")
             clearp_bgr = gr.Textbox(label="Clearing progress")
+      
+##################################################################################################################################
+            
     with gr.Tab("Upscaler"):
         with gr.Row():
             gr.Label("Upscale image up to 10x size")
@@ -46,6 +52,9 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             upsc_button = gr.Button("📈 Start upscaling")
         with gr.Row():
             upsc_clear_cache = gr.Button("🧹 Clear torch, cuda and models cache")
+            
+##################################################################################################################################
+            
     with gr.Tab("NSFW Detector"):
         with gr.Row():
             gr.Label("Detect NSFW images from dir")
@@ -74,6 +83,9 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
         with gr.Row():
             detector_clear_button = gr.Button("🧹 Clear outputs")
             clearp = gr.Textbox(label="Clearing progress")
+            
+##################################################################################################################################            
+            
     with gr.Tab("Image Analyzer"):
         with gr.Row():
             gr.Label("Analyze images")
@@ -83,6 +95,9 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
         with gr.Row():
             clip_checked = gr.Checkbox(value=False, label="Use CLIP for generate prompt (slow if a weak PC)")
             spc_button = gr.Button("👟 Click here to start")
+            
+##################################################################################################################################
+            
     with gr.Tab("Video Analyzer"):
         with gr.Row():
             gr.Label("Analyze Video")
@@ -114,7 +129,12 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
         )
         with gr.Row():
             start_dir_videos = gr.Button("⭐ Start")
+        with gr.Row():
             clear_videos = gr.Button("🧹 Clear outputs")
+            bth_Vspc_clear_output = gr.Textbox(label="Clearing progress", placeholder="Clear output will be here...")
+            
+##################################################################################################################################
+            
     with gr.Tab("Prompt Generator"):
         with gr.Row():
             gr.Label("Generate prompt from your input")
@@ -137,29 +157,33 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             )
         with gr.Row():
             promptgen_button = gr.Button("⭐ Start")
+            
+##################################################################################################################################
+            
     with gr.Tab("Clear all outputs"):
         with gr.Row():
             clear_all_button = gr.Button("⭐ Start")
             clear_all_tb = gr.Textbox(label="Result")
             
+##################################################################################################################################
+            
+    rembg_button.click(multi.BgRemoverLite, inputs=image_input, outputs=image_output)
+    rembg_batch_button.click(multi.BgRemoverLiteBatch, inputs=image_input_dir, outputs=image_output_dir)
+    clearp_bgr_button.click(multi.BgRemoverLite_Clear, outputs=clearp_bgr)
 
-    rembg_button.click(multi.rem_bg_def, inputs=image_input, outputs=image_output)
-    rembg_batch_button.click(multi.rem_bg_def_batch, inputs=image_input_dir, outputs=image_output_dir)
-    clearp_bgr_button.click(multi.clearp_bgr_def, outputs=clearp_bgr)
-
-    detector_button.click(multi.detector, inputs=[detector_input, detector_slider, detector_skeep_dr, drawings_threshold], outputs=detector_output)
-    detector_clear_button.click(multi.detector_clear, outputs=clearp)
+    detector_button.click(multi.NSFW_Detector, inputs=[detector_input, detector_slider, detector_skeep_dr, drawings_threshold], outputs=detector_output)
+    detector_clear_button.click(multi.NSFWDetector_Clear, outputs=clearp)
     
-    upsc_button.click(multi.uspc, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)
+    upsc_button.click(multi.Upscaler, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)
     upsc_clear_cache.click(clear_on_device_caches)
     
-    spc_button.click(multi.spc, inputs=[file_spc, clip_checked], outputs=spc_output)
+    spc_button.click(multi.ImageAnalyzer, inputs=[file_spc, clip_checked], outputs=spc_output)
     
-    Vspc_button.click(multi.Vspc, inputs=file_Vspc, outputs=Vspc_output)
-    start_dir_videos.click(multi.bth_Vspc, inputs=[video_dir, vbth_slider, threshold_Vspc_slider], outputs=bth_Vspc_output)   
-    clear_videos.click(multi.bth_Vspc_clear)   
+    Vspc_button.click(multi.VideoAnalyzer, inputs=file_Vspc, outputs=Vspc_output)
+    start_dir_videos.click(multi.VideoAnalyzerBatch, inputs=[video_dir, vbth_slider, threshold_Vspc_slider], outputs=bth_Vspc_output)   
+    clear_videos.click(multi.VideoAnalyzerBatch_Clear, outputs=bth_Vspc_clear_output)   
     
-    promptgen_button.click(multi.prompt_generator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
+    promptgen_button.click(multi.PromptGenetator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
     
     clear_all_button.click(init.clear_all, outputs=clear_all_tb)
 

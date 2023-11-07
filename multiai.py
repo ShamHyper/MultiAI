@@ -19,8 +19,10 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 import cv2
 from numba import cuda
 
+##################################################################################################################################
+
 class init:
-    ver = "MultiAI v1.7.9"
+    ver = "MultiAI v1.8.0"
     print(f"Initializing {ver} launch...")
     
     current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -54,12 +56,14 @@ class init:
         return preloaded_tb
     
     def clear_all():
-        multi.clearp_bgr_def()
-        multi.detector_clear()
-        multi.bth_Vspc_clear()
+        multi.BgRemoverLite_Clear()
+        multi.NSFWDetector_Clear()
+        multi.VideoAnalyzerBatch_Clear()
         if config.debug: print("All outputs cleared!")
         clear_all_tb = "Done!"
         return clear_all_tb
+    
+##################################################################################################################################
     
 class config:
     if "dev_config.json" in os.listdir():
@@ -79,6 +83,8 @@ class config:
 
     if not (debug or inbrowser or share_gradio or preload_models or clear_on_start):
         if debug: print("Something wrong in config.json. Check them out!")
+        
+##################################################################################################################################
 
 class models:   
     def nsfw_load():
@@ -125,9 +131,11 @@ class models:
                 ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
                 ci_status = True
         return ci, ci_status
+    
+##################################################################################################################################
                   
 class multi:
-    def rem_bg_def(inputs):
+    def BgRemoverLite(inputs):
         try:
             outputs = remove(inputs)
         except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
@@ -135,7 +143,7 @@ class multi:
             pass
         return outputs
 
-    def rem_bg_def_batch(inputs):
+    def BgRemoverLiteBatch(inputs):
         temp_dir = inputs
         for filename in tqdm(os.listdir(inputs)):
             outputs = "outputs/rembg_outputs"
@@ -153,7 +161,7 @@ class multi:
         outputs = init.current_directory + r"\outputs" + r"\rembg_outputs"
         return outputs
 
-    def detector(detector_input, detector_slider, detector_skeep_dr, drawings_threshold):
+    def NSFW_Detector(detector_input, detector_slider, detector_skeep_dr, drawings_threshold):
         if detector_skeep_dr == True:
             if config.debug: print("")
             if config.debug: print("I will skip drawings!")
@@ -208,7 +216,7 @@ class multi:
         )
         return outputs
 
-    def detector_clear():
+    def NSFWDetector_Clear():
         outputs_dir1 = os.path.join(init.current_directory, "outputs/detector_outputs_nsfw")
         sh.rmtree(outputs_dir1)
         outputs_dir2 = os.path.join(init.current_directory, "outputs/detector_outputs_plain")
@@ -224,7 +232,7 @@ class multi:
         outputs = "Done!"
         return outputs
 
-    def clearp_bgr_def():
+    def BgRemoverLite_Clear():
         outputs_dir = os.path.join(init.current_directory, "outputs/rembg_outputs")
         sh.rmtree(outputs_dir)
         folder_path = "outputs/rembg_outputs"
@@ -234,12 +242,12 @@ class multi:
         outputs = "Done!"
         return outputs
     
-    def uspc(upsc_image_input, scale_factor, model_ups):
+    def Upscaler(upsc_image_input, scale_factor, model_ups):
         tmp_img_ndr = Image.fromarray(upsc_image_input)
         upsc_image_output = upscale(model_ups, tmp_img_ndr, scale_factor)
         return upsc_image_output
     
-    def spc(file_spc, clip_checked):
+    def ImageAnalyzer(file_spc, clip_checked):
         img = Image.fromarray(file_spc, 'RGB')
         img.save('tmp.png')
         dir_img_fromarray = os.path.join(os.getcwd(), "tmp.png")
@@ -265,6 +273,7 @@ class multi:
         spc_output += f"Neutral: {percentages['neutral']}%"
 
         tmp_file = "tmp.png"
+        
         try:
             os.remove(tmp_file)
         except FileNotFoundError as e:
@@ -273,7 +282,7 @@ class multi:
 
         return spc_output
     
-    def prompt_generator(prompt_input, pg_prompts, pg_max_length, randomize_temp):
+    def PromptGenetator(prompt_input, pg_prompts, pg_max_length, randomize_temp):
         models.tokenizer_load()
         prompt = prompt_input
         if randomize_temp == True:
@@ -296,7 +305,7 @@ class multi:
         promptgen_output = ('\n\n'.join(outs) + '\n')  
         return promptgen_output 
     
-    def Vspc(file_Vspc):
+    def VideoAnalyzer(file_Vspc):
         output_dir = 'tmp_pngs'
         os.makedirs(output_dir, exist_ok=True)
         models.nsfw_load()
@@ -347,7 +356,7 @@ class multi:
         result_frame = frame    
         return result_frame
 
-    def bth_Vspc(video_dir, vbth_slider, threshold_Vspc_slider):
+    def VideoAnalyzerBatch(video_dir, vbth_slider, threshold_Vspc_slider):
         models.nsfw_load()
         _nsfw = 0
         _plain = 0
@@ -391,6 +400,7 @@ class multi:
                         if config.debug: print("Frame-Skip disabled!")
                     else:
                         pass
+                    
                 try:   
                     file_path = os.path.join(output_dir, file_name)
                     result = predict.classify(model_nsfw, file_path)
@@ -401,6 +411,7 @@ class multi:
                     file_count += 1
                 except (AssertionError, Exception):
                     pass
+                
             try: 
                 avg_sum = total_sum / file_count 
                 percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
@@ -411,17 +422,20 @@ class multi:
                 value_nsfw_3 = percentages["sexy"]
             except (ZeroDivisionError, Exception):
                 pass
-        
-            if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD:
-                video_path = os.path.join(video_dir, dir_Vspc)
-                sh.copy(video_path, 'outputs/video_analyze_nsfw')
-                _nsfw += 1
-                _nsfw_factor = True
-            else:
-                video_path = os.path.join(video_dir, dir_Vspc)
-                sh.copy(video_path, 'outputs/video_analyze_plain')
-                _plain += 1
-                _plain_factor = True
+            
+            try:
+                if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD:
+                    video_path = os.path.join(video_dir, dir_Vspc)
+                    sh.copy(video_path, 'outputs/video_analyze_nsfw')
+                    _nsfw += 1
+                    _nsfw_factor = True
+                else:
+                    video_path = os.path.join(video_dir, dir_Vspc)
+                    sh.copy(video_path, 'outputs/video_analyze_plain')
+                    _plain += 1
+                    _plain_factor = True
+            except (PermissionError, FileExistsError, AssertionError, Exception):
+                pass
                 
             cap.release()
             cv2.destroyAllWindows()
@@ -448,7 +462,7 @@ class multi:
             
         return bth_Vspc_output
 
-    def bth_Vspc_clear():
+    def VideoAnalyzerBatch_Clear():
         output_dir = 'tmp_pngs'
         try:
             outputs_dir1 = os.path.join(init.current_directory, "outputs/video_analyze_nsfw")
@@ -479,5 +493,7 @@ class multi:
                 file.close()
             except (PermissionError, FileNotFoundError, FileExistsError, Exception):
                 pass
-        return
+            
+        bth_Vspc_clear_output = "Done!"
+        return bth_Vspc_clear_output
         

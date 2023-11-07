@@ -1,4 +1,8 @@
 # Changelog
+## 1.8.x
+- Fixed all bugs of version **1.7**
+- All defs renamed for simpler use
+- Progress textbox for **Video Analyzer** cleaner
 ## 1.7.x
 - Fixed all bugs of version **1.6**
 - Work on optimization has been carried out
