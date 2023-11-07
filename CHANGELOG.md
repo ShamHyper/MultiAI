@@ -47,7 +47,7 @@
 - Fixed several inconspicuous bugs
 - Added the ability to enable asynchronous model loading. Later it was cut out in 1.3+
 ## 1.1.x
-- Improved the output of promptov in Image Analyzer
+- Improved the output of prompts in Image Analyzer
 - Removed spam in the console associated with the previously added debugger for gradio
 - NSFW specifier renamed to Image Analyzer
 - Added CLIP interrogator to Image Analyzer to generate an image promo
