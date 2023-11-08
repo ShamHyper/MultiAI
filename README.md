@@ -11,6 +11,10 @@ sdk_version: 3.42.0
 [![1](https://i.imgur.com/8Hva6OY.png)](https://www.donationalerts.com/r/shamhyper0)
 
 [![wakatime](https://wakatime.com/badge/github/ShamHyper/MultiAI.svg)](https://wakatime.com/badge/github/ShamHyper/MultiAI)
+
+## Our Discord Servers
+<iframe src="https://discord.com/widget?id=1158378744982020169&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe><iframe src="https://discord.com/widget?id=1091587110542266501&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+
 ## AIs
 **1. [BgRemoverLite](https://github.com/ShamHyper/BgRemoverLite)**
 
@@ -130,3 +134,5 @@ git clone https://github.com/ShamHyper/MultiAI.git
 - **Upscaling** - https://github.com/kmewhort/upscalers
 - **Clip-interrogator** for *Image Analyzer* - https://github.com/pharmapsychotic/clip-interrogator
 - **Fast Prompt Generator** - https://huggingface.co/FredZhang7/anime-anything-promptgen-v2
+## License
+MIT license | Copyright (c) 2023 ShamHyper
