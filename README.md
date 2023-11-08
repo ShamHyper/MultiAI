@@ -9,6 +9,7 @@ sdk_version: 3.42.0
 ![0](https://i.imgur.com/Ui4dvUh.png?raw=true)
 
 [![1](https://i.imgur.com/8Hva6OY.png)](https://www.donationalerts.com/r/shamhyper0)
+
 ![Discord Banner SH](https://discordapp.com/api/guilds/1091587110542266501/widget.png?style=banner2)
 ![Discord Banner VDM](https://discordapp.com/api/guilds/1158378744982020169/widget.png?style=banner2)
 
