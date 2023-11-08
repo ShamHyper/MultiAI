@@ -4,6 +4,8 @@ import os
 from tqdm import tqdm
 import json
 import random
+import datetime
+import logging
 
 from PIL import Image, UnidentifiedImageError
 from rembg import remove
@@ -19,14 +21,23 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 import cv2
 from numba import cuda
 
+############################ 
+version = "MultiAI v1.8.2"
+############################ 
+
 ##################################################################################################################################
 
 class init:
-    ver = "MultiAI v1.8.1"
+    ver = version
+    
+    log_current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    log_filename = f"logs/{ver}_log_{log_current_time}.log"
+    logging.basicConfig(filename=log_filename, level=logging.INFO, format='%(asctime)s %(message)s')
+    
     print(f"Initializing {ver} launch...")
     
     current_directory = os.path.dirname(os.path.abspath(__file__))
-
+    
     modelname = "nsfw_mobilenet2.224x224.h5"
     url = "https://s3.amazonaws.com/ir_public/nsfwjscdn/nsfw_mobilenet2.224x224.h5"
     
@@ -34,9 +45,13 @@ class init:
         files_in_directory = os.listdir(init.current_directory)
 
         if filename in files_in_directory:
-            print("NSFW Model detected")
+            if config.debug: 
+                print("NSFW Model detected")
+                logging.info("NSFW Model detected")
         else:
-            print("NSFW Model undected. Downloading...")
+            if config.debug: 
+                print("NSFW Model undected. Downloading...")
+                logging.info("NSFW Model undected. Downloading...")
             urllib.request.urlretrieve(init.url, init.modelname)
     
     def delete_tmp_pngs():
@@ -48,7 +63,9 @@ class init:
             pass
     
     def preloader():
-        if config.debug: print("Preloading models...")
+        if config.debug: 
+            print("Preloading models...")
+            logging.info("Preloading models...")
         models.ci_load()
         models.nsfw_load()
         models.tokenizer_load()  
@@ -59,12 +76,14 @@ class init:
         multi.BgRemoverLite_Clear()
         multi.NSFWDetector_Clear()
         multi.VideoAnalyzerBatch_Clear()
-        if config.debug: print("All outputs cleared!")
+        if config.debug: 
+            print("All outputs cleared!")
+            logging.info("All outputs cleared!")
         clear_all_tb = "Done!"
         return clear_all_tb
-    
+        
 ##################################################################################################################################
-    
+
 class config:
     def save_config_gr(settings_debug_mode, settings_start_in_browser, settings_share_gradio, settings_preload_models, settings_clear_on_start, json_file):
         settings = {
@@ -98,10 +117,12 @@ class config:
         with open("settings/dev_config.json") as json_file:
             data = json.load(json_file)
             print("dev_config.json loaded")
+            logging.info("dev_config.json loaded")
     elif "config.json" in os.listdir("settings"):
         with open("settings/config.json") as json_file:
             data = json.load(json_file)
             print("config.json loaded")
+            logging.info("config.json loaded")
 
     debug = data.get('debug_mode', 'False').lower() == 'true'
     inbrowser = data.get('start_in_browser', 'False').lower() == 'true'
@@ -110,8 +131,10 @@ class config:
     clear_on_start = data.get('clear_on_start', 'False').lower() == 'true'
 
     if not (debug or inbrowser or share_gradio or preload_models or clear_on_start):
-        if debug: print("Something wrong in config.json. Check them out!")
-        
+        if debug: 
+            print("Something wrong in config.json. Check them out!")
+            logging.info("Something wrong in config.json. Check them out!")
+
 ##################################################################################################################################
 
 class models:   
@@ -123,7 +146,9 @@ class models:
                 model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
                 nsfw_status = True
             elif nsfw_status == True:
-                if config.debug: print("NSFW model already loaded!")
+                if config.debug: 
+                    print("NSFW model already loaded!")
+                    logging.info("NSFW model already loaded!")
         except NameError:
                 init.check_file(init.modelname)
                 model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
@@ -139,7 +164,9 @@ class models:
                 model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
                 tokenizer_status = True
             elif tokenizer_status == True:
-                if config.debug: print("Tokinezer already loaded!")
+                if config.debug: 
+                    print("Tokinezer already loaded!")
+                    logging.info("Tokinezer already loaded!")
         except NameError:
                 tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
                 tokenizer.add_special_tokens({'pad_token': '[PAD]'})
@@ -154,7 +181,9 @@ class models:
                 ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
                 ci_status = True
             elif ci_status == True:
-                if config.debug: print("CLIP already loaded!")
+                if config.debug: 
+                    print("CLIP already loaded!")
+                    logging.info("CLIP already loaded!")
         except NameError:
                 ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
                 ci_status = True
@@ -167,7 +196,9 @@ class multi:
         try:
             outputs = remove(inputs)
         except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-            if config.debug: print(f"Error: {e}")
+            if config.debug: 
+                print(f"Error: {e}")
+                logging.info(f"Error: {e}")
             pass
         return outputs
 
@@ -184,16 +215,30 @@ class multi:
                 output_image = remove(input_image)
                 output_image.save(outputs)
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-                if config.debug: print(f"Error: {e}")
+                if config.debug: 
+                    print(f"Error: {e}")
+                    logging.info(f"Error: {e}")
                 pass
         outputs = init.current_directory + r"\outputs" + r"\rembg_outputs"
         return outputs
+    
+    def BgRemoverLite_Clear():
+        outputs_dir = os.path.join(init.current_directory, "outputs/rembg_outputs")
+        sh.rmtree(outputs_dir)
+        folder_path = "outputs/rembg_outputs"
+        os.makedirs(folder_path)
+        file = open(f"{folder_path}/outputs will be here.txt", "w")
+        file.close()
+        outputs = "Done!"
+        return outputs
+
+##################################################################################################################################
 
     def NSFW_Detector(detector_input, detector_slider, detector_skeep_dr, drawings_threshold):
         if detector_skeep_dr == True:
-            if config.debug: print("")
-            if config.debug: print("I will skip drawings!")
-            if config.debug: print("")
+            if config.debug: 
+                print("I will skip drawings!")
+                logging.info("I will skip drawings!")
         models.nsfw_load()
         init.check_file(init.modelname)
         FOLDER_NAME = str(detector_input)
@@ -225,7 +270,9 @@ class multi:
                         
                 elif detector_skeep_dr == True:
                     if value_draw > DRAW_THRESHOLD or value_nsfw_2 > THRESHOLD*1.5:
-                        if config.debug: print(f"I skipped this pic, because value_draw[{value_draw}] > DRAW_THRESHOLD[{DRAW_THRESHOLD}]")
+                        if config.debug: 
+                            print(f"I skipped this pic, because value_draw[{value_draw}] > DRAW_THRESHOLD[{DRAW_THRESHOLD}]")
+                            logging.info(f"I skipped this pic, because value_draw[{value_draw}] > DRAW_THRESHOLD[{DRAW_THRESHOLD}]")
                         pass
                     elif value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
                         sh.copyfile(file, f'./outputs/detector_outputs_nsfw/{file.split("/")[-1]}')
@@ -235,7 +282,9 @@ class multi:
                         plain += 1
                         
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-                if config.debug: print(f"Error: {e}")
+                if config.debug: 
+                    print(f"Error: {e}")
+                    logging.info(f"Error: {e}")
                 pass
 
         outputs = (
@@ -260,20 +309,14 @@ class multi:
         outputs = "Done!"
         return outputs
 
-    def BgRemoverLite_Clear():
-        outputs_dir = os.path.join(init.current_directory, "outputs/rembg_outputs")
-        sh.rmtree(outputs_dir)
-        folder_path = "outputs/rembg_outputs"
-        os.makedirs(folder_path)
-        file = open(f"{folder_path}/outputs will be here.txt", "w")
-        file.close()
-        outputs = "Done!"
-        return outputs
-    
+##################################################################################################################################
+
     def Upscaler(upsc_image_input, scale_factor, model_ups):
         tmp_img_ndr = Image.fromarray(upsc_image_input)
         upsc_image_output = upscale(model_ups, tmp_img_ndr, scale_factor)
         return upsc_image_output
+    
+##################################################################################################################################
     
     def ImageAnalyzer(file_spc, clip_checked):
         img = Image.fromarray(file_spc, 'RGB')
@@ -305,33 +348,14 @@ class multi:
         try:
             os.remove(tmp_file)
         except FileNotFoundError as e:
-            if config.debug: print(f"Error: {e}")
+            if config.debug: 
+                print(f"Error: {e}")
+                logging.info(f"Error: {e}")
             pass
 
         return spc_output
     
-    def PromptGenetator(prompt_input, pg_prompts, pg_max_length, randomize_temp):
-        models.tokenizer_load()
-        prompt = prompt_input
-        if randomize_temp == True:
-            tempreture_pg = (random.randint(4, 9)/10)
-        elif randomize_temp == False:
-            tempreture_pg = 0.7
-
-        nlp = pipeline('text-generation', model=model_tokinezer, tokenizer=tokenizer)
-        outs = nlp(prompt, 
-                   max_length=pg_max_length, 
-                   num_return_sequences=pg_prompts, 
-                   do_sample=True, 
-                   repetition_penalty=1.2, 
-                   temperature=tempreture_pg, 
-                   top_k=4, 
-                   early_stopping=False)
-
-        for i in tqdm(range(len(outs))):
-            outs[i] = str(outs[i]['generated_text']).replace('  ', '').rstrip(',')
-        promptgen_output = ('\n\n'.join(outs) + '\n')  
-        return promptgen_output 
+##################################################################################################################################
     
     def VideoAnalyzer(file_Vspc):
         output_dir = 'tmp_pngs'
@@ -425,7 +449,9 @@ class multi:
                         continue
                 elif vbth_slider == 1:
                     if config.debug == True:
-                        if config.debug: print("Frame-Skip disabled!")
+                        if config.debug: 
+                            print("Frame-Skip disabled!")
+                            logging.info("Frame-Skip disabled!")
                     else:
                         pass
                     
@@ -480,9 +506,11 @@ class multi:
                 out_cmd = f"NSFW: {_nsfw}"
                 out_cmd += f"\n[+]Plain: {_plain}"
                 
-            if config.debug: print("")
-            if config.debug: print(out_cmd)
-            if config.debug: print("")
+            if config.debug: 
+                print("")
+                print(out_cmd)
+                logging.info(out_cmd)
+                print("")
             out_cmd = str("")
             avg_sum = 0
             percentages = 0
@@ -523,4 +551,29 @@ class multi:
                 pass
             
         bth_Vspc_clear_output = "Done!"
-        return bth_Vspc_clear_output   
+        return bth_Vspc_clear_output 
+    
+##################################################################################################################################
+
+    def PromptGenetator(prompt_input, pg_prompts, pg_max_length, randomize_temp):
+        models.tokenizer_load()
+        prompt = prompt_input
+        if randomize_temp == True:
+            tempreture_pg = (random.randint(4, 9)/10)
+        elif randomize_temp == False:
+            tempreture_pg = 0.7
+
+        nlp = pipeline('text-generation', model=model_tokinezer, tokenizer=tokenizer)
+        outs = nlp(prompt, 
+                   max_length=pg_max_length, 
+                   num_return_sequences=pg_prompts, 
+                   do_sample=True, 
+                   repetition_penalty=1.2, 
+                   temperature=tempreture_pg, 
+                   top_k=4, 
+                   early_stopping=False)
+
+        for i in tqdm(range(len(outs))):
+            outs[i] = str(outs[i]['generated_text']).replace('  ', '').rstrip(',')
+        promptgen_output = ('\n\n'.join(outs) + '\n')  
+        return promptgen_output 

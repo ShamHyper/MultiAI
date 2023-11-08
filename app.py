@@ -169,7 +169,9 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
 
     with gr.Tab("Settings"):
         with gr.Row():
-            settings_debug_mode = gr.Checkbox(value=True, label="Enable debug mode (write debug info)")
+            gr.Label("This options checked by default! This not your options!")
+        with gr.Row():
+            settings_debug_mode = gr.Checkbox(value=True, label="Enable debug mode (write debug info and logs)")
         with gr.Row():
             settings_start_in_browser = gr.Checkbox(value=True, label="Enable MultiAI starting in browser")
         with gr.Row():
@@ -185,7 +187,8 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
         with gr.Row():
             gr.Label("Creating new ones .json files in ../settings will not give any effect. Choose only config.json in dropdown above!")
             
-            
+##################################################################################################################################
+                     
     rembg_button.click(multi.BgRemoverLite, inputs=image_input, outputs=image_output)
     rembg_batch_button.click(multi.BgRemoverLiteBatch, inputs=image_input_dir, outputs=image_output_dir)
     clearp_bgr_button.click(multi.BgRemoverLite_Clear, outputs=clearp_bgr)
@@ -208,7 +211,8 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     
     settings_save.click(config.save_config_gr, inputs=[settings_debug_mode, settings_start_in_browser, 
                                                        settings_share_gradio, settings_preload_models, 
-                                                       settings_clear_on_start, json_files], outputs=settings_save_progress)
+                                                       settings_clear_on_start, json_files], 
+                        outputs=settings_save_progress)
 
 clear()
 

@@ -95,6 +95,7 @@ git clone https://github.com/ShamHyper/MultiAI.git
         "debug_mode": "True", 
         // Boolean ("True" or "False")
         // Enable debug mode (write debug info)
+        // Enable logging
         
         "start_in_browser": "True",
         // Boolean ("True" or "False")
