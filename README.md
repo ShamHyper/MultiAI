@@ -13,7 +13,8 @@ sdk_version: 3.42.0
 [![wakatime](https://wakatime.com/badge/github/ShamHyper/MultiAI.svg)](https://wakatime.com/badge/github/ShamHyper/MultiAI)
 
 ## Our Discord Servers
-<iframe src="https://discord.com/widget?id=1158378744982020169&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe><iframe src="https://discord.com/widget?id=1091587110542266501&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+![Discord Banner SH](https://discordapp.com/api/guilds/[1091587110542266501]/widget.png?style=banner2)
+![Discord Banner VDM](https://discordapp.com/api/guilds/[1158378744982020169]/widget.png?style=banner2)
 
 ## AIs
 **1. [BgRemoverLite](https://github.com/ShamHyper/BgRemoverLite)**
