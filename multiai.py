@@ -22,7 +22,7 @@ from numba import cuda
 ##################################################################################################################################
 
 class init:
-    ver = "MultiAI v1.8.0"
+    ver = "MultiAI v1.8.1"
     print(f"Initializing {ver} launch...")
     
     current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -66,12 +66,40 @@ class init:
 ##################################################################################################################################
     
 class config:
-    if "dev_config.json" in os.listdir():
-        with open("dev_config.json") as json_file:
+    def save_config_gr(settings_debug_mode, settings_start_in_browser, settings_share_gradio, settings_preload_models, settings_clear_on_start, json_file):
+        settings = {
+            "debug_mode": str(settings_debug_mode),
+            "start_in_browser": str(settings_start_in_browser),
+            "share_gradio": str(settings_share_gradio),
+            "preload_models": str(settings_preload_models),
+            "clear_on_start": str(settings_clear_on_start)
+        }
+        
+        json_file = "settings/" + str(json_file)
+        
+        with open(json_file, 'w') as file:
+            json.dump(settings, file, indent=4)
+            
+        settings_save_progress = f"Settings saved to [{json_file}]. Restart MultiAI!"
+        return settings_save_progress
+    
+    def list_json_files():
+        directory = "settings"
+        json_files = []
+        files = os.listdir(directory)
+        
+        for file in files:
+            if file.endswith('.json'):
+                json_files.append(file)
+        
+        return json_files
+
+    if "dev_config.json" in os.listdir("settings"):
+        with open("settings/dev_config.json") as json_file:
             data = json.load(json_file)
             print("dev_config.json loaded")
-    elif "config.json" in os.listdir():
-        with open("config.json") as json_file:
+    elif "config.json" in os.listdir("settings"):
+        with open("settings/config.json") as json_file:
             data = json.load(json_file)
             print("config.json loaded")
 
@@ -495,5 +523,4 @@ class multi:
                 pass
             
         bth_Vspc_clear_output = "Done!"
-        return bth_Vspc_clear_output
-        
+        return bth_Vspc_clear_output   

@@ -166,6 +166,25 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             clear_all_tb = gr.Textbox(label="Result")
             
 ##################################################################################################################################
+
+    with gr.Tab("Settings"):
+        with gr.Row():
+            settings_debug_mode = gr.Checkbox(value=True, label="Enable debug mode (write debug info)")
+        with gr.Row():
+            settings_start_in_browser = gr.Checkbox(value=True, label="Enable MultiAI starting in browser")
+        with gr.Row():
+            settings_share_gradio = gr.Checkbox(value=False, label="Enable MultiAI starting with share link")
+        with gr.Row():
+            settings_preload_models = gr.Checkbox(value=False, label="Enable preloading AI models")
+        with gr.Row():
+            settings_clear_on_start = gr.Checkbox(value=False, label="Enable clear all outputs on MultiAI start")
+        with gr.Row():
+            json_files = gr.Dropdown(label="Pick .json file to write settings", choices=config.list_json_files())
+            settings_save = gr.Button("🗃️ Save settings")
+            settings_save_progress = gr.Textbox(label="Saving progress", placeholder="Your saving progress will be here")
+        with gr.Row():
+            gr.Label("Creating new ones .json files in ../settings will not give any effect. Choose only config.json in dropdown above!")
+            
             
     rembg_button.click(multi.BgRemoverLite, inputs=image_input, outputs=image_output)
     rembg_batch_button.click(multi.BgRemoverLiteBatch, inputs=image_input_dir, outputs=image_output_dir)
@@ -186,6 +205,10 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     promptgen_button.click(multi.PromptGenetator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
     
     clear_all_button.click(init.clear_all, outputs=clear_all_tb)
+    
+    settings_save.click(config.save_config_gr, inputs=[settings_debug_mode, settings_start_in_browser, 
+                                                       settings_share_gradio, settings_preload_models, 
+                                                       settings_clear_on_start, json_files], outputs=settings_save_progress)
 
 clear()
 
@@ -205,4 +228,3 @@ print(f"Executing time: {total_time}s")
 print("")
 
 multiai.launch(inbrowser=config.inbrowser, share=config.share_gradio)
-    

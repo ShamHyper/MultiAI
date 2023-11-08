@@ -27,22 +27,6 @@ sdk_version: 3.42.0
 **2. NVIDIA GPU with CUDA 11.8 support**
 
 **3. 16gb RAM**
-## Installation (legacy)
-**1. Install [Python 3.10.x](https://www.python.org/downloads/)**
-
-**2. Install [Git](https://git-scm.com/downloads)**
-
-**3. Install [FFmpeg](https://ffmpeg.org/download.html)**
-
-**4. Install [CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Windows)**
-
-**5. Restart your PC**
-
-**6. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
-
-**7. Unarchive ZIP**
-
-**8. Run *install.bat* for first time. Next time run *run.bat***
 ## Installation (recommended)
 **1. Install [winget](https://learn.microsoft.com/windows/package-manager/winget/#install-winget)**
 
@@ -67,7 +51,30 @@ winget install -e --id Gyan.FFmpeg
 git clone https://github.com/ShamHyper/MultiAI.git
 ```
 **8. Run *install.bat* for first time. Next time run *run.bat***
-## Configuration (config.json)
+## Installation (legacy)
+**1. Install [Python 3.10.x](https://www.python.org/downloads/)**
+
+**2. Install [Git](https://git-scm.com/downloads)**
+
+**3. Install [FFmpeg](https://ffmpeg.org/download.html)**
+
+**4. Install [CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Windows)**
+
+**5. Restart your PC**
+
+**6. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
+
+**7. Unarchive ZIP**
+
+**8. Run *install.bat* for first time. Next time run *run.bat***
+## Settings tab (recommended)
+### Now you don't have to go into config.json and change something with your hands. This tab will do everything for you!
+![cfg](https://i.imgur.com/DzCcfnu.png?raw=true)
+1. Choose necessary checkboxes
+2. Pick config.json
+3. Press *Save settings*
+4. Restart **MultiAI**
+## Settings (legacy, ../settings/config.json)
 ```js
     {
         "debug_mode": "True", 
@@ -108,6 +115,7 @@ git clone https://github.com/ShamHyper/MultiAI.git
 ![5](https://i.imgur.com/wR1fGIn.png?raw=true)
 **5. Video Analyzer**
 ![6](https://i.imgur.com/cssEq5K.png?raw=true)
+![6.1](https://i.imgur.com/z8aOPXj.png?raw=true)
 **6. Prompt Generator**
 ![7](https://i.imgur.com/hRVhMKa.png?raw=true)
 ## About Python 3.11 - 3.12

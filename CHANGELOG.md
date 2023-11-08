@@ -3,6 +3,7 @@
 - Fixed all bugs of version **1.7**
 - All defs renamed for simpler use
 - Progress textbox for **Video Analyzer** cleaner
+- Added Settings tab. Now you don't have to go into config.json and change something with your hands. This tab will do everything for you!
 ## 1.7.x
 - Fixed all bugs of version **1.6**
 - Work on optimization has been carried out
