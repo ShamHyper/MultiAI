@@ -123,16 +123,10 @@ git clone https://github.com/ShamHyper/MultiAI.git
 ## About Python 3.11 - 3.12
 *So far, most of the libraries used in my project have not been updated to 3.11 - 3.12 or are working incorrectly. I tried to adapt the project for the new version, but for now I advise you to stay within 3.10 (in extreme cases, 3.9 will also work)*
 ## Credits
-*Built with Gradio - https://www.gradio.app/*
-
-*u2net model - https://github.com/xuebinqin/U-2-Net*
-
-*RemBG library - https://github.com/danielgatis/rembg*
-
-*NSFW Detection - https://github.com/GantMan/nsfw_model*
-
-*Upscaling - https://github.com/kmewhort/upscalers*
-
-*Clip-interrogator - https://github.com/pharmapsychotic/clip-interrogator*
-
-*Fast Anime PromptGen - https://huggingface.co/FredZhang7/anime-anything-promptgen-v2*
+- Built with **Gradio** - https://www.gradio.app/
+- Using **u2net model** for *BgRemoverLite* - https://github.com/xuebinqin/U-2-Net
+- **RemBG** library for *BgRemoverLite* - https://github.com/danielgatis/rembg
+- **NSFW Detection** - https://github.com/GantMan/nsfw_model
+- **Upscaling** - https://github.com/kmewhort/upscalers
+- **Clip-interrogator** for *Image Analyzer* - https://github.com/pharmapsychotic/clip-interrogator
+- **Fast Anime PromptGen** for *Prompt Generator* - https://huggingface.co/FredZhang7/anime-anything-promptgen-v2
