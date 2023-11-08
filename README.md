@@ -1,5 +1,6 @@
 ---
 title: MultiAI
+release_version: 1.8
 app_file: app.py
 sdk: gradio
 sdk_version: 3.42.0
