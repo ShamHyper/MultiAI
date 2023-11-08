@@ -129,4 +129,4 @@ git clone https://github.com/ShamHyper/MultiAI.git
 - **NSFW Detection** - https://github.com/GantMan/nsfw_model
 - **Upscaling** - https://github.com/kmewhort/upscalers
 - **Clip-interrogator** for *Image Analyzer* - https://github.com/pharmapsychotic/clip-interrogator
-- **Fast Anime PromptGen** for *Prompt Generator* - https://huggingface.co/FredZhang7/anime-anything-promptgen-v2
+- **Fast Prompt Generator** - https://huggingface.co/FredZhang7/anime-anything-promptgen-v2
