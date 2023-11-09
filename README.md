@@ -121,9 +121,9 @@ python3 app.py
 
 This is a very BETA version of the installation for Linux. I have briefly checked the functionality and do not really understand how to set up a venv for this OS yet.
 
-| BgRemoverLite | Second Header | Image upscaler | NSFW Detector | Image Analyzer  | Video Analyzer | Prompt Generator |
-| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-| Fully functional  | Partially functional | Not tested | Not tested | Not tested | Not tested | Not tested |
+| BgRemoverLite | Image upscaler | NSFW Detector | Image Analyzer  | Video Analyzer | Prompt Generator |
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+| Fully functional  | Partially functional | Not tested | Not tested | Not tested | Not tested |
 ## Settings tab (recommended)
 ### Now you don't have to go into config.json and change something with your hands. This tab will do everything for you!
 ![cfg](https://i.imgur.com/DzCcfnu.png?raw=true)
