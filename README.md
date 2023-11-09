@@ -87,7 +87,7 @@ git clone https://github.com/ShamHyper/MultiAI.git
 ```sh
 sudo apt install python3
 ```
-**2. Install Pip**
+**2. Install PIP**
 ```sh
 sudo apt install python3-pip
 ```
@@ -115,6 +115,12 @@ pip3 install -r requirements.txt
 ```sh
 python3 app.py
 ```
+
+This is a very BETA version of the installation for Linux. I have briefly checked the functionality and do not really understand how to set up a venv for this OS yet.
+
+| BgRemoverLite | Second Header | Image upscaler | NSFW Detector | Image Analyzer  | Video Analyzer | Prompt Generator |
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+| Fully functional  | Partially functional | Not tested | Not tested | Not tested | Not tested | Not tested |
 ## Settings tab (recommended)
 ### Now you don't have to go into config.json and change something with your hands. This tab will do everything for you!
 ![cfg](https://i.imgur.com/DzCcfnu.png?raw=true)
