@@ -42,7 +42,7 @@
 **2. NVIDIA GPU with CUDA 11.8 support**
 
 **3. 16gb RAM**
-## Installation (recommended)
+## Installation for Windows (recommended)
 **1. Install [winget](https://learn.microsoft.com/windows/package-manager/winget/#install-winget)**
 
 **2. Install Python**
@@ -66,7 +66,7 @@ winget install -e --id Gyan.FFmpeg
 git clone https://github.com/ShamHyper/MultiAI.git
 ```
 **8. Run *install.bat* for first time. Next time run *run.bat***
-## Installation (legacy)
+## Installation for Windows (legacy)
 **1. Install [Python 3.10.x](https://www.python.org/downloads/)**
 
 **2. Install [Git](https://git-scm.com/downloads)**
@@ -82,6 +82,39 @@ git clone https://github.com/ShamHyper/MultiAI.git
 **7. Unarchive ZIP**
 
 **8. Run *install.bat* for first time. Next time run *run.bat***
+## [BETA]Installation for Linux (tested on Ubuntu)
+**1. Install Python**
+```sh
+sudo apt install python3
+```
+**2. Install Pip**
+```sh
+sudo apt install python3-pip
+```
+**3. Install Git**
+```py
+sudo apt install git
+```
+**4. Install FFmpeg**
+```py
+sudo apt install FFmpeg
+```
+**5. Install [CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Linux)**
+
+**6. Restart your PC**
+
+**7. Clone repository**
+```git
+git clone https://github.com/ShamHyper/MultiAI.git
+```
+**8. In terminal, type for first time:**
+```sh
+pip3 install -r requirements.txt
+```
+**9. In terminal, type for run MultiAI:**
+```sh
+python3 app.py
+```
 ## Settings tab (recommended)
 ### Now you don't have to go into config.json and change something with your hands. This tab will do everything for you!
 ![cfg](https://i.imgur.com/DzCcfnu.png?raw=true)
