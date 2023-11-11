@@ -21,9 +21,7 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 import cv2
 from numba import cuda
 
-############################ 
-version = "MultiAI v1.8.2"
-############################ 
+version = "MultiAI v1.9.0"
 
 ##################################################################################################################################
 
@@ -60,6 +58,12 @@ class init:
             rm_tmp = os.path.join(init.current_directory, output_dir)
             sh.rmtree(rm_tmp)
         except (PermissionError, FileNotFoundError, FileExistsError, Exception):
+            pass
+        
+        tmp_file = "tmp.png"
+        try:
+            os.remove(tmp_file)
+        except FileNotFoundError as e:
             pass
     
     def preloader():
@@ -390,19 +394,24 @@ class multi:
         avg_sum = total_sum / file_count 
         percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
         
-        if percentages['porn'] > 70:
-            sh.move(file_Vspc, 'outputs/video_analyze_nsfw')
-        else:
-            sh.move(file_Vspc, 'outputs/video_analyze_plain')
+        value1 = percentages["drawings"]
+        value2 = percentages["hentai"]
+        value3 = percentages["neutral"]
+        value4 = percentages["porn"]
+        value5 = percentages["sexy"]
+        
+        Vspc_output = f"Drawings: {value1}%\n"
+        Vspc_output += f"Hentai: {value2}%\n"
+        Vspc_output += f"Porn: {value4}%\n"
+        Vspc_output += f"Sexy: {value5}%\n"
+        Vspc_output += f"Neutral: {value3}%"
         
         rm_tmp = os.path.join(init.current_directory, dir_tmp)
         sh.rmtree(rm_tmp)
         cap.release()
         cv2.destroyAllWindows()
         
-        bth_Vspc_output = "Test"
-        
-        return bth_Vspc_output
+        return Vspc_output
     
     def process_frame(frame):
         result_frame = frame    

@@ -119,7 +119,7 @@ pip3 install -r requirements.txt
 python3 app.py
 ```
 
-This is a very BETA version of the installation for Linux. I have briefly checked the functionality and do not really understand how to set up a venv for this OS yet.
+*This is a very BETA version of the installation for Linux. I have briefly checked the functionality and do not really understand how to set up a venv for this OS yet.*
 
 | BgRemoverLite | Image upscaler | NSFW Detector | Image Analyzer  | Video Analyzer | Prompt Generator |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |

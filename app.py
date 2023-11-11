@@ -14,8 +14,8 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
         with gr.Row():
             gr.Label("Remove background from single image")
         with gr.Row():
-            image_input = gr.Image()
-            image_output = gr.Image(width=200, height=240)
+            image_input = gr.Image(width=200, height=400)
+            image_output = gr.Image(width=200, height=400)
         with gr.Row():
             rembg_button = gr.Button("🖼️ Remove one background")
         with gr.Row():
@@ -39,8 +39,8 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
         with gr.Row():
             gr.Label("Upscale image up to 10x size")
         with gr.Row():
-            upsc_image_input = gr.Image()
-            upsc_image_output = gr.Image(width=200, height=240)
+            upsc_image_input = gr.Image(width=200, height=400)
+            upsc_image_output = gr.Image(width=200, height=400)
         with gr.Row():
             model_ups = gr.Dropdown(label="Model", choices=available_models())
             scale_factor = gr.Slider(
@@ -90,7 +90,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
         with gr.Row():
             gr.Label("Analyze images")
         with gr.Row():
-            file_spc = gr.Image()
+            file_spc = gr.Image(width=200, height=400)
             spc_output = gr.Textbox(label="Stats", placeholder="Press start to get specifications of image")
         with gr.Row():
             clip_checked = gr.Checkbox(value=False, label="Use CLIP for generate prompt (slow if a weak PC)")
@@ -102,7 +102,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
         with gr.Row():
             gr.Label("Analyze Video")
         with gr.Row():
-            file_Vspc = gr.Video()
+            file_Vspc = gr.Video(sources="upload", width=200, height=400)
             Vspc_output = gr.Textbox(label="Stats", placeholder="Press start to get specifications of Video")
         with gr.Row():
             Vspc_button = gr.Button("👟 Click here to start")   

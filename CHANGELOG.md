@@ -1,4 +1,11 @@
 # Changelog
+## 1.9.x
+- Fixed all bugs of version **1.8**
+- Updating for requirements.txt old-version libs
+- Fixed requirements.txt (gfpgan requirements compability) 
+- Fixed bug with tmp.png in MultiAI/.. folder
+- Gradio update
+- Fixed single video **Video Analyzer** (idk why and how I broke this function...)
 ## 1.8.x
 - Fixed all bugs of version **1.7**
 - All defs renamed for simpler use
