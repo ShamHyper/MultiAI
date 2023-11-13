@@ -6,6 +6,8 @@
 - Fixed bug with tmp.png in MultiAI/.. folder
 - Gradio update
 - Fixed single video **Video Analyzer** (idk why and how I broke this function...)
+- New color theme
+- Clear log in clearing tab
 ## 1.8.x
 - Fixed all bugs of version **1.7**
 - All defs renamed for simpler use

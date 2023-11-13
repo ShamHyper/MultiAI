@@ -5,7 +5,12 @@ import gradio as gr
 from clear import clear
 from upscalers import available_models, clear_on_device_caches
 
-with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) as multiai:
+with open("settings/.css", "r") as file:
+    CSS = file.read()
+
+with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
+    primary_hue="purple", 
+    secondary_hue="blue")) as multiai:
     gr.Markdown(init.ver)
     
 ##################################################################################################################################
@@ -160,10 +165,15 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             
 ##################################################################################################################################
             
-    with gr.Tab("Clear all outputs"):
+    with gr.Tab("Clearing"):
         with gr.Row():
+            gr.Label("Clear all outputs")
             clear_all_button = gr.Button("⭐ Start")
             clear_all_tb = gr.Textbox(label="Result")
+        with gr.Row():
+            gr.Label("Clear logs")
+            logs_clear = gr.Button("⭐ Start")
+            logs_clear_tb = gr.Textbox(label="Result")
             
 ##################################################################################################################################
 
@@ -208,6 +218,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     promptgen_button.click(multi.PromptGenetator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
     
     clear_all_button.click(init.clear_all, outputs=clear_all_tb)
+    logs_clear.click(init.ClearLogs, outputs=logs_clear_tb)
     
     settings_save.click(config.save_config_gr, inputs=[settings_debug_mode, settings_start_in_browser, 
                                                        settings_share_gradio, settings_preload_models, 

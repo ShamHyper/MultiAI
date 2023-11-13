@@ -21,7 +21,7 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 import cv2
 from numba import cuda
 
-version = "MultiAI v1.9.0"
+version = "MultiAI v1.9.1"
 
 ##################################################################################################################################
 
@@ -85,6 +85,16 @@ class init:
             logging.info("All outputs cleared!")
         clear_all_tb = "Done!"
         return clear_all_tb
+    
+    def ClearLogs():
+        outputs_dir = os.path.join(init.current_directory, "logs")
+        sh.rmtree(outputs_dir)
+        folder_path = "logs"
+        os.makedirs(folder_path)
+        file = open(f"{folder_path}/logs will be here.txt", "w")
+        file.close()
+        logs_clear_tb = "Done!"
+        return logs_clear_tb
         
 ##################################################################################################################################
 
@@ -472,7 +482,7 @@ class multi:
                     file_sum = sum(values.values())
                     total_sum += file_sum 
                     file_count += 1
-                except (AssertionError, Exception):
+                except Exception:
                     pass
                 
             try: 
@@ -497,7 +507,7 @@ class multi:
                     sh.copy(video_path, 'outputs/video_analyze_plain')
                     _plain += 1
                     _plain_factor = True
-            except (PermissionError, FileExistsError, AssertionError, Exception):
+            except (PermissionError, FileExistsError, Exception):
                 pass
                 
             cap.release()
@@ -586,3 +596,5 @@ class multi:
             outs[i] = str(outs[i]['generated_text']).replace('  ', '').rstrip(',')
         promptgen_output = ('\n\n'.join(outs) + '\n')  
         return promptgen_output 
+
+##################################################################################################################################
