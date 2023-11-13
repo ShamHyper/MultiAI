@@ -87,13 +87,23 @@ class init:
         return clear_all_tb
     
     def ClearLogs():
-        outputs_dir = os.path.join(init.current_directory, "logs")
-        sh.rmtree(outputs_dir)
-        folder_path = "logs"
-        os.makedirs(folder_path)
-        file = open(f"{folder_path}/logs will be here.txt", "w")
-        file.close()
-        logs_clear_tb = "Done!"
+        try:
+            outputs_dir = os.path.join(init.current_directory, "logs")
+            sh.rmtree(outputs_dir)
+            folder_path = "logs"
+            os.makedirs(folder_path)
+            file = open(f"{folder_path}/logs will be here.txt", "w")
+            file.close()
+            logs_clear_tb = "Done!"
+        except PermissionError: 
+            folder_path = "logs"
+            os.makedirs(folder_path)
+            try:
+                file = open(f"{folder_path}/logs will be here.txt", "w")
+                file.close()
+            except FileExistsError:
+                pass
+            logs_clear_tb = "PermissionError, because I can't delete the blog that was created in this session"
         return logs_clear_tb
         
 ##################################################################################################################################
