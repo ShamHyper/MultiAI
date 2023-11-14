@@ -26,12 +26,13 @@ If applicable, add screenshots to help explain your problem.
 **Errors in console**
 Put your error here using "```"
 
-**PC specs.:**
+**PC specs:**
  - OS: [e.g. Windows 10 Pro]
  - GPU: [e.g. GTX 1080]
  - RAM: [e.g. 8 GB]
  - MultiAI Version: [e.g. 1.5.1]
  - Python Version: [e.g. 3.9]
+ - etc.
 
 **Additional context**
 Add any other context about the problem here.
