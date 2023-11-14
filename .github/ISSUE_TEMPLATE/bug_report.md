@@ -23,12 +23,10 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+**Errors in console**
+Put your error here using "```"
 
-**Smartphone (please complete the following information):**
+**PC specs.:**
  - OS: [e.g. Windows 10 Pro]
  - GPU: [e.g. GTX 1080]
  - RAM: [e.g. 8 GB]
