@@ -175,7 +175,7 @@ python3 app.py
 **6. Prompt Generator**
 ![7](https://i.imgur.com/hRVhMKa.png?raw=true)
 ## About Python 3.11 - 3.12
-*So far, most of the libraries used in my project have not been updated to 3.11 - 3.12 or are working incorrectly. I tried to adapt the project for the new version, but for now I advise you to stay within 3.10 (in extreme cases, 3.9 will also work)*
+*So far, most of the libraries used in my project have not been updated to 3.11 - 3.12 or are working incorrectly. I tried to adapt the project for the new version, but for now I advise you to stay within 3.10. **After v1.10.x, discontinued support for 3.9, only 3.10 now***
 ## Credits
 - Built with **Gradio** - https://www.gradio.app/
 - Using **u2net model** for *BgRemoverLite* - https://github.com/xuebinqin/U-2-Net

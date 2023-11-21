@@ -179,23 +179,21 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
 
     with gr.Tab("Settings"):
         with gr.Row():
-            gr.Label("This options checked by default! This not your options!")
+            settings_debug_mode = gr.Checkbox(value=config.debug, label="Enable debug mode (write debug info and logs)")
         with gr.Row():
-            settings_debug_mode = gr.Checkbox(value=True, label="Enable debug mode (write debug info and logs)")
+            settings_start_in_browser = gr.Checkbox(value=config.inbrowser, label="Enable MultiAI starting in browser")
         with gr.Row():
-            settings_start_in_browser = gr.Checkbox(value=True, label="Enable MultiAI starting in browser")
+            settings_share_gradio = gr.Checkbox(value=config.share_gradio, label="Enable MultiAI starting with share link")
         with gr.Row():
-            settings_share_gradio = gr.Checkbox(value=False, label="Enable MultiAI starting with share link")
+            settings_preload_models = gr.Checkbox(value=config.preload_models, label="Enable preloading AI models")
         with gr.Row():
-            settings_preload_models = gr.Checkbox(value=False, label="Enable preloading AI models")
+            settings_clear_on_start = gr.Checkbox(value=config.clear_on_start, label="Enable clear all outputs on MultiAI start")
         with gr.Row():
-            settings_clear_on_start = gr.Checkbox(value=False, label="Enable clear all outputs on MultiAI start")
-        with gr.Row():
-            json_files = gr.Dropdown(label="Pick .json file to write settings", choices=config.list_json_files())
+            json_files = gr.Label("Saving in [../settings/config.json]")
             settings_save = gr.Button("🗃️ Save settings")
             settings_save_progress = gr.Textbox(label="Saving progress", placeholder="Your saving progress will be here")
         with gr.Row():
-            gr.Label("Creating new ones .json files in ../settings will not give any effect. Choose only config.json in dropdown above!")
+            gr.Label("Creating new ones .json files in ../settings will not give any effect.")
             
 ##################################################################################################################################
                      
@@ -222,7 +220,7 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
     
     settings_save.click(config.save_config_gr, inputs=[settings_debug_mode, settings_start_in_browser, 
                                                        settings_share_gradio, settings_preload_models, 
-                                                       settings_clear_on_start, json_files], 
+                                                       settings_clear_on_start], 
                         outputs=settings_save_progress)
 
 clear()

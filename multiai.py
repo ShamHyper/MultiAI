@@ -21,7 +21,7 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 import cv2
 from numba import cuda
 
-version = "MultiAI v1.9.1"
+version = "MultiAI v1.10.0"
 
 ##################################################################################################################################
 
@@ -109,7 +109,7 @@ class init:
 ##################################################################################################################################
 
 class config:
-    def save_config_gr(settings_debug_mode, settings_start_in_browser, settings_share_gradio, settings_preload_models, settings_clear_on_start, json_file):
+    def save_config_gr(settings_debug_mode, settings_start_in_browser, settings_share_gradio, settings_preload_models, settings_clear_on_start):
         settings = {
             "debug_mode": str(settings_debug_mode),
             "start_in_browser": str(settings_start_in_browser),
@@ -118,25 +118,20 @@ class config:
             "clear_on_start": str(settings_clear_on_start)
         }
         
-        json_file = "settings/" + str(json_file)
-        
+        if "dev_config.json" in os.listdir("settings"):
+            json_file = "dev_config.json"
+        elif "config.json" in os.listdir("settings"):
+            json_file = "config.json"
+            
+        json_file = "settings/" + json_file
+    
         with open(json_file, 'w') as file:
             json.dump(settings, file, indent=4)
             
         settings_save_progress = f"Settings saved to [{json_file}]. Restart MultiAI!"
+        
         return settings_save_progress
     
-    def list_json_files():
-        directory = "settings"
-        json_files = []
-        files = os.listdir(directory)
-        
-        for file in files:
-            if file.endswith('.json'):
-                json_files.append(file)
-        
-        return json_files
-
     if "dev_config.json" in os.listdir("settings"):
         with open("settings/dev_config.json") as json_file:
             data = json.load(json_file)
