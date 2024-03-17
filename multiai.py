@@ -21,7 +21,7 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 import cv2
 from numba import cuda
 
-version = "MultiAI v1.10.0"
+version = "MultiAI v1.11.0-beta"
 
 ##################################################################################################################################
 
@@ -96,9 +96,9 @@ class init:
             file.close()
             logs_clear_tb = "Done!"
         except PermissionError: 
-            folder_path = "logs"
-            os.makedirs(folder_path)
             try:
+                folder_path = "logs"
+                os.makedirs(folder_path)
                 file = open(f"{folder_path}/logs will be here.txt", "w")
                 file.close()
             except FileExistsError:
