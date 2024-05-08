@@ -21,7 +21,7 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 import cv2
 from numba import cuda
 
-version = "MultiAI v1.11.0-beta"
+version = "MultiAI v1.11.0"
 
 ##################################################################################################################################
 
@@ -103,7 +103,7 @@ class init:
                 file.close()
             except FileExistsError:
                 pass
-            logs_clear_tb = "PermissionError, because I can't delete the blog that was created in this session"
+            logs_clear_tb = "Permission Error, because I can't delete the logs that was created in this session"
         return logs_clear_tb
         
 ##################################################################################################################################

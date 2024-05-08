@@ -1,4 +1,10 @@
 # Changelog
+## 1.11.x
+- QOL updates
+- Libs versions update in requirements
+- Reworking logs (W.I.P.)
+## 1.10.x
+- Fixed live settings for #3 issue
 ## 1.9.x
 - Fixed all bugs of version **1.8**
 - Updating for requirements.txt old-version libs
@@ -6,7 +12,7 @@
 - Fixed bug with tmp.png in MultiAI/.. folder
 - Gradio update
 - Fixed single video **Video Analyzer** (idk why and how I broke this function...)
-- New color theme
+- New color theme - with .css file for custom theme in ../settings
 - Clear log in clearing tab
 ## 1.8.x
 - Fixed all bugs of version **1.7**

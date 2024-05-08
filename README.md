@@ -43,6 +43,8 @@
 **2. NVIDIA GPU with CUDA 11.8 support**
 
 **3. 16gb RAM**
+
+**4. 8gb+ free SSD (NOT HDD) space**
 ## Installation for Windows (recommended)
 **1. Install [winget](https://learn.microsoft.com/windows/package-manager/winget/#install-winget)**
 
