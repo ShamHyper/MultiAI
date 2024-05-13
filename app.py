@@ -170,16 +170,12 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
             gr.Label("Clear all outputs")
             clear_all_button = gr.Button("⭐ Start")
             clear_all_tb = gr.Textbox(label="Result")
-        with gr.Row():
-            gr.Label("Clear logs")
-            logs_clear = gr.Button("⭐ Start")
-            logs_clear_tb = gr.Textbox(label="Result")
             
 ##################################################################################################################################
 
     with gr.Tab("Settings"):
         with gr.Row():
-            settings_debug_mode = gr.Checkbox(value=config.debug, label="Enable debug mode (write debug info and logs)")
+            settings_debug_mode = gr.Checkbox(value=config.debug, label="Enable debug mode (write debug info)")
         with gr.Row():
             settings_start_in_browser = gr.Checkbox(value=config.inbrowser, label="Enable MultiAI starting in browser")
         with gr.Row():
@@ -216,7 +212,6 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
     promptgen_button.click(multi.PromptGenetator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
     
     clear_all_button.click(init.clear_all, outputs=clear_all_tb)
-    logs_clear.click(init.ClearLogs, outputs=logs_clear_tb)
     
     settings_save.click(config.save_config_gr, inputs=[settings_debug_mode, settings_start_in_browser, 
                                                        settings_share_gradio, settings_preload_models, 

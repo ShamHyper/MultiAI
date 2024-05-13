@@ -2,7 +2,7 @@
 ## 1.11.x
 - QOL updates
 - Libs versions update in requirements
-- Reworking logs (W.I.P.)
+- Removed logs
 ## 1.10.x
 - Fixed live settings for #3 issue
 ## 1.9.x

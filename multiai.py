@@ -5,7 +5,6 @@ from tqdm import tqdm
 import json
 import random
 import datetime
-import logging
 
 from PIL import Image, UnidentifiedImageError
 from rembg import remove
@@ -21,16 +20,12 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 import cv2
 from numba import cuda
 
-version = "MultiAI v1.11.0"
+version = "MultiAI v1.11.1"
 
 ##################################################################################################################################
 
 class init:
     ver = version
-    
-    log_current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    log_filename = f"logs/{ver}_log_{log_current_time}.log"
-    logging.basicConfig(filename=log_filename, level=logging.INFO, format='%(asctime)s %(message)s')
     
     print(f"Initializing {ver} launch...")
     
@@ -45,11 +40,9 @@ class init:
         if filename in files_in_directory:
             if config.debug: 
                 print("NSFW Model detected")
-                logging.info("NSFW Model detected")
         else:
             if config.debug: 
                 print("NSFW Model undected. Downloading...")
-                logging.info("NSFW Model undected. Downloading...")
             urllib.request.urlretrieve(init.url, init.modelname)
     
     def delete_tmp_pngs():
@@ -69,7 +62,6 @@ class init:
     def preloader():
         if config.debug: 
             print("Preloading models...")
-            logging.info("Preloading models...")
         models.ci_load()
         models.nsfw_load()
         models.tokenizer_load()  
@@ -82,29 +74,8 @@ class init:
         multi.VideoAnalyzerBatch_Clear()
         if config.debug: 
             print("All outputs cleared!")
-            logging.info("All outputs cleared!")
         clear_all_tb = "Done!"
         return clear_all_tb
-    
-    def ClearLogs():
-        try:
-            outputs_dir = os.path.join(init.current_directory, "logs")
-            sh.rmtree(outputs_dir)
-            folder_path = "logs"
-            os.makedirs(folder_path)
-            file = open(f"{folder_path}/logs will be here.txt", "w")
-            file.close()
-            logs_clear_tb = "Done!"
-        except PermissionError: 
-            try:
-                folder_path = "logs"
-                os.makedirs(folder_path)
-                file = open(f"{folder_path}/logs will be here.txt", "w")
-                file.close()
-            except FileExistsError:
-                pass
-            logs_clear_tb = "Permission Error, because I can't delete the logs that was created in this session"
-        return logs_clear_tb
         
 ##################################################################################################################################
 
@@ -136,12 +107,10 @@ class config:
         with open("settings/dev_config.json") as json_file:
             data = json.load(json_file)
             print("dev_config.json loaded")
-            logging.info("dev_config.json loaded")
     elif "config.json" in os.listdir("settings"):
         with open("settings/config.json") as json_file:
             data = json.load(json_file)
             print("config.json loaded")
-            logging.info("config.json loaded")
 
     debug = data.get('debug_mode', 'False').lower() == 'true'
     inbrowser = data.get('start_in_browser', 'False').lower() == 'true'
@@ -152,7 +121,6 @@ class config:
     if not (debug or inbrowser or share_gradio or preload_models or clear_on_start):
         if debug: 
             print("Something wrong in config.json. Check them out!")
-            logging.info("Something wrong in config.json. Check them out!")
 
 ##################################################################################################################################
 
@@ -167,7 +135,6 @@ class models:
             elif nsfw_status == True:
                 if config.debug: 
                     print("NSFW model already loaded!")
-                    logging.info("NSFW model already loaded!")
         except NameError:
                 init.check_file(init.modelname)
                 model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
@@ -185,7 +152,6 @@ class models:
             elif tokenizer_status == True:
                 if config.debug: 
                     print("Tokinezer already loaded!")
-                    logging.info("Tokinezer already loaded!")
         except NameError:
                 tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
                 tokenizer.add_special_tokens({'pad_token': '[PAD]'})
@@ -202,7 +168,6 @@ class models:
             elif ci_status == True:
                 if config.debug: 
                     print("CLIP already loaded!")
-                    logging.info("CLIP already loaded!")
         except NameError:
                 ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
                 ci_status = True
@@ -217,7 +182,6 @@ class multi:
         except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
             if config.debug: 
                 print(f"Error: {e}")
-                logging.info(f"Error: {e}")
             pass
         return outputs
 
@@ -236,7 +200,6 @@ class multi:
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
                 if config.debug: 
                     print(f"Error: {e}")
-                    logging.info(f"Error: {e}")
                 pass
         outputs = init.current_directory + r"\outputs" + r"\rembg_outputs"
         return outputs
@@ -257,7 +220,6 @@ class multi:
         if detector_skeep_dr == True:
             if config.debug: 
                 print("I will skip drawings!")
-                logging.info("I will skip drawings!")
         models.nsfw_load()
         init.check_file(init.modelname)
         FOLDER_NAME = str(detector_input)
@@ -291,7 +253,6 @@ class multi:
                     if value_draw > DRAW_THRESHOLD or value_nsfw_2 > THRESHOLD*1.5:
                         if config.debug: 
                             print(f"I skipped this pic, because value_draw[{value_draw}] > DRAW_THRESHOLD[{DRAW_THRESHOLD}]")
-                            logging.info(f"I skipped this pic, because value_draw[{value_draw}] > DRAW_THRESHOLD[{DRAW_THRESHOLD}]")
                         pass
                     elif value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
                         sh.copyfile(file, f'./outputs/detector_outputs_nsfw/{file.split("/")[-1]}')
@@ -303,7 +264,6 @@ class multi:
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
                 if config.debug: 
                     print(f"Error: {e}")
-                    logging.info(f"Error: {e}")
                 pass
 
         outputs = (
@@ -369,7 +329,6 @@ class multi:
         except FileNotFoundError as e:
             if config.debug: 
                 print(f"Error: {e}")
-                logging.info(f"Error: {e}")
             pass
 
         return spc_output
@@ -475,7 +434,6 @@ class multi:
                     if config.debug == True:
                         if config.debug: 
                             print("Frame-Skip disabled!")
-                            logging.info("Frame-Skip disabled!")
                     else:
                         pass
                     
@@ -533,7 +491,6 @@ class multi:
             if config.debug: 
                 print("")
                 print(out_cmd)
-                logging.info(out_cmd)
                 print("")
             out_cmd = str("")
             avg_sum = 0
