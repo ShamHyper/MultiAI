@@ -177,7 +177,7 @@ python3 app.py
 ![6.1](https://i.imgur.com/z8aOPXj.png?raw=true)
 **6. Prompt Generator**
 ![7](https://i.imgur.com/hRVhMKa.png?raw=true)
-**7. Prompt Generator**
+**7. [BETA]AI Detector**
 ![8](https://i.imgur.com/qYRg0AS.png?raw=true)
 ## About Python 3.11 - 3.12
 *So far, most of the libraries used in my project have not been updated to 3.11 - 3.12 or are working incorrectly. I tried to adapt the project for the new version, but for now I advise you to stay within 3.10. **After v1.10.x, discontinued support for 3.9, only 3.10 now***
