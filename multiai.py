@@ -23,7 +23,7 @@ from numba import cuda
 from keras.models import load_model
 import numpy as np
 
-version = "MultiAI v1.12.0"
+version = "MultiAI v1.12.1"
 
 ##################################################################################################################################
 
@@ -195,14 +195,14 @@ class models:
         global model_h5, h5_status
         try:
             if h5_status != True:
-                init.check_file(init.modelname_h5)
+                init.checkfile_h5(init.modelname_h5)
                 model_h5 = load_model('model.h5')
                 h5_status = True
             elif h5_status == True:
                 if config.debug: 
                     print("H5 model already loaded!")
         except NameError:
-                init.check_file(init.modelname_h5)
+                init.checkfile_h5(init.modelname_h5)
                 model_h5 = load_model('model.h5')
                 h5_status = True
         return model_h5, h5_status
