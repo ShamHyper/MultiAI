@@ -20,7 +20,10 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 import cv2
 from numba import cuda
 
-version = "MultiAI v1.11.1"
+from keras.models import load_model
+import numpy as np
+
+version = "MultiAI v1.12.0"
 
 ##################################################################################################################################
 
@@ -34,6 +37,9 @@ class init:
     modelname = "nsfw_mobilenet2.224x224.h5"
     url = "https://s3.amazonaws.com/ir_public/nsfwjscdn/nsfw_mobilenet2.224x224.h5"
     
+    modelname_h5 = "model.h5"
+    url_h5 = "https://github.com/Shahnawax/HAR-CNN-Keras/raw/master/model.h5"
+    
     def check_file(filename):
         files_in_directory = os.listdir(init.current_directory)
 
@@ -44,6 +50,17 @@ class init:
             if config.debug: 
                 print("NSFW Model undected. Downloading...")
             urllib.request.urlretrieve(init.url, init.modelname)
+    
+    def checkfile_h5(filename):
+        files_in_directory = os.listdir(init.current_directory)
+        
+        if filename in files_in_directory:
+            if config.debug:
+                print("H5 Model detected")
+        else:
+            if config.debug: 
+                print("H5 Model undected. Downloading...")
+            urllib.request.urlretrieve(init.url_h5, init.modelname_h5)
     
     def delete_tmp_pngs():
         output_dir = "tmp_pngs"
@@ -72,6 +89,7 @@ class init:
         multi.BgRemoverLite_Clear()
         multi.NSFWDetector_Clear()
         multi.VideoAnalyzerBatch_Clear()
+        multi.AID_Clear()
         if config.debug: 
             print("All outputs cleared!")
         clear_all_tb = "Done!"
@@ -172,6 +190,22 @@ class models:
                 ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
                 ci_status = True
         return ci, ci_status
+    
+    def h5_load():
+        global model_h5, h5_status
+        try:
+            if h5_status != True:
+                init.check_file(init.modelname_h5)
+                model_h5 = load_model('model.h5')
+                h5_status = True
+            elif h5_status == True:
+                if config.debug: 
+                    print("H5 model already loaded!")
+        except NameError:
+                init.check_file(init.modelname_h5)
+                model_h5 = load_model('model.h5')
+                h5_status = True
+        return model_h5, h5_status
     
 ##################################################################################################################################
                   
@@ -558,5 +592,83 @@ class multi:
             outs[i] = str(outs[i]['generated_text']).replace('  ', '').rstrip(',')
         promptgen_output = ('\n\n'.join(outs) + '\n')  
         return promptgen_output 
+    
+##################################################################################################################################
+
+    def is_image_generated(test_image):
+                test_image = test_image.resize((3, 90))  
+                test_image = test_image.convert('L')  
+                test_image = np.array(test_image)
+                test_image = np.expand_dims(test_image, axis=0)
+                test_image = np.expand_dims(test_image, axis=-1)  
+                result = model_h5.predict(test_image)
+                if config.debug: 
+                    print(f"Result of detecting:{result}") 
+                if result[0][0] >= 1:
+                    isai = "This is an image created by AI"
+                    return isai
+                else:
+                    isai = "This is an image created by HUMAN"
+                    return isai
+                
+
+    def AiDetector_single(aid_input_single, aid_output_single):
+        models.h5_load()   
+        img_h5 = Image.fromarray(aid_input_single)
+        aid_output_single = multi.is_image_generated(img_h5)
+        return aid_output_single
+    
+
+    def AiDetector_batch(aid_input_batch, aid_output_batch): 
+        models.h5_load()   
+        aid_ai_dir = os.path.join(init.current_directory, "outputs/aid_ai")
+        aid_human_dir = os.path.join(init.current_directory, "outputs/aid_human")
+        
+        if not os.path.exists(aid_ai_dir):
+            os.makedirs(aid_ai_dir)
+        if not os.path.exists(aid_human_dir):
+            os.makedirs(aid_human_dir)
+        
+        image_files = os.listdir(aid_input_batch)
+        
+        for image_file in image_files:
+            try:
+                img_path = os.path.join(aid_input_batch, image_file)
+                
+                if config.debug:
+                    print(f"Processing image: {img_path}")
+                
+                img_h5 = Image.open(img_path)
+                result = multi.is_image_generated(img_h5)
+                
+                if config.debug:
+                    print(f"Result for {image_file}: {result}")
+                
+                if result == "This is an image created by AI":
+                    sh.copyfile(img_path, os.path.join(aid_ai_dir, image_file))
+                elif result == "This is an image created by HUMAN":
+                    sh.copyfile(img_path, os.path.join(aid_human_dir, image_file))
+            except (UnidentifiedImageError, PermissionError, FileNotFoundError, FileExistsError, Exception) as e:
+                print(f"Error processing {image_file}: {e}")
+        
+        aid_output_batch = "Images sorted successfully!"
+        return aid_output_batch
+    
+    
+    def AID_Clear():
+        outputs_dir1 = os.path.join(init.current_directory, "outputs/aid_ai")
+        sh.rmtree(outputs_dir1)
+        outputs_dir2 = os.path.join(init.current_directory, "outputs/aid_human")
+        sh.rmtree(outputs_dir2)
+        folder_path1 = "outputs/aid_ai"
+        os.makedirs(folder_path1)
+        file = open(f"{folder_path1}/outputs will be here.txt", "w")
+        file.close()
+        folder_path2 = "outputs/aid_human"
+        os.makedirs(folder_path2)
+        file = open(f"{folder_path2}/outputs will be here.txt", "w")
+        file.close()
+        outputs = "Done!"
+        return outputs
 
 ##################################################################################################################################

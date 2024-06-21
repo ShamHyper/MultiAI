@@ -37,6 +37,8 @@
 **5. Video Analyzer**
 
 **6. Prompt Generator**
+
+**7. [BETA]AI Detector**
 ## System requirements
 **1. Windows 10-11**
 
@@ -121,16 +123,15 @@ python3 app.py
 
 *This is a very BETA version of the installation for Linux. I have briefly checked the functionality and do not really understand how to set up a venv for this OS yet.*
 
-| BgRemoverLite | Image upscaler | NSFW Detector | Image Analyzer  | Video Analyzer | Prompt Generator |
-| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-| Fully functional  | Partially functional | Not tested | Not tested | Not tested | Not tested |
+| BgRemoverLite | Image upscaler | NSFW Detector | Image Analyzer  | Video Analyzer | Prompt Generator | AI Detector
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+| Fully functional  | Partially functional | Not tested | Not tested | Not tested | Not tested | Not tested
 ## Settings tab (recommended)
 ### Now you don't have to go into config.json and change something with your hands. This tab will do everything for you!
-![cfg](https://i.imgur.com/DzCcfnu.png?raw=true)
+![cfg](https://i.imgur.com/Pw00z0a.png?raw=true)
 1. Choose necessary checkboxes
-2. Pick config.json
-3. Press *Save settings*
-4. Restart **MultiAI**
+2. Press *Save settings*
+3. Restart **MultiAI**
 ## Settings (legacy, ../settings/config.json)
 ```js
     {
@@ -176,6 +177,8 @@ python3 app.py
 ![6.1](https://i.imgur.com/z8aOPXj.png?raw=true)
 **6. Prompt Generator**
 ![7](https://i.imgur.com/hRVhMKa.png?raw=true)
+**7. Prompt Generator**
+![8](https://i.imgur.com/qYRg0AS.png?raw=true)
 ## About Python 3.11 - 3.12
 *So far, most of the libraries used in my project have not been updated to 3.11 - 3.12 or are working incorrectly. I tried to adapt the project for the new version, but for now I advise you to stay within 3.10. **After v1.10.x, discontinued support for 3.9, only 3.10 now***
 ## Credits
@@ -186,5 +189,6 @@ python3 app.py
 - **Upscaling** - https://github.com/kmewhort/upscalers
 - **Clip-interrogator** for *Image Analyzer* - https://github.com/pharmapsychotic/clip-interrogator
 - **Fast Prompt Generator** - https://huggingface.co/FredZhang7/anime-anything-promptgen-v2
+- **H5 Keras Modedl** - https://github.com/Shahnawax/HAR-CNN-Keras/
 ## License
 MIT license | Copyright (c) 2023 ShamHyper

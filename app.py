@@ -93,7 +93,7 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
             
     with gr.Tab("Image Analyzer"):
         with gr.Row():
-            gr.Label("Analyze images")
+            gr.Label("Analyze image")
         with gr.Row():
             file_spc = gr.Image(width=200, height=400)
             spc_output = gr.Textbox(label="Stats", placeholder="Press start to get specifications of image")
@@ -163,6 +163,32 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
         with gr.Row():
             promptgen_button = gr.Button("⭐ Start")
             
+##################################################################################################################################            
+            
+    with gr.Tab("[BETA]AI Detector"):
+        with gr.Row():
+            gr.Label("Analyze image")
+        with gr.Row():
+            aid_input_single = gr.Image(width=200, height=400)
+            aid_output_single = gr.Textbox(label="Result", placeholder="Press start to get result")
+        with gr.Row():
+            aid_single_button = gr.Button("👟 Click here to start")
+
+####                           ####                           ####                           ####                           ####                    
+
+        with gr.Row():
+            gr.Label("Detect AI/Human images from dir")
+        with gr.Row():
+            aid_input_batch = gr.Textbox(label="Enter dir", placeholder="Enter dir like this: D:\Python\MultiAI")
+            aid_output_batch = gr.Textbox(label="Output", placeholder="AI Detector outputs will be here")
+        with gr.Row():
+            aid_batch_button = gr.Button("👟 Click here to start")
+        with gr.Row():
+            gr.Label("Clear outputs")
+        with gr.Row():
+            aid_clear_button = gr.Button("🧹 Clear outputs")
+            aid_clearp = gr.Textbox(label="Clearing progress")
+                  
 ##################################################################################################################################
             
     with gr.Tab("Clearing"):
@@ -210,6 +236,10 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
     clear_videos.click(multi.VideoAnalyzerBatch_Clear, outputs=bth_Vspc_clear_output)   
     
     promptgen_button.click(multi.PromptGenetator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
+    
+    aid_single_button.click(multi.AiDetector_single, inputs=aid_input_single, outputs=aid_output_single)
+    aid_batch_button.click(multi.AiDetector_batch, inputs=aid_input_batch, outputs=aid_output_batch)
+    aid_clear_button.click(multi.AID_Clear, outputs=aid_clearp)
     
     clear_all_button.click(init.clear_all, outputs=clear_all_tb)
     
