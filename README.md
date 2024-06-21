@@ -127,7 +127,7 @@ python3 app.py
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
 | Fully functional  | Partially functional | Not tested | Not tested | Not tested | Not tested | Not tested
 ## Settings tab (recommended)
-### Now you don't have to go into config.json and change something with your hands. This tab will do everything for you!
+**Now you don't have to go into config.json and change something with your hands. This tab will do everything for you!**
 ![cfg](https://i.imgur.com/Pw00z0a.png?raw=true)
 1. Choose necessary checkboxes
 2. Press *Save settings*
@@ -189,6 +189,6 @@ python3 app.py
 - **Upscaling** - https://github.com/kmewhort/upscalers
 - **Clip-interrogator** for *Image Analyzer* - https://github.com/pharmapsychotic/clip-interrogator
 - **Fast Prompt Generator** - https://huggingface.co/FredZhang7/anime-anything-promptgen-v2
-- **H5 Keras Modedl** - https://github.com/Shahnawax/HAR-CNN-Keras/
+- **H5 Keras Model** - https://github.com/Shahnawax/HAR-CNN-Keras/
 ## License
 MIT license | Copyright (c) 2023 ShamHyper
