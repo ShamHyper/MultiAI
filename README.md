@@ -191,4 +191,4 @@ python3 app.py
 - **Fast Prompt Generator** - https://huggingface.co/FredZhang7/anime-anything-promptgen-v2
 - **H5 Keras Model** - https://github.com/Shahnawax/HAR-CNN-Keras/
 ## License
-MIT license | Copyright (c) 2023 ShamHyper
+MIT license | Copyright (c) 2023-2024 ShamHyper

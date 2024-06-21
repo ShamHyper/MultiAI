@@ -82,6 +82,7 @@ class init:
         models.ci_load()
         models.nsfw_load()
         models.tokenizer_load()  
+        models.h5_load()
         preloaded_tb = "Done!"
         return preloaded_tb
     
