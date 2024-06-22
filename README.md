@@ -19,7 +19,7 @@
 ## Donate
 [![1](https://i.imgur.com/8Hva6OY.png)](https://www.donationalerts.com/r/shamhyper0)
 
-**ETH: 0x634907686f395570eF91cd0a4e694C3Df810D9B0**
+**USDT(TRC20): TAaBpuhdoPGNv9xnyne2nXQ5gLQLNUrY6V**
 ## Time spent on the project
 [![wakatime](https://wakatime.com/badge/github/ShamHyper/MultiAI.svg)](https://wakatime.com/badge/github/ShamHyper/MultiAI)
 ## Our discord servers
