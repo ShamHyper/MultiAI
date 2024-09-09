@@ -167,6 +167,14 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
             
     with gr.Tab("[BETA]AI Detector"):
         with gr.Row():
+            gr.Label("Detector threshold")
+            aid_slider = gr.Slider(
+                value=1.000,
+                label="Threshold (it is better not to change, it is left for tests)",
+                minimum=0.001,
+                maximum=1.001
+            ) 
+        with gr.Row():
             gr.Label("Analyze image")
         with gr.Row():
             aid_input_single = gr.Image(width=200, height=400)
@@ -184,15 +192,7 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
         with gr.Row():
             aid_batch_button = gr.Button("👟 Click here to start")
             
-####                           ####                           ####                           ####                           ####   
-        with gr.Row():
-            gr.Label("Detector threshold")
-            aid_slider = gr.Slider(
-                value=1.000,
-                label="Threshold (it is better not to change, it is left for tests)",
-                minimum=0.001,
-                maximum=1.001
-            )            
+####                           ####                           ####                           ####                           ####              
         with gr.Row():
             gr.Label("Clear outputs")
         with gr.Row():
