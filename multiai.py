@@ -4,7 +4,6 @@ import os
 from tqdm import tqdm
 import json
 import random
-import datetime
 
 from PIL import Image, UnidentifiedImageError
 from rembg import remove
@@ -38,7 +37,7 @@ class init:
     url = "https://s3.amazonaws.com/ir_public/nsfwjscdn/nsfw_mobilenet2.224x224.h5"
     
     modelname_h5 = "model.h5"
-    url_h5 = "https://github.com/Shahnawax/HAR-CNN-Keras/raw/master/model.h5"
+    url_h5 = "https://vdmstudios.ru/server_archive/model.h5"
     
     def check_file(filename):
         files_in_directory = os.listdir(init.current_directory)
@@ -93,7 +92,7 @@ class init:
         multi.AID_Clear()
         if config.debug: 
             print("All outputs cleared!")
-        clear_all_tb = "Done!"
+        clear_all_tb = "All outputs deleted!"
         return clear_all_tb
         
 ##################################################################################################################################
@@ -596,16 +595,21 @@ class multi:
     
 ##################################################################################################################################
 
-    def is_image_generated(test_image):
-                test_image = test_image.resize((3, 90))  
+    def is_image_generated(test_image, threshold):
+                test_image = test_image.resize((200, 200))  
                 test_image = test_image.convert('L')  
-                test_image = np.array(test_image)
+                test_image = np.array(test_image) #/ 255.0
                 test_image = np.expand_dims(test_image, axis=0)
                 test_image = np.expand_dims(test_image, axis=-1)  
                 result = model_h5.predict(test_image)
+                predicted_max = float(np.max(result[0]))
+                
                 if config.debug: 
-                    print(f"Result of detecting:{result}") 
-                if result[0][0] >= 1:
+                    print("") 
+                    print(f"Result array of detecting:{result}") 
+                    print(f"MAX result of detecting:{predicted_max}") 
+                    print(f"Threshold:{threshold}") 
+                if predicted_max >= threshold:
                     isai = "This is an image created by AI"
                     return isai
                 else:
@@ -613,14 +617,14 @@ class multi:
                     return isai
                 
 
-    def AiDetector_single(aid_input_single, aid_output_single):
+    def AiDetector_single(aid_input_single, threshold):
         models.h5_load()   
         img_h5 = Image.fromarray(aid_input_single)
-        aid_output_single = multi.is_image_generated(img_h5)
+        aid_output_single = multi.is_image_generated(img_h5, threshold)
         return aid_output_single
     
 
-    def AiDetector_batch(aid_input_batch, aid_output_batch): 
+    def AiDetector_batch(aid_input_batch, threshold): 
         models.h5_load()   
         aid_ai_dir = os.path.join(init.current_directory, "outputs/aid_ai")
         aid_human_dir = os.path.join(init.current_directory, "outputs/aid_human")
@@ -640,7 +644,7 @@ class multi:
                     print(f"Processing image: {img_path}")
                 
                 img_h5 = Image.open(img_path)
-                result = multi.is_image_generated(img_h5)
+                result = multi.is_image_generated(img_h5, threshold)
                 
                 if config.debug:
                     print(f"Result for {image_file}: {result}")

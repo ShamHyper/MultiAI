@@ -1,6 +1,9 @@
 # Changelog
 ## 1.12.x
 - Added [BETA]AI Detector - detecting AI or Human created images. Very crude function, a lot of false definitions
+- Some fixes of AI Detector
+- Adde threshold for AI Detector
+- New H5 model
 ## 1.11.x
 - QOL updates
 - Libs versions update in requirements

@@ -183,6 +183,16 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
             aid_output_batch = gr.Textbox(label="Output", placeholder="AI Detector outputs will be here")
         with gr.Row():
             aid_batch_button = gr.Button("👟 Click here to start")
+            
+####                           ####                           ####                           ####                           ####   
+        with gr.Row():
+            gr.Label("Detector threshold")
+            aid_slider = gr.Slider(
+                value=1.000,
+                label="Threshold (it is better not to change, it is left for tests)",
+                minimum=0.001,
+                maximum=1.001
+            )            
         with gr.Row():
             gr.Label("Clear outputs")
         with gr.Row():
@@ -237,8 +247,8 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
     
     promptgen_button.click(multi.PromptGenetator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
     
-    aid_single_button.click(multi.AiDetector_single, inputs=aid_input_single, outputs=aid_output_single)
-    aid_batch_button.click(multi.AiDetector_batch, inputs=aid_input_batch, outputs=aid_output_batch)
+    aid_single_button.click(multi.AiDetector_single, inputs=[aid_input_single, aid_slider], outputs=aid_output_single)
+    aid_batch_button.click(multi.AiDetector_batch, inputs=[aid_input_batch, aid_slider], outputs=aid_output_batch)
     aid_clear_button.click(multi.AID_Clear, outputs=aid_clearp)
     
     clear_all_button.click(init.clear_all, outputs=clear_all_tb)
