@@ -4,6 +4,8 @@
 - Some fixes of AI Detector
 - Added threshold for AI Detector
 - New H5 model
+- Now all models downloading from our studio server
+- QOL updates
 ## 1.11.x
 - QOL updates
 - Libs versions update in requirements

@@ -1,4 +1,5 @@
 print("Loading libs...")
+
 import shutil as sh
 import os
 from tqdm import tqdm
@@ -22,7 +23,7 @@ from numba import cuda
 from keras.models import load_model
 import numpy as np
 
-version = "MultiAI v1.12.1"
+version = "MultiAI v1.12.4"
 
 ##################################################################################################################################
 
@@ -34,7 +35,7 @@ class init:
     current_directory = os.path.dirname(os.path.abspath(__file__))
     
     modelname = "nsfw_mobilenet2.224x224.h5"
-    url = "https://s3.amazonaws.com/ir_public/nsfwjscdn/nsfw_mobilenet2.224x224.h5"
+    url = "https://vdmstudios.ru/server_archive/nsfw_mobilenet2.224x224.h5"
     
     modelname_h5 = "model.h5"
     url_h5 = "https://vdmstudios.ru/server_archive/model.h5"
@@ -73,6 +74,7 @@ class init:
         try:
             os.remove(tmp_file)
         except FileNotFoundError as e:
+            print(f"Error: {e}")
             pass
     
     def preloader():
@@ -284,7 +286,7 @@ class multi:
                         plain += 1
                         
                 elif detector_skeep_dr == True:
-                    if value_draw > DRAW_THRESHOLD or value_nsfw_2 > THRESHOLD*1.5:
+                    if value_draw > DRAW_THRESHOLD or value_nsfw_2 > THRESHOLD * 1.5:
                         if config.debug: 
                             print(f"I skipped this pic, because value_draw[{value_draw}] > DRAW_THRESHOLD[{DRAW_THRESHOLD}]")
                         pass
