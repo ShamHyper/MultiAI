@@ -16,10 +16,15 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
     
 ##################################################################################################################################
     
+    
+##################################################################################################################################
+    
     with gr.Tab("BgRemoverLite"):
         with gr.Row():
             gr.Label("Remove background from single image")
         with gr.Row():
+            image_input = gr.Image(width=200, height=400)
+            image_output = gr.Image(width=200, height=400)
             image_input = gr.Image(width=200, height=400)
             image_output = gr.Image(width=200, height=400)
         with gr.Row():
@@ -41,10 +46,15 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
       
 ##################################################################################################################################
             
+      
+##################################################################################################################################
+            
     with gr.Tab("Upscaler"):
         with gr.Row():
             gr.Label("Upscale image up to 10x size")
         with gr.Row():
+            upsc_image_input = gr.Image(width=200, height=400)
+            upsc_image_output = gr.Image(width=200, height=400)
             upsc_image_input = gr.Image(width=200, height=400)
             upsc_image_output = gr.Image(width=200, height=400)
         with gr.Row():
@@ -61,6 +71,9 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
             
 ##################################################################################################################################
             
+            
+##################################################################################################################################
+            
     with gr.Tab("NSFW Detector"):
         with gr.Row():
             gr.Label("Detect NSFW images from dir")
@@ -68,9 +81,21 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
             detector_input = gr.Textbox(label="Enter dir", placeholder="Enter dir like this: D:\Python\MultiAI")
             detector_output = gr.Textbox(label="Output", placeholder="NSFW Detector outputs will be here")
         with gr.Row():
+            detector_output = gr.Textbox(label="Output", placeholder="NSFW Detector outputs will be here")
+        with gr.Row():
             detector_slider = gr.Slider(
                 value=0.36,
                 label="Threshold (larger number = simpler detection | smaller number = stricter one)",
+                minimum=0.01,
+                maximum=0.98
+            )
+        with gr.Row():
+            detector_skeep_dr = gr.Checkbox(value=False, label="🎨 Skip drawings or anime")
+            drawings_threshold = gr.Slider(
+                value=0.10,
+                label="Threshold for 🎨 Skip drawings or anime",
+                minimum=0.01,
+                maximum=0.98
                 minimum=0.01,
                 maximum=0.98
             )
@@ -92,10 +117,15 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
             
 ##################################################################################################################################            
             
+            
+##################################################################################################################################            
+            
     with gr.Tab("Image Analyzer"):
         with gr.Row():
             gr.Label("Analyze image")
+            gr.Label("Analyze image")
         with gr.Row():
+            file_spc = gr.Image(width=200, height=400)
             file_spc = gr.Image(width=200, height=400)
             spc_output = gr.Textbox(label="Stats", placeholder="Press start to get specifications of image")
         with gr.Row():
@@ -104,13 +134,48 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
             
 ##################################################################################################################################
             
+            
+##################################################################################################################################
+            
     with gr.Tab("Video Analyzer"):
         with gr.Row():
             gr.Label("Analyze Video")
+            gr.Label("Analyze Video")
         with gr.Row():
+            file_Vspc = gr.Video(sources="upload", width=200, height=400)
             file_Vspc = gr.Video(sources="upload", width=200, height=400)
             Vspc_output = gr.Textbox(label="Stats", placeholder="Press start to get specifications of Video")
         with gr.Row():
+            Vspc_button = gr.Button("👟 Click here to start")   
+        with gr.Row():
+            gr.Label("Analyze Videos in dir")     
+        with gr.Row():
+            video_dir = gr.Textbox(label="Videos dir", placeholder="Enter dir like this: D:\Python\MultiAI")
+            bth_Vspc_output = gr.Textbox(label="Output", placeholder="Output will be here...")
+        with gr.Row():
+            vbth_slider = gr.Slider(
+            value=80,
+            step=1,
+            label="Frame-Skip (larger number = simpler detection | smaller number = stricter one)",
+            minimum=1,
+            maximum=100,
+            info="Set 1 to turn off. If an error appears, decrease the value"
+        )  
+            threshold_Vspc_slider = gr.Slider(
+            value=20,
+            minimum=2,
+            maximum=98,
+            step=1,
+            label="Threshold (larger number = simpler detection | smaller number = stricter one)"
+        )
+        with gr.Row():
+            start_dir_videos = gr.Button("⭐ Start")
+        with gr.Row():
+            clear_videos = gr.Button("🧹 Clear outputs")
+            bth_Vspc_clear_output = gr.Textbox(label="Clearing progress", placeholder="Clear output will be here...")
+            
+##################################################################################################################################
+            
             Vspc_button = gr.Button("👟 Click here to start")   
         with gr.Row():
             gr.Label("Analyze Videos in dir")     
@@ -154,11 +219,13 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
                 label="Prompts",
                 minimum=1,
                 maximum=1000
+                maximum=1000
             )
             pg_max_length = gr.Slider(
                 value=76,
                 label="Max Length of prompt",
                 minimum=1,
+                maximum=1000
                 maximum=1000
             )
         with gr.Row():
@@ -233,15 +300,91 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
     rembg_button.click(multi.BgRemoverLite, inputs=image_input, outputs=image_output)
     rembg_batch_button.click(multi.BgRemoverLiteBatch, inputs=image_input_dir, outputs=image_output_dir)
     clearp_bgr_button.click(multi.BgRemoverLite_Clear, outputs=clearp_bgr)
+##################################################################################################################################            
+            
+    with gr.Tab("[BETA]AI Detector"):
+        with gr.Row():
+            gr.Label("Detector threshold")
+            aid_slider = gr.Slider(
+                value=1.000,
+                label="Threshold (it is better not to change, it is left for tests)",
+                minimum=0.001,
+                maximum=1.001
+            ) 
+        with gr.Row():
+            gr.Label("Analyze image")
+        with gr.Row():
+            aid_input_single = gr.Image(width=200, height=400)
+            aid_output_single = gr.Textbox(label="Result", placeholder="Press start to get result")
+        with gr.Row():
+            aid_single_button = gr.Button("👟 Click here to start")
 
+####                           ####                           ####                           ####                           ####                    
+
+        with gr.Row():
+            gr.Label("Detect AI/Human images from dir")
+        with gr.Row():
+            aid_input_batch = gr.Textbox(label="Enter dir", placeholder="Enter dir like this: D:\Python\MultiAI")
+            aid_output_batch = gr.Textbox(label="Output", placeholder="AI Detector outputs will be here")
+        with gr.Row():
+            aid_batch_button = gr.Button("👟 Click here to start")
+            
+####                           ####                           ####                           ####                           ####              
+        with gr.Row():
+            gr.Label("Clear outputs")
+        with gr.Row():
+            aid_clear_button = gr.Button("🧹 Clear outputs")
+            aid_clearp = gr.Textbox(label="Clearing progress")
+                  
+##################################################################################################################################
+            
+    with gr.Tab("Clearing"):
+        with gr.Row():
+            gr.Label("Clear all outputs")
+            clear_all_button = gr.Button("⭐ Start")
+            clear_all_tb = gr.Textbox(label="Result")
+            
+##################################################################################################################################
+
+    with gr.Tab("Settings"):
+        with gr.Row():
+            settings_debug_mode = gr.Checkbox(value=config.debug, label="Enable debug mode (write debug info)")
+        with gr.Row():
+            settings_start_in_browser = gr.Checkbox(value=config.inbrowser, label="Enable MultiAI starting in browser")
+        with gr.Row():
+            settings_share_gradio = gr.Checkbox(value=config.share_gradio, label="Enable MultiAI starting with share link")
+        with gr.Row():
+            settings_preload_models = gr.Checkbox(value=config.preload_models, label="Enable preloading AI models")
+        with gr.Row():
+            settings_clear_on_start = gr.Checkbox(value=config.clear_on_start, label="Enable clear all outputs on MultiAI start")
+        with gr.Row():
+            json_files = gr.Label("Saving in [../settings/config.json]")
+            settings_save = gr.Button("🗃️ Save settings")
+            settings_save_progress = gr.Textbox(label="Saving progress", placeholder="Your saving progress will be here")
+        with gr.Row():
+            gr.Label("Creating new ones .json files in ../settings will not give any effect.")
+            
+##################################################################################################################################
+                     
+    rembg_button.click(multi.BgRemoverLite, inputs=image_input, outputs=image_output)
+    rembg_batch_button.click(multi.BgRemoverLiteBatch, inputs=image_input_dir, outputs=image_output_dir)
+    clearp_bgr_button.click(multi.BgRemoverLite_Clear, outputs=clearp_bgr)
+
+    detector_button.click(multi.NSFW_Detector, inputs=[detector_input, detector_slider, detector_skeep_dr, drawings_threshold], outputs=detector_output)
+    detector_clear_button.click(multi.NSFWDetector_Clear, outputs=clearp)
     detector_button.click(multi.NSFW_Detector, inputs=[detector_input, detector_slider, detector_skeep_dr, drawings_threshold], outputs=detector_output)
     detector_clear_button.click(multi.NSFWDetector_Clear, outputs=clearp)
     
     upsc_button.click(multi.Upscaler, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)
+    upsc_button.click(multi.Upscaler, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)
     upsc_clear_cache.click(clear_on_device_caches)
     
     spc_button.click(multi.ImageAnalyzer, inputs=[file_spc, clip_checked], outputs=spc_output)
+    spc_button.click(multi.ImageAnalyzer, inputs=[file_spc, clip_checked], outputs=spc_output)
     
+    Vspc_button.click(multi.VideoAnalyzer, inputs=file_Vspc, outputs=Vspc_output)
+    start_dir_videos.click(multi.VideoAnalyzerBatch, inputs=[video_dir, vbth_slider, threshold_Vspc_slider], outputs=bth_Vspc_output)   
+    clear_videos.click(multi.VideoAnalyzerBatch_Clear, outputs=bth_Vspc_clear_output)   
     Vspc_button.click(multi.VideoAnalyzer, inputs=file_Vspc, outputs=Vspc_output)
     start_dir_videos.click(multi.VideoAnalyzerBatch, inputs=[video_dir, vbth_slider, threshold_Vspc_slider], outputs=bth_Vspc_output)   
     clear_videos.click(multi.VideoAnalyzerBatch_Clear, outputs=bth_Vspc_clear_output)   

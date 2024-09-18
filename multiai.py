@@ -28,11 +28,19 @@ version = "[BETA] MultiAI v1.13.0-b2"
 class init:
     ver = version
     
+    ver = version
+    
     print(f"Initializing {ver} launch...")
+    
     
     current_directory = os.path.dirname(os.path.abspath(__file__))
     
+    
     modelname = "nsfw_mobilenet2.224x224.h5"
+    url = "https://vdmstudios.ru/server_archive/nsfw_mobilenet2.224x224.h5"
+    
+    modelname_h5 = "model.h5"
+    url_h5 = "https://vdmstudios.ru/server_archive/model.h5"
     url = "https://vdmstudios.ru/server_archive/nsfw_mobilenet2.224x224.h5"
     
     modelname_h5 = "model.h5"
@@ -44,7 +52,11 @@ class init:
         if filename in files_in_directory:
             if config.debug: 
                 print("NSFW Model detected")
+            if config.debug: 
+                print("NSFW Model detected")
         else:
+            if config.debug: 
+                print("NSFW Model undected. Downloading...")
             if config.debug: 
                 print("NSFW Model undected. Downloading...")
             urllib.request.urlretrieve(init.url, init.modelname)
@@ -211,17 +223,22 @@ class models:
                   
 class multi:
     def BgRemoverLite(inputs):
+    def BgRemoverLite(inputs):
         try:
             outputs = remove(inputs)
         except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
+            if config.debug: 
+                print(f"Error: {e}")
             if config.debug: 
                 print(f"Error: {e}")
             pass
         return outputs
 
     def BgRemoverLiteBatch(inputs):
+    def BgRemoverLiteBatch(inputs):
         temp_dir = inputs
         for filename in tqdm(os.listdir(inputs)):
+            outputs = "outputs/rembg_outputs"
             outputs = "outputs/rembg_outputs"
             inputs = os.path.abspath(temp_dir)
             try:
@@ -234,7 +251,10 @@ class multi:
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
                 if config.debug: 
                     print(f"Error: {e}")
+                if config.debug: 
+                    print(f"Error: {e}")
                 pass
+        outputs = init.current_directory + r"\outputs" + r"\rembg_outputs"
         outputs = init.current_directory + r"\outputs" + r"\rembg_outputs"
         return outputs
     
@@ -258,6 +278,7 @@ class multi:
         init.check_file(init.modelname)
         FOLDER_NAME = str(detector_input)
         THRESHOLD = detector_slider
+        DRAW_THRESHOLD = drawings_threshold
         DRAW_THRESHOLD = drawings_threshold
         nsfw = 0
         plain = 0
@@ -298,6 +319,8 @@ class multi:
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
                 if config.debug: 
                     print(f"Error: {e}")
+                if config.debug: 
+                    print(f"Error: {e}")
                 pass
 
         outputs = (
@@ -308,13 +331,18 @@ class multi:
 
     def NSFWDetector_Clear():
         outputs_dir1 = os.path.join(init.current_directory, "outputs/detector_outputs_nsfw")
+    def NSFWDetector_Clear():
+        outputs_dir1 = os.path.join(init.current_directory, "outputs/detector_outputs_nsfw")
         sh.rmtree(outputs_dir1)
         outputs_dir2 = os.path.join(init.current_directory, "outputs/detector_outputs_plain")
+        outputs_dir2 = os.path.join(init.current_directory, "outputs/detector_outputs_plain")
         sh.rmtree(outputs_dir2)
+        folder_path1 = "outputs/detector_outputs_nsfw"
         folder_path1 = "outputs/detector_outputs_nsfw"
         os.makedirs(folder_path1)
         file = open(f"{folder_path1}/outputs will be here.txt", "w")
         file.close()
+        folder_path2 = "outputs/detector_outputs_plain"
         folder_path2 = "outputs/detector_outputs_plain"
         os.makedirs(folder_path2)
         file = open(f"{folder_path2}/outputs will be here.txt", "w")
@@ -322,6 +350,9 @@ class multi:
         outputs = "Done!"
         return outputs
 
+##################################################################################################################################
+
+    def Upscaler(upsc_image_input, scale_factor, model_ups):
 ##################################################################################################################################
 
     def Upscaler(upsc_image_input, scale_factor, model_ups):
@@ -336,6 +367,7 @@ class multi:
         img.save("tmp.png")
         dir_img_fromarray = os.path.join(os.getcwd(), "tmp.png")
 
+        models.nsfw_load()
         models.nsfw_load()
         result = predict.classify(model_nsfw, dir_img_fromarray)
         x = next(iter(result.keys()))
@@ -358,9 +390,12 @@ class multi:
 
         tmp_file = "tmp.png"
         
+        
         try:
             os.remove(tmp_file)
         except FileNotFoundError as e:
+            if config.debug: 
+                print(f"Error: {e}")
             if config.debug: 
                 print(f"Error: {e}")
             pass
@@ -372,6 +407,7 @@ class multi:
     def VideoAnalyzer(file_Vspc):
         output_dir = "tmp"
         os.makedirs(output_dir, exist_ok=True)
+        models.nsfw_load()
         models.nsfw_load()
         cap = cv2.VideoCapture(file_Vspc)
 
@@ -402,6 +438,17 @@ class multi:
         avg_sum = total_sum / file_count 
         percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
         
+        value1 = percentages["drawings"]
+        value2 = percentages["hentai"]
+        value3 = percentages["neutral"]
+        value4 = percentages["porn"]
+        value5 = percentages["sexy"]
+        
+        Vspc_output = f"Drawings: {value1}%\n"
+        Vspc_output += f"Hentai: {value2}%\n"
+        Vspc_output += f"Porn: {value4}%\n"
+        Vspc_output += f"Sexy: {value5}%\n"
+        Vspc_output += f"Neutral: {value3}%"
         value1 = percentages["drawings"]
         value2 = percentages["hentai"]
         value3 = percentages["neutral"]
