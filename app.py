@@ -4,9 +4,6 @@ import gradio as gr
 from clear import clear
 from upscalers import available_models, clear_on_device_caches
 
-<<<<<<< Updated upstream
-with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) as multiai:
-=======
 start_time = time.time()
 
 def CODC_log():
@@ -19,7 +16,6 @@ with open("settings/.css", "r") as file:
 with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
     primary_hue="purple", 
     secondary_hue="blue")) as multiai:
->>>>>>> Stashed changes
     gr.Markdown(init.ver)
     with gr.Tab("BgRemoverLite"):
         with gr.Row():
@@ -58,14 +54,9 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
                 maximum=10.0,
             )
             upsc_button = gr.Button("📈 Start upscaling")
-<<<<<<< Updated upstream
-        with gr.Row():
-            upsc_clear_cache = gr.Button("🧹 Clear torch, cuda and models cache")
-=======
             
 ##################################################################################################################################
             
->>>>>>> Stashed changes
     with gr.Tab("NSFW Detector"):
         with gr.Row():
             gr.Label("Detect NSFW images from dir")
@@ -125,8 +116,6 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
         with gr.Row():
             promptgen_button = gr.Button("⭐ Start")
             
-<<<<<<< Updated upstream
-=======
 ##################################################################################################################################            
             
     with gr.Tab("[BETA-0.2]AI Detector"):
@@ -145,19 +134,11 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
             aid_output_single = gr.Textbox(label="Result", placeholder="Press start to get result")
         with gr.Row():
             aid_single_button = gr.Button("👟 Click here to start")
->>>>>>> Stashed changes
 
     rembg_button.click(multi.rem_bg_def, inputs=image_input, outputs=image_output)
     rembg_batch_button.click(multi.rem_bg_def_batch, inputs=image_input_dir, outputs=image_output_dir)
     clearp_bgr_button.click(multi.clearp_bgr_def, outputs=clearp_bgr)
 
-<<<<<<< Updated upstream
-    detector_button.click(multi.detector, inputs=[detector_input, detector_slider], outputs=detector_output)
-    detector_clear_button.click(multi.detector_clear, outputs=clearp)
-    
-    upsc_button.click(multi.uspc, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)
-    upsc_clear_cache.click(clear_on_device_caches)
-=======
         with gr.Row():
             gr.Label("Detect AI/Human images from dir")
         with gr.Row():
@@ -214,7 +195,6 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
     
     upsc_button.click(multi.Upscaler, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)
     upsc_clear_cache.click(CODC_log)
->>>>>>> Stashed changes
     
     spc_button.click(multi.spc, inputs=[file_spc, clip_checked], outputs=spc_output)
     

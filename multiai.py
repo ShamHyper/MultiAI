@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-print("Loading libs...")
-=======
->>>>>>> Stashed changes
 import shutil as sh
 import os
 from tqdm import tqdm
@@ -20,8 +16,6 @@ from clip_interrogator import Config, Interrogator
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, pipeline
 
 import cv2
-<<<<<<< Updated upstream
-=======
 from numba import cuda
 
 from keras.models import load_model
@@ -32,7 +26,6 @@ import gradio as gr
 version = "MultiAI v1.13.0"
 
 ##################################################################################################################################
->>>>>>> Stashed changes
 
 class init:
     ver = "MultiAI v1.6.3"
@@ -82,66 +75,6 @@ class init:
         files_in_directory = os.listdir(init.current_directory)
 
         if filename in files_in_directory:
-<<<<<<< Updated upstream
-            print("NSFW Model detected")
-        else:
-            print("NSFW Model undected. Downloading...")
-            urllib.request.urlretrieve(init.url, init.modelname)
-    
-#########################
-# Model loading section #
-#########################
-   
-def nsfw_load():
-    global model_nsfw, nsfw_status
-    try:
-        if nsfw_status != True:
-            init.check_file(init.modelname)
-            model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
-            nsfw_status = True
-        elif nsfw_status == True:
-            print("NSFW model already loaded!")
-    except NameError:
-            init.check_file(init.modelname)
-            model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
-            nsfw_status = True
-    return model_nsfw, nsfw_status
-
-def tokenizer_load():
-    global tokenizer, tokenizer_status, model_tokinezer
-    try:
-        if tokenizer_status != True:
-            tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
-            tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-            model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
-            tokenizer_status = True
-        elif tokenizer_status == True:
-            print("Tokinezer already loaded!")
-    except NameError:
-            tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
-            tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-            model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
-            tokenizer_status = True
-    return tokenizer, tokenizer_status, model_tokinezer
-
-def ci_load():
-    global ci, ci_status
-    try:
-        if ci_status != True:
-            ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
-            ci_status = True
-        elif ci_status == True:
-            print("CLIP already loaded!")
-    except NameError:
-            ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
-            ci_status = True
-    return ci, ci_status
-
-#########################
-# Model loading section #
-#########################
-           
-=======
             if config.debug:
                 gr.Info("NSFW Model detected")
         else:
@@ -307,17 +240,12 @@ class models:
     
 ##################################################################################################################################
                   
->>>>>>> Stashed changes
 class multi:
     def rem_bg_def(inputs):
         try:
             outputs = remove(inputs)
         except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-<<<<<<< Updated upstream
-            print(f"Error: {e}")
-=======
             gr.Error(f"Error: {e}")
->>>>>>> Stashed changes
             pass
         return outputs
 
@@ -334,15 +262,6 @@ class multi:
                 output_image = remove(input_image)
                 output_image.save(outputs)
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-<<<<<<< Updated upstream
-                print(f"Error: {e}")
-                pass
-        outputs = init.current_directory + r"\rembg_outputs"
-        return outputs
-
-    def detector(detector_input, detector_slider):
-        nsfw_load()
-=======
                 gr.Error(f"Error: {e}")
                 pass
         outputs = init.current_directory + r"\outputs" + r"\rembg_outputs"
@@ -366,8 +285,10 @@ class multi:
         if detector_skeep_dr is True: 
             if config.debug:
                 gr.Info("I will skip drawings!")
+        if detector_skeep_dr == True:
+            if config.debug: 
+                gr.Info("I will skip drawings!")
         models.nsfw_load()
->>>>>>> Stashed changes
         init.check_file(init.modelname)
         FOLDER_NAME = str(detector_input)
         THRESHOLD = detector_slider
@@ -387,16 +308,6 @@ class multi:
                 value_nsfw_3 = result[x]["sexy"]
                 value_sfw = result[x]["neutral"]
 
-<<<<<<< Updated upstream
-                if (value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.5) and value_sfw < THRESHOLD:
-                    sh.copyfile(file, f'./detector_outputs_nsfw/{file.split("/")[-1]}')
-                    nsfw += 1
-                else:
-                    sh.copyfile(file, f'./detector_outputs_plain/{file.split("/")[-1]}')
-                    plain += 1
-            except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-                print(f"Error: {e}")
-=======
                 if detector_skeep_dr is False:
                     if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
                         sh.copyfile(file, f'./outputs/detector_outputs_nsfw/{file.split("/")[-1]}')
@@ -419,7 +330,6 @@ class multi:
                         
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
                 gr.Error(f"Error: {e}")
->>>>>>> Stashed changes
                 pass
 
         outputs = (
@@ -484,11 +394,7 @@ class multi:
 
         spc_output = ""
         if clip_checked is True:
-<<<<<<< Updated upstream
-            ci_load()
-=======
             models.ci_load()
->>>>>>> Stashed changes
             clip = Image.open(dir_img_fromarray).convert('RGB')
             spc_output += f"Prompt:\n{ci.interrogate(clip)}\n\n" 
 
@@ -502,11 +408,7 @@ class multi:
         try:
             os.remove(tmp_file)
         except FileNotFoundError as e:
-<<<<<<< Updated upstream
-            print(f"Error: {e}")
-=======
             gr.Error(f"Error: {e}")
->>>>>>> Stashed changes
             pass
 
         return spc_output
@@ -534,13 +436,8 @@ class multi:
         promptgen_output = ('\n\n'.join(outs) + '\n')  
         return promptgen_output 
     
-<<<<<<< Updated upstream
-    def Vspc(file_Vspc):
-        output_dir = 'tmp_pngs'
-=======
     def VideoAnalyzer(file_Vspc):
         output_dir = 'tmp'
->>>>>>> Stashed changes
         os.makedirs(output_dir, exist_ok=True)
         nsfw_load()
         cap = cv2.VideoCapture(file_Vspc)
@@ -582,11 +479,6 @@ class multi:
         cap.release()
         cv2.destroyAllWindows()
         
-<<<<<<< Updated upstream
-        bth_Vspc_output = "Test"
-        
-        return bth_Vspc_output
-=======
         return Vspc_output
     
     def process_frame(frame):
@@ -690,6 +582,11 @@ class multi:
                 out_cmd += f"\n[+]Plain: {_plain}"
                 
             if config.debug:
+            if config.debug: 
+            if config.debug: 
+                print("")
+            if config.debug:
+                print("")
                 print(out_cmd)
             out_cmd = str("")
             avg_sum = 0
@@ -843,4 +740,3 @@ class multi:
         return outputs
 
 ##################################################################################################################################
->>>>>>> Stashed changes
