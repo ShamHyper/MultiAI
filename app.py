@@ -1,9 +1,10 @@
 import time
-start_time = time.time()
-from multiai import *
+from multiai import init, config, multi
 import gradio as gr
 from clear import clear
 from upscalers import available_models, clear_on_device_caches
+
+start_time = time.time()
 
 with open("settings/.css", "r") as file:
     CSS = file.read()
@@ -260,10 +261,10 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
 
 clear()
 
-if config.clear_on_start == True:
+if config.clear_on_start is True:
     init.clear_all()
 
-if config.preload_models == True:
+if config.preload_models is True:
     init.preloader()
     
 init.delete_tmp_pngs()
