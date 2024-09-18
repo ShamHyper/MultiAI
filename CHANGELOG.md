@@ -1,4 +1,52 @@
 # Changelog
+<<<<<<< Updated upstream
+=======
+## 1.13.x
+- Improved code readability
+- Changes recommended by Ruff have been made
+- The log system has been rewritten
+- Added tooltips instead of some logs
+- Fixed a bug that prevented the launch of the Video analyzer
+- Now None is selected in Upscaler according to the standard, which removed the error at startup
+## 1.12.x
+- Added [BETA]AI Detector - detecting AI or Human created images. Very crude function, a lot of false definitions
+- Some fixes of AI Detector
+- Added threshold for AI Detector
+- New H5 model
+- Now all models downloading from our studio server
+- QOL updates
+## 1.11.x
+- QOL updates
+- Libs versions update in requirements
+- Removed logs
+## 1.10.x
+- Fixed live settings for #3 issue
+## 1.9.x
+- Fixed all bugs of version **1.8**
+- Updating for requirements.txt old-version libs
+- Fixed requirements.txt (gfpgan requirements compability) 
+- Fixed bug with tmp.png in MultiAI/.. folder
+- Gradio update
+- Fixed single video **Video Analyzer** (idk why and how I broke this function...)
+- New color theme - with .css file for custom theme in ../settings
+- Clear log in clearing tab
+## 1.8.x
+- Fixed all bugs of version **1.7**
+- All defs renamed for simpler use
+- Progress textbox for **Video Analyzer** cleaner
+- Added Settings tab. Now you don't have to go into config.json and change something with your hands. This tab will do everything for you!
+- Logging for *Debug mode* (../logs)
+## 1.7.x
+- Fixed all bugs of version **1.6**
+- Work on optimization has been carried out
+- Now all outputs are in the same folders for ease of use
+- Fixed a bug with an uncleaned *tmp_pngs* folder that appeared if the batch process of **Video Analyzer** was interrupted
+- Added separate class for models
+- Added *Clear all outputs* tab
+- Code optimizations for config
+- New lines for debug (config.json)
+- Threshold slider for *Skip drawings or anime* checkbox
+>>>>>>> Stashed changes
 ## 1.6.x
 - New AI - **Video Analyzer**. Analyze Video like in **Image Analyzer**, but analyze per-frame of video and give you avg. percentages specs. of them
 - Fixes for debug launch-timer

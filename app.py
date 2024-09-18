@@ -1,11 +1,25 @@
 import time
-start_time = time.time()
-from multiai import *
+from multiai import init, config, multi
 import gradio as gr
 from clear import clear
 from upscalers import available_models, clear_on_device_caches
 
+<<<<<<< Updated upstream
 with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary_hue="orange")) as multiai:
+=======
+start_time = time.time()
+
+def CODC_log():
+    clear_on_device_caches
+    gr.Info("Cache cleared!")
+
+with open("settings/.css", "r") as file:
+    CSS = file.read()
+
+with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
+    primary_hue="purple", 
+    secondary_hue="blue")) as multiai:
+>>>>>>> Stashed changes
     gr.Markdown(init.ver)
     with gr.Tab("BgRemoverLite"):
         with gr.Row():
@@ -36,7 +50,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
             upsc_image_input = gr.Image()
             upsc_image_output = gr.Image(width=200, height=240)
         with gr.Row():
-            model_ups = gr.Dropdown(label="Model", choices=available_models())
+            model_ups = gr.Dropdown(label="Model", choices=available_models(), value="None")
             scale_factor = gr.Slider(
                 value=4.0,
                 label="Scale factor (4x factor max recommended)",
@@ -44,8 +58,14 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
                 maximum=10.0,
             )
             upsc_button = gr.Button("📈 Start upscaling")
+<<<<<<< Updated upstream
         with gr.Row():
             upsc_clear_cache = gr.Button("🧹 Clear torch, cuda and models cache")
+=======
+            
+##################################################################################################################################
+            
+>>>>>>> Stashed changes
     with gr.Tab("NSFW Detector"):
         with gr.Row():
             gr.Label("Detect NSFW images from dir")
@@ -105,16 +125,96 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
         with gr.Row():
             promptgen_button = gr.Button("⭐ Start")
             
+<<<<<<< Updated upstream
+=======
+##################################################################################################################################            
+            
+    with gr.Tab("[BETA-0.2]AI Detector"):
+        with gr.Row():
+            gr.Label("Detector threshold")
+            aid_slider = gr.Slider(
+                value=1.000,
+                label="Threshold (it is better not to change, it is left for tests)",
+                minimum=0.001,
+                maximum=1.001
+            ) 
+        with gr.Row():
+            gr.Label("Analyze image")
+        with gr.Row():
+            aid_input_single = gr.Image(width=200, height=400)
+            aid_output_single = gr.Textbox(label="Result", placeholder="Press start to get result")
+        with gr.Row():
+            aid_single_button = gr.Button("👟 Click here to start")
+>>>>>>> Stashed changes
 
     rembg_button.click(multi.rem_bg_def, inputs=image_input, outputs=image_output)
     rembg_batch_button.click(multi.rem_bg_def_batch, inputs=image_input_dir, outputs=image_output_dir)
     clearp_bgr_button.click(multi.clearp_bgr_def, outputs=clearp_bgr)
 
+<<<<<<< Updated upstream
     detector_button.click(multi.detector, inputs=[detector_input, detector_slider], outputs=detector_output)
     detector_clear_button.click(multi.detector_clear, outputs=clearp)
     
     upsc_button.click(multi.uspc, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)
     upsc_clear_cache.click(clear_on_device_caches)
+=======
+        with gr.Row():
+            gr.Label("Detect AI/Human images from dir")
+        with gr.Row():
+            aid_input_batch = gr.Textbox(label="Enter dir", placeholder="Enter dir like this: D:\Python\MultiAI")
+            aid_output_batch = gr.Textbox(label="Output", placeholder="AI Detector outputs will be here")
+        with gr.Row():
+            aid_batch_button = gr.Button("👟 Click here to start")
+            
+####                           ####                           ####                           ####                           ####              
+        with gr.Row():
+            gr.Label("Clear outputs")
+        with gr.Row():
+            aid_clear_button = gr.Button("🧹 Clear outputs")
+            aid_clearp = gr.Textbox(label="Clearing progress")
+                  
+##################################################################################################################################
+            
+    with gr.Tab("Clearing"):
+        with gr.Row():
+            gr.Label("Clear all outputs")
+            clear_all_button = gr.Button("⭐ Start")
+            clear_all_tb = gr.Textbox(label="Result")
+        with gr.Row():
+            upsc_clear_cache = gr.Button("🧹 Clear torch, cuda and models cache")
+            
+##################################################################################################################################
+
+    with gr.Tab("Settings"):
+        with gr.Row():
+            settings_debug_mode = gr.Checkbox(value=config.debug, label="Enable debug mode (write debug info)")
+        with gr.Row():
+            settings_start_in_browser = gr.Checkbox(value=config.inbrowser, label="Enable MultiAI starting in browser")
+        with gr.Row():
+            settings_share_gradio = gr.Checkbox(value=config.share_gradio, label="Enable MultiAI starting with share link")
+        with gr.Row():
+            settings_preload_models = gr.Checkbox(value=config.preload_models, label="Enable preloading AI models")
+        with gr.Row():
+            settings_clear_on_start = gr.Checkbox(value=config.clear_on_start, label="Enable clear all outputs on MultiAI start")
+        with gr.Row():
+            json_files = gr.Label("Saving in [../settings/config.json]")
+            settings_save = gr.Button("🗃️ Save settings")
+            settings_save_progress = gr.Textbox(label="Saving progress", placeholder="Your saving progress will be here")
+        with gr.Row():
+            gr.Label("Creating new ones .json files in ../settings will not give any effect.")
+            
+##################################################################################################################################
+                     
+    rembg_button.click(multi.BgRemoverLite, inputs=image_input, outputs=image_output)
+    rembg_batch_button.click(multi.BgRemoverLiteBatch, inputs=image_input_dir, outputs=image_output_dir)
+    clearp_bgr_button.click(multi.BgRemoverLite_Clear, outputs=clearp_bgr)
+
+    detector_button.click(multi.NSFW_Detector, inputs=[detector_input, detector_slider, detector_skeep_dr, drawings_threshold], outputs=detector_output)
+    detector_clear_button.click(multi.NSFWDetector_Clear, outputs=clearp)
+    
+    upsc_button.click(multi.Upscaler, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)
+    upsc_clear_cache.click(CODC_log)
+>>>>>>> Stashed changes
     
     spc_button.click(multi.spc, inputs=[file_spc, clip_checked], outputs=spc_output)
     
@@ -122,6 +222,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(primary_hue="red", secondary
     
     promptgen_button.click(multi.prompt_generator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
 
+<<<<<<< Updated upstream
 if init.debug is True:
     if init.preload_models is True:
         ci_load()
@@ -141,3 +242,24 @@ elif init.debug is False:
     clear()
     multiai.queue()
     multiai.launch(inbrowser=init.inbrowser, share=init.share_gradio)
+=======
+clear()
+
+if config.clear_on_start is True:
+    init.clear_all()
+
+if config.preload_models is True:
+    init.preloader()
+    
+init.delete_tmp_pngs()
+   
+multiai.queue()
+
+clear()
+
+end_time = time.time()
+total_time = round(end_time - start_time, 2)
+print(f"Executing time: {total_time}s")
+
+multiai.launch(inbrowser=config.inbrowser, share=config.share_gradio)
+>>>>>>> Stashed changes

@@ -100,6 +100,11 @@ git clone https://github.com/ShamHyper/MultiAI.git
 ![6](https://i.imgur.com/cssEq5K.png?raw=true)
 **6. Prompt Generator**
 ![7](https://i.imgur.com/hRVhMKa.png?raw=true)
+<<<<<<< Updated upstream
+=======
+**7. [BETA-2]AI Detector**
+![8](https://i.imgur.com/qYRg0AS.png?raw=true)
+>>>>>>> Stashed changes
 ## About Python 3.11 - 3.12
 *So far, most of the libraries used in my project have not been updated to 3.11 - 3.12 or are working incorrectly. I tried to adapt the project for the new version, but for now I advise you to stay within 3.10 (in extreme cases, 3.9 will also work)*
 ## Credits
