@@ -1,3 +1,5 @@
+print("Loading libs...")
+
 import shutil as sh
 import os
 from tqdm import tqdm
@@ -21,64 +23,32 @@ from numba import cuda
 from keras.models import load_model
 import numpy as np
 
-import gradio as gr
-
-version = "MultiAI v1.13.0"
+version = "MultiAI v1.12.4"
 
 ##################################################################################################################################
 
 class init:
-    ver = "MultiAI v1.6.3"
+    ver = version
+    
     print(f"Initializing {ver} launch...")
     
-    with open("config.json") as json_file:
-        data = json.load(json_file)
-
-    debug = data.get("debug_mode")
-    if debug == "False":
-        debug = False
-    elif debug == "True":
-        debug = True
-    else:
-        print("Something wrong in config.json. Check them out!")
-            
-    inbrowser = data.get("start_in_browser")
-    if inbrowser == "False":
-        inbrowser = False
-    elif inbrowser == "True":
-        inbrowser = True
-    else:
-        print("Something wrong in config.json. Check them out!")
-
-    share_gradio = data.get("share_gradio")
-    if share_gradio == "False":
-        share_gradio = False
-    elif share_gradio == "True":
-        share_gradio = True
-    else:
-        print("Something wrong in config.json. Check them out!")
-        
-    preload_models = data.get("preload_models")
-    if preload_models == "False":
-        preload_models = False
-    elif preload_models == "True":
-        preload_models = True
-    else:
-        print("Something wrong in config.json. Check them out!")
-
     current_directory = os.path.dirname(os.path.abspath(__file__))
-
+    
     modelname = "nsfw_mobilenet2.224x224.h5"
-    url = "https://s3.amazonaws.com/ir_public/nsfwjscdn/nsfw_mobilenet2.224x224.h5"
+    url = "https://vdmstudios.ru/server_archive/nsfw_mobilenet2.224x224.h5"
+    
+    modelname_h5 = "model.h5"
+    url_h5 = "https://vdmstudios.ru/server_archive/model.h5"
     
     def check_file(filename):
         files_in_directory = os.listdir(init.current_directory)
 
         if filename in files_in_directory:
-            if config.debug:
-                gr.Info("NSFW Model detected")
+            if config.debug: 
+                print("NSFW Model detected")
         else:
-            gr.Info("NSFW Model undected. Downloading...")
+            if config.debug: 
+                print("NSFW Model undected. Downloading...")
             urllib.request.urlretrieve(init.url, init.modelname)
     
     def checkfile_h5(filename):
@@ -86,13 +56,14 @@ class init:
         
         if filename in files_in_directory:
             if config.debug:
-                gr.Info("H5 Model detected")
+                print("H5 Model detected")
         else:
-            gr.Info("H5 Model undected. Downloading...")
+            if config.debug: 
+                print("H5 Model undected. Downloading...")
             urllib.request.urlretrieve(init.url_h5, init.modelname_h5)
     
     def delete_tmp_pngs():
-        output_dir = "tmp"
+        output_dir = "tmp_pngs"
         try:
             rm_tmp = os.path.join(init.current_directory, output_dir)
             sh.rmtree(rm_tmp)
@@ -103,11 +74,12 @@ class init:
         try:
             os.remove(tmp_file)
         except FileNotFoundError as e:
-            gr.Error(f"Error: {e}")
+            print(f"Error: {e}")
             pass
     
     def preloader():
-        print("Preloading models...")
+        if config.debug: 
+            print("Preloading models...")
         models.ci_load()
         models.nsfw_load()
         models.tokenizer_load()  
@@ -120,8 +92,8 @@ class init:
         multi.NSFWDetector_Clear()
         multi.VideoAnalyzerBatch_Clear()
         multi.AID_Clear()
-        gr.Info("All outputs cleared!")
-        
+        if config.debug: 
+            print("All outputs cleared!")
         clear_all_tb = "All outputs deleted!"
         return clear_all_tb
         
@@ -149,8 +121,6 @@ class config:
             
         settings_save_progress = f"Settings saved to [{json_file}]. Restart MultiAI!"
         
-        gr.Info("Settings saved! Restart MultiAI")
-        
         return settings_save_progress
     
     if "dev_config.json" in os.listdir("settings"):
@@ -167,9 +137,10 @@ class config:
     share_gradio = data.get('share_gradio', 'False').lower() == 'true'
     preload_models = data.get('preload_models', 'False').lower() == 'true'
     clear_on_start = data.get('clear_on_start', 'False').lower() == 'true'
-     
+
     if not (debug or inbrowser or share_gradio or preload_models or clear_on_start):
-        gr.Warning("Something wrong in config.json. Check them out!")
+        if debug: 
+            print("Something wrong in config.json. Check them out!")
 
 ##################################################################################################################################
 
@@ -177,13 +148,13 @@ class models:
     def nsfw_load():
         global model_nsfw, nsfw_status
         try:
-            if nsfw_status is not True:
+            if nsfw_status != True:
                 init.check_file(init.modelname)
                 model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
                 nsfw_status = True
-            elif nsfw_status is True:
-                if config.debug:
-                    gr.Info("NSFW model already loaded!")
+            elif nsfw_status == True:
+                if config.debug: 
+                    print("NSFW model already loaded!")
         except NameError:
                 init.check_file(init.modelname)
                 model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
@@ -193,14 +164,14 @@ class models:
     def tokenizer_load():
         global tokenizer, tokenizer_status, model_tokinezer
         try:
-            if tokenizer_status is not True:
+            if tokenizer_status != True:
                 tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
                 tokenizer.add_special_tokens({'pad_token': '[PAD]'})
                 model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
                 tokenizer_status = True
-            elif tokenizer_status is True: 
-                if config.debug:
-                    gr.Info("Tokinezer already loaded!")
+            elif tokenizer_status == True:
+                if config.debug: 
+                    print("Tokinezer already loaded!")
         except NameError:
                 tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
                 tokenizer.add_special_tokens({'pad_token': '[PAD]'})
@@ -211,12 +182,12 @@ class models:
     def ci_load():
         global ci, ci_status
         try:
-            if ci_status is not True:
+            if ci_status != True:
                 ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
                 ci_status = True
-            elif ci_status is True: 
-                if config.debug:
-                    gr.Info("CLIP already loaded!")
+            elif ci_status == True:
+                if config.debug: 
+                    print("CLIP already loaded!")
         except NameError:
                 ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
                 ci_status = True
@@ -225,13 +196,13 @@ class models:
     def h5_load():
         global model_h5, h5_status
         try:
-            if h5_status is not True:
+            if h5_status != True:
                 init.checkfile_h5(init.modelname_h5)
                 model_h5 = load_model('model.h5')
                 h5_status = True
-            elif h5_status is True:
-                if config.debug:
-                    gr.Info("H5 model already loaded!")
+            elif h5_status == True:
+                if config.debug: 
+                    print("H5 model already loaded!")
         except NameError:
                 init.checkfile_h5(init.modelname_h5)
                 model_h5 = load_model('model.h5')
@@ -241,18 +212,19 @@ class models:
 ##################################################################################################################################
                   
 class multi:
-    def rem_bg_def(inputs):
+    def BgRemoverLite(inputs):
         try:
             outputs = remove(inputs)
         except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-            gr.Error(f"Error: {e}")
+            if config.debug: 
+                print(f"Error: {e}")
             pass
         return outputs
 
-    def rem_bg_def_batch(inputs):
+    def BgRemoverLiteBatch(inputs):
         temp_dir = inputs
         for filename in tqdm(os.listdir(inputs)):
-            outputs = "rembg_outputs"
+            outputs = "outputs/rembg_outputs"
             inputs = os.path.abspath(temp_dir)
             try:
                 inputs = os.path.join(inputs, filename)
@@ -262,7 +234,8 @@ class multi:
                 output_image = remove(input_image)
                 output_image.save(outputs)
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-                gr.Error(f"Error: {e}")
+                if config.debug: 
+                    print(f"Error: {e}")
                 pass
         outputs = init.current_directory + r"\outputs" + r"\rembg_outputs"
         return outputs
@@ -274,24 +247,20 @@ class multi:
         os.makedirs(folder_path)
         file = open(f"{folder_path}/outputs will be here.txt", "w")
         file.close()
-        
-        gr.Info("BgRemoverLite outputs cleared!")
         outputs = "Done!"
         return outputs
 
 ##################################################################################################################################
 
     def NSFW_Detector(detector_input, detector_slider, detector_skeep_dr, drawings_threshold):
-        if detector_skeep_dr is True: 
-            if config.debug:
-                gr.Info("I will skip drawings!")
         if detector_skeep_dr == True:
             if config.debug: 
-                gr.Info("I will skip drawings!")
+                print("I will skip drawings!")
         models.nsfw_load()
         init.check_file(init.modelname)
         FOLDER_NAME = str(detector_input)
         THRESHOLD = detector_slider
+        DRAW_THRESHOLD = drawings_threshold
         nsfw = 0
         plain = 0
 
@@ -306,9 +275,9 @@ class multi:
                 value_nsfw_1 = result[x]["porn"]
                 value_nsfw_2 = result[x]["hentai"]
                 value_nsfw_3 = result[x]["sexy"]
-                value_sfw = result[x]["neutral"]
+                value_draw = result[x]["drawings"]
 
-                if detector_skeep_dr is False:
+                if detector_skeep_dr == False:
                     if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
                         sh.copyfile(file, f'./outputs/detector_outputs_nsfw/{file.split("/")[-1]}')
                         nsfw += 1
@@ -316,9 +285,9 @@ class multi:
                         sh.copyfile(file, f'./outputs/detector_outputs_plain/{file.split("/")[-1]}')
                         plain += 1
                         
-                elif detector_skeep_dr is True:
+                elif detector_skeep_dr == True:
                     if value_draw > DRAW_THRESHOLD or value_nsfw_2 > THRESHOLD * 1.5:
-                        if config.debug:
+                        if config.debug: 
                             print(f"I skipped this pic, because value_draw[{value_draw}] > DRAW_THRESHOLD[{DRAW_THRESHOLD}]")
                         pass
                     elif value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
@@ -329,62 +298,47 @@ class multi:
                         plain += 1
                         
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-                gr.Error(f"Error: {e}")
+                if config.debug: 
+                    print(f"Error: {e}")
                 pass
 
         outputs = (
-            "["
-            + str(nsfw)
-            + "]"
-            + "NSFW: "
-            + os.path.abspath("./detector_outputs_nsfw")
-            + "\n["
-            + str(plain)
-            + "]"
-            + "Plain: "
-            + os.path.abspath("./detector_outputs_plain")
+            f"[{str(nsfw)}] NSFW: {os.path.abspath('./outputs/detector_outputs_nsfw')}\n"
+            f"[{str(plain)}] Plain: {os.path.abspath('./outputs/detector_outputs_plain')}"
         )
         return outputs
 
-    def detector_clear():
-        outputs_dir1 = os.path.join(init.current_directory, "detector_outputs_nsfw")
+    def NSFWDetector_Clear():
+        outputs_dir1 = os.path.join(init.current_directory, "outputs/detector_outputs_nsfw")
         sh.rmtree(outputs_dir1)
-        outputs_dir2 = os.path.join(init.current_directory, "detector_outputs_plain")
+        outputs_dir2 = os.path.join(init.current_directory, "outputs/detector_outputs_plain")
         sh.rmtree(outputs_dir2)
-        folder_path1 = "detector_outputs_nsfw"
+        folder_path1 = "outputs/detector_outputs_nsfw"
         os.makedirs(folder_path1)
         file = open(f"{folder_path1}/outputs will be here.txt", "w")
         file.close()
-        folder_path2 = "detector_outputs_plain"
+        folder_path2 = "outputs/detector_outputs_plain"
         os.makedirs(folder_path2)
         file = open(f"{folder_path2}/outputs will be here.txt", "w")
         file.close()
-        
-        gr.Info("NSFW Detector outputs cleared!")
         outputs = "Done!"
         return outputs
 
-    def clearp_bgr_def():
-        outputs_dir = os.path.join(init.current_directory, "rembg_outputs")
-        sh.rmtree(outputs_dir)
-        folder_path = "rembg_outputs"
-        os.makedirs(folder_path)
-        file = open(f"{folder_path}/outputs will be here.txt", "w")
-        file.close()
-        outputs = "Done!"
-        return outputs
-    
-    def uspc(upsc_image_input, scale_factor, model_ups):
+##################################################################################################################################
+
+    def Upscaler(upsc_image_input, scale_factor, model_ups):
         tmp_img_ndr = Image.fromarray(upsc_image_input)
         upsc_image_output = upscale(model_ups, tmp_img_ndr, scale_factor)
         return upsc_image_output
     
-    def spc(file_spc, clip_checked):
+##################################################################################################################################
+    
+    def ImageAnalyzer(file_spc, clip_checked):
         img = Image.fromarray(file_spc, 'RGB')
         img.save('tmp.png')
         dir_img_fromarray = os.path.join(os.getcwd(), "tmp.png")
 
-        nsfw_load()
+        models.nsfw_load()
         result = predict.classify(model_nsfw, dir_img_fromarray)
         x = next(iter(result.keys()))
 
@@ -393,7 +347,7 @@ class multi:
         percentages = {k: round((v / total_sum) * 100, 1) for k, v in values.items()}
 
         spc_output = ""
-        if clip_checked is True:
+        if clip_checked == True:
             models.ci_load()
             clip = Image.open(dir_img_fromarray).convert('RGB')
             spc_output += f"Prompt:\n{ci.interrogate(clip)}\n\n" 
@@ -405,41 +359,22 @@ class multi:
         spc_output += f"Neutral: {percentages['neutral']}%"
 
         tmp_file = "tmp.png"
+        
         try:
             os.remove(tmp_file)
         except FileNotFoundError as e:
-            gr.Error(f"Error: {e}")
+            if config.debug: 
+                print(f"Error: {e}")
             pass
 
         return spc_output
     
-    def prompt_generator(prompt_input, pg_prompts, pg_max_length, randomize_temp):
-        tokenizer_load()
-        prompt = prompt_input
-        if randomize_temp is True:
-            tempreture_pg = (random.randint(4, 9)/10)
-        elif randomize_temp is False:
-            tempreture_pg = 0.7
-
-        nlp = pipeline('text-generation', model=model_tokinezer, tokenizer=tokenizer)
-        outs = nlp(prompt, 
-                   max_length=pg_max_length, 
-                   num_return_sequences=pg_prompts, 
-                   do_sample=True, 
-                   repetition_penalty=1.2, 
-                   temperature=tempreture_pg, 
-                   top_k=4, 
-                   early_stopping=False)
-
-        for i in tqdm(range(len(outs))):
-            outs[i] = str(outs[i]['generated_text']).replace('  ', '').rstrip(',')
-        promptgen_output = ('\n\n'.join(outs) + '\n')  
-        return promptgen_output 
+##################################################################################################################################
     
     def VideoAnalyzer(file_Vspc):
-        output_dir = 'tmp'
+        output_dir = 'tmp_pngs'
         os.makedirs(output_dir, exist_ok=True)
-        nsfw_load()
+        models.nsfw_load()
         cap = cv2.VideoCapture(file_Vspc)
 
         frame_count = 0
@@ -452,7 +387,7 @@ class multi:
             cv2.imwrite(output_file, frame)
             frame_count += 1
         
-        dir_tmp = "tmp"
+        dir_tmp = "tmp_pngs"
         total_sum = 0
         file_count = 0
         
@@ -469,10 +404,17 @@ class multi:
         avg_sum = total_sum / file_count 
         percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
         
-        if percentages['porn'] > 70:
-            sh.move(file_Vspc, 'video_analyze_nsfw')
-        else:
-            sh.move(file_Vspc, 'video_analyze_plain')
+        value1 = percentages["drawings"]
+        value2 = percentages["hentai"]
+        value3 = percentages["neutral"]
+        value4 = percentages["porn"]
+        value5 = percentages["sexy"]
+        
+        Vspc_output = f"Drawings: {value1}%\n"
+        Vspc_output += f"Hentai: {value2}%\n"
+        Vspc_output += f"Porn: {value4}%\n"
+        Vspc_output += f"Sexy: {value5}%\n"
+        Vspc_output += f"Neutral: {value3}%"
         
         rm_tmp = os.path.join(init.current_directory, dir_tmp)
         sh.rmtree(rm_tmp)
@@ -490,7 +432,7 @@ class multi:
         _nsfw = 0
         _plain = 0
         out_cmd = str("")
-        output_dir = 'tmp'
+        output_dir = 'tmp_pngs'
         os.makedirs(output_dir, exist_ok=True)
         video_files = os.listdir(video_dir)
         
@@ -525,8 +467,9 @@ class multi:
                     if i % vbth_slider != 0:
                         continue
                 elif vbth_slider == 1:
-                    if config.debug:
-                        print("Frame-Skip disabled!")
+                    if config.debug == True:
+                        if config.debug: 
+                            print("Frame-Skip disabled!")
                     else:
                         pass
                     
@@ -573,21 +516,18 @@ class multi:
             sh.rmtree(rm_tmp)
             os.makedirs(output_dir, exist_ok=True)
             
-            if _nsfw_factor is True:  
+            if _nsfw_factor == True:  
                 out_cmd = f"[+]NSFW: {_nsfw}"
                 out_cmd += f"\nPlain: {_plain}"
                 
-            elif _plain_factor is True:
+            elif _plain_factor == True:
                 out_cmd = f"NSFW: {_nsfw}"
                 out_cmd += f"\n[+]Plain: {_plain}"
                 
-            if config.debug:
             if config.debug: 
-            if config.debug: 
-                print("")
-            if config.debug:
                 print("")
                 print(out_cmd)
+                print("")
             out_cmd = str("")
             avg_sum = 0
             percentages = 0
@@ -596,13 +536,13 @@ class multi:
         return bth_Vspc_output
 
     def VideoAnalyzerBatch_Clear():
-        output_dir = 'tmp'
+        output_dir = 'tmp_pngs'
         try:
             outputs_dir1 = os.path.join(init.current_directory, "outputs/video_analyze_nsfw")
             sh.rmtree(outputs_dir1)
             outputs_dir2 = os.path.join(init.current_directory, "outputs/video_analyze_plain")
             sh.rmtree(outputs_dir2)
-            outputs_dir3 = os.path.join(init.current_directory, "tmp")
+            outputs_dir3 = os.path.join(init.current_directory, "tmp_pngs")
             sh.rmtree(outputs_dir3)
             folder_path1 = "outputs/video_analyze_nsfw"
             os.makedirs(folder_path1)
@@ -626,8 +566,7 @@ class multi:
                 file.close()
             except (PermissionError, FileNotFoundError, FileExistsError, Exception):
                 pass
-        
-        gr.Info("Video Analyzer outputs cleared!")    
+            
         bth_Vspc_clear_output = "Done!"
         return bth_Vspc_clear_output 
     
@@ -636,9 +575,9 @@ class multi:
     def PromptGenetator(prompt_input, pg_prompts, pg_max_length, randomize_temp):
         models.tokenizer_load()
         prompt = prompt_input
-        if randomize_temp is True:
+        if randomize_temp == True:
             tempreture_pg = (random.randint(4, 9)/10)
-        elif randomize_temp is False:
+        elif randomize_temp == False:
             tempreture_pg = 0.7
 
         nlp = pipeline('text-generation', model=model_tokinezer, tokenizer=tokenizer)
@@ -666,8 +605,9 @@ class multi:
                 test_image = np.expand_dims(test_image, axis=-1)  
                 result = model_h5.predict(test_image)
                 predicted_max = float(np.max(result[0]))
-                 
-                if config.debug:
+                
+                if config.debug: 
+                    print("") 
                     print(f"Result array of detecting:{result}") 
                     print(f"MAX result of detecting:{predicted_max}") 
                     print(f"Threshold:{threshold}") 
@@ -716,7 +656,7 @@ class multi:
                 elif result == "This is an image created by HUMAN":
                     sh.copyfile(img_path, os.path.join(aid_human_dir, image_file))
             except (UnidentifiedImageError, PermissionError, FileNotFoundError, FileExistsError, Exception) as e:
-                gr.Warning(f"Error processing {image_file}: {e}")
+                print(f"Error processing {image_file}: {e}")
         
         aid_output_batch = "Images sorted successfully!"
         return aid_output_batch
@@ -735,7 +675,6 @@ class multi:
         os.makedirs(folder_path2)
         file = open(f"{folder_path2}/outputs will be here.txt", "w")
         file.close()
-        gr.Info("AI Detector outputs cleared!")
         outputs = "Done!"
         return outputs
 

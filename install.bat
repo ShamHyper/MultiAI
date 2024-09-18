@@ -42,7 +42,8 @@ goto :show_stdout_stderr
 set PYTHON="%VENV_DIR%\Scripts\Python.exe"
 echo venv %PYTHON%
 if exist %VENV_DIR%\Scripts\python.exe (
-	%VENV_DIR%\Scripts\python.exe -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+    echo Installing torch...
+	%VENV_DIR%\Scripts\python.exe -m pip install torch torchvision==0.16.2 --index-url https://download.pytorch.org/whl/cu118
 )
 if exist %VENV_DIR%\Scripts\python.exe (
     %VENV_DIR%\Scripts\python.exe -m pip install -r requirements.txt
