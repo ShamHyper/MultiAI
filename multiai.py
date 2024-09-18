@@ -223,7 +223,6 @@ class models:
                   
 class multi:
     def BgRemoverLite(inputs):
-    def BgRemoverLite(inputs):
         try:
             outputs = remove(inputs)
         except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
@@ -234,7 +233,6 @@ class multi:
             pass
         return outputs
 
-    def BgRemoverLiteBatch(inputs):
     def BgRemoverLiteBatch(inputs):
         temp_dir = inputs
         for filename in tqdm(os.listdir(inputs)):
@@ -331,8 +329,6 @@ class multi:
 
     def NSFWDetector_Clear():
         outputs_dir1 = os.path.join(init.current_directory, "outputs/detector_outputs_nsfw")
-    def NSFWDetector_Clear():
-        outputs_dir1 = os.path.join(init.current_directory, "outputs/detector_outputs_nsfw")
         sh.rmtree(outputs_dir1)
         outputs_dir2 = os.path.join(init.current_directory, "outputs/detector_outputs_plain")
         outputs_dir2 = os.path.join(init.current_directory, "outputs/detector_outputs_plain")
@@ -350,9 +346,6 @@ class multi:
         outputs = "Done!"
         return outputs
 
-##################################################################################################################################
-
-    def Upscaler(upsc_image_input, scale_factor, model_ups):
 ##################################################################################################################################
 
     def Upscaler(upsc_image_input, scale_factor, model_ups):

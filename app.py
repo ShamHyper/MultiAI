@@ -96,8 +96,6 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
                 label="Threshold for 🎨 Skip drawings or anime",
                 minimum=0.01,
                 maximum=0.98
-                minimum=0.01,
-                maximum=0.98
             )
         with gr.Row():
             detector_skeep_dr = gr.Checkbox(value=False, label="🎨 Skip drawings or anime")
@@ -219,13 +217,11 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
                 label="Prompts",
                 minimum=1,
                 maximum=1000
-                maximum=1000
             )
             pg_max_length = gr.Slider(
                 value=76,
                 label="Max Length of prompt",
                 minimum=1,
-                maximum=1000
                 maximum=1000
             )
         with gr.Row():
