@@ -3,5 +3,5 @@
     "start_in_browser": "False",
     "share_gradio": "False",
     "preload_models": "False",
-    "clear_on_start": "False"
+    "clear_on_start": "True"
 }
