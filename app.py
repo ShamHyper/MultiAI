@@ -164,7 +164,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(
             
 ##################################################################################################################################            
             
-    with gr.Tab("[BETA]AI Detector"):
+    with gr.Tab("[BETA-0.2]AI Detector"):
         with gr.Row():
             gr.Label("Detector threshold")
             aid_slider = gr.Slider(

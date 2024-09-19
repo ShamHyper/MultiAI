@@ -25,7 +25,7 @@ import gradio as gr
 
 from upscalers import clear_on_device_caches
 
-version = "MultiAI v1.13.0-b4"
+version = "MultiAI | v1.13.0"
 
 ##################################################################################################################################
 

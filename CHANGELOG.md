@@ -1,4 +1,11 @@
 # Changelog
+## 1.13.x
+- Improved code readability
+- Changes recommended by Ruff have been made
+- The log system has been rewritten
+- Added tooltips instead of some logs
+- Fixed a bug that prevented the launch of the Video analyzer
+- Now None is selected in Upscaler according to the standard, which removed the error at startup
 ## 1.12.x
 - Added [BETA]AI Detector - detecting AI or Human created images. Very crude function, a lot of false definitions
 - Some fixes of AI Detector
