@@ -13,9 +13,6 @@
 
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 ![PowerShell](https://img.shields.io/badge/PowerShell-%235391FE.svg?style=for-the-badge&logo=powershell&logoColor=white)
-
-![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
-![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
 ## Donate
 [![1](https://i.imgur.com/8Hva6OY.png)](https://www.donationalerts.com/r/shamhyper0)
 
@@ -38,7 +35,7 @@
 
 **6. Prompt Generator**
 
-**7. [BETA]AI Detector**
+**7. [BETA-2]AI Detector**
 ## System requirements
 **1. Windows 10-11**
 
@@ -87,45 +84,6 @@ git clone https://github.com/ShamHyper/MultiAI.git
 **7. Unarchive ZIP**
 
 **8. Run *install.bat* for first time. Next time run *run.bat***
-## [BETA]Installation for Linux (tested on Ubuntu)
-**1. Install Python**
-```sh
-sudo apt install python3
-```
-**2. Install PIP**
-```sh
-sudo apt install python3-pip
-```
-**3. Install Git**
-```py
-sudo apt install git
-```
-**4. Install FFmpeg**
-```py
-sudo apt install FFmpeg
-```
-**5. Install [CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Linux)**
-
-**6. Restart your PC**
-
-**7. Clone repository**
-```git
-git clone https://github.com/ShamHyper/MultiAI.git
-```
-**8. In terminal, type for first time:**
-```sh
-pip3 install -r requirements.txt
-```
-**9. In terminal, type for run MultiAI:**
-```sh
-python3 app.py
-```
-
-*This is a very BETA version of the installation for Linux. I have briefly checked the functionality and do not really understand how to set up a venv for this OS yet.*
-
-| BgRemoverLite | Image upscaler | NSFW Detector | Image Analyzer  | Video Analyzer | Prompt Generator | AI Detector
-| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-| Fully functional  | Partially functional | Not tested | Not tested | Not tested | Not tested | Not tested
 ## Settings tab (recommended)
 **Now you don't have to go into config.json and change something with your hands. This tab will do everything for you!**
 ![cfg](https://i.imgur.com/Pw00z0a.png?raw=true)
