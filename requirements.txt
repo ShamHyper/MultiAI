@@ -1,7 +1,7 @@
 clear==2.0.0
 tqdm==4.66.0
 
-gradio==4.3.0
+gradio==4.44.0
 nsfw_detector==1.1.1
 clip-interrogator==0.6.0
 upscalers==0.5.3

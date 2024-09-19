@@ -21,7 +21,7 @@ from numba import cuda
 from keras.models import load_model
 import numpy as np
 
-version = "MultiAI v1.13.0-b2"
+version = "MultiAI v1.13.0-b3"
 
 ##################################################################################################################################
 

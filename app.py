@@ -3,12 +3,15 @@ import gradio as gr
 from clear import clear
 from upscalers import available_models, clear_on_device_caches
 
-with open("settings/.css", "r") as file:
+with open("css/dark_2.0.css", "r") as file:
     CSS = file.read()
+    print("CSS loaded!")
 
-with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
+with gr.Blocks(title=init.ver, theme=gr.themes.Soft(
     primary_hue="purple", 
-    secondary_hue="blue")) as multiai:
+    secondary_hue="blue"),
+    css=CSS  
+    ) as multiai:
     gr.Markdown(init.ver)
     
 ##################################################################################################################################
