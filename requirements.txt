@@ -1,5 +1,5 @@
 clear==2.0.0
-tqdm
+tqdm==4.66.0
 
 gradio==4.3.0
 nsfw_detector==1.1.1
@@ -8,8 +8,8 @@ upscalers==0.5.3
 
 gfpgan>=1.3.0
 tensorflow>=2.2.0
-basicsr
-realesrgan
+basicsr==1.4.2
+realesrgan==0.3.0
 einops==0.7.0
 piexif==1.1.3
 ldm==0.1.3

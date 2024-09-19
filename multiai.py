@@ -1,5 +1,3 @@
-print("Loading libs...")
-
 import shutil as sh
 import os
 from tqdm import tqdm
@@ -23,7 +21,7 @@ from numba import cuda
 from keras.models import load_model
 import numpy as np
 
-version = "MultiAI v1.12.4"
+version = "MultiAI v1.13.0-b2"
 
 ##################################################################################################################################
 
@@ -63,7 +61,7 @@ class init:
             urllib.request.urlretrieve(init.url_h5, init.modelname_h5)
     
     def delete_tmp_pngs():
-        output_dir = "tmp_pngs"
+        output_dir = "tmp"
         try:
             rm_tmp = os.path.join(init.current_directory, output_dir)
             sh.rmtree(rm_tmp)
@@ -148,11 +146,11 @@ class models:
     def nsfw_load():
         global model_nsfw, nsfw_status
         try:
-            if nsfw_status != True:
+            if nsfw_status is not True:
                 init.check_file(init.modelname)
                 model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
                 nsfw_status = True
-            elif nsfw_status == True:
+            elif nsfw_status is True:
                 if config.debug: 
                     print("NSFW model already loaded!")
         except NameError:
@@ -164,12 +162,12 @@ class models:
     def tokenizer_load():
         global tokenizer, tokenizer_status, model_tokinezer
         try:
-            if tokenizer_status != True:
+            if tokenizer_status is not True:
                 tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
                 tokenizer.add_special_tokens({'pad_token': '[PAD]'})
                 model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
                 tokenizer_status = True
-            elif tokenizer_status == True:
+            elif tokenizer_status is True:
                 if config.debug: 
                     print("Tokinezer already loaded!")
         except NameError:
@@ -182,10 +180,10 @@ class models:
     def ci_load():
         global ci, ci_status
         try:
-            if ci_status != True:
+            if ci_status is not True:
                 ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
                 ci_status = True
-            elif ci_status == True:
+            elif ci_status is True:
                 if config.debug: 
                     print("CLIP already loaded!")
         except NameError:
@@ -196,11 +194,11 @@ class models:
     def h5_load():
         global model_h5, h5_status
         try:
-            if h5_status != True:
+            if h5_status is not True:
                 init.checkfile_h5(init.modelname_h5)
                 model_h5 = load_model('model.h5')
                 h5_status = True
-            elif h5_status == True:
+            elif h5_status is True:
                 if config.debug: 
                     print("H5 model already loaded!")
         except NameError:
@@ -253,7 +251,7 @@ class multi:
 ##################################################################################################################################
 
     def NSFW_Detector(detector_input, detector_slider, detector_skeep_dr, drawings_threshold):
-        if detector_skeep_dr == True:
+        if detector_skeep_dr is True:
             if config.debug: 
                 print("I will skip drawings!")
         models.nsfw_load()
@@ -277,7 +275,7 @@ class multi:
                 value_nsfw_3 = result[x]["sexy"]
                 value_draw = result[x]["drawings"]
 
-                if detector_skeep_dr == False:
+                if detector_skeep_dr is False:
                     if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
                         sh.copyfile(file, f'./outputs/detector_outputs_nsfw/{file.split("/")[-1]}')
                         nsfw += 1
@@ -285,7 +283,7 @@ class multi:
                         sh.copyfile(file, f'./outputs/detector_outputs_plain/{file.split("/")[-1]}')
                         plain += 1
                         
-                elif detector_skeep_dr == True:
+                elif detector_skeep_dr is True:
                     if value_draw > DRAW_THRESHOLD or value_nsfw_2 > THRESHOLD * 1.5:
                         if config.debug: 
                             print(f"I skipped this pic, because value_draw[{value_draw}] > DRAW_THRESHOLD[{DRAW_THRESHOLD}]")
@@ -347,7 +345,7 @@ class multi:
         percentages = {k: round((v / total_sum) * 100, 1) for k, v in values.items()}
 
         spc_output = ""
-        if clip_checked == True:
+        if clip_checked is True:
             models.ci_load()
             clip = Image.open(dir_img_fromarray).convert('RGB')
             spc_output += f"Prompt:\n{ci.interrogate(clip)}\n\n" 
@@ -372,7 +370,7 @@ class multi:
 ##################################################################################################################################
     
     def VideoAnalyzer(file_Vspc):
-        output_dir = 'tmp_pngs'
+        output_dir = 'tmp'
         os.makedirs(output_dir, exist_ok=True)
         models.nsfw_load()
         cap = cv2.VideoCapture(file_Vspc)
@@ -387,7 +385,7 @@ class multi:
             cv2.imwrite(output_file, frame)
             frame_count += 1
         
-        dir_tmp = "tmp_pngs"
+        dir_tmp = "tmp"
         total_sum = 0
         file_count = 0
         
@@ -432,7 +430,7 @@ class multi:
         _nsfw = 0
         _plain = 0
         out_cmd = str("")
-        output_dir = 'tmp_pngs'
+        output_dir = 'tmp'
         os.makedirs(output_dir, exist_ok=True)
         video_files = os.listdir(video_dir)
         
@@ -467,9 +465,8 @@ class multi:
                     if i % vbth_slider != 0:
                         continue
                 elif vbth_slider == 1:
-                    if config.debug == True:
-                        if config.debug: 
-                            print("Frame-Skip disabled!")
+                    if config.debug: 
+                        print("Frame-Skip disabled!")
                     else:
                         pass
                     
@@ -516,11 +513,11 @@ class multi:
             sh.rmtree(rm_tmp)
             os.makedirs(output_dir, exist_ok=True)
             
-            if _nsfw_factor == True:  
+            if _nsfw_factor is True:  
                 out_cmd = f"[+]NSFW: {_nsfw}"
                 out_cmd += f"\nPlain: {_plain}"
                 
-            elif _plain_factor == True:
+            elif _plain_factor is True:
                 out_cmd = f"NSFW: {_nsfw}"
                 out_cmd += f"\n[+]Plain: {_plain}"
                 
@@ -536,13 +533,13 @@ class multi:
         return bth_Vspc_output
 
     def VideoAnalyzerBatch_Clear():
-        output_dir = 'tmp_pngs'
+        output_dir = 'tmp'
         try:
             outputs_dir1 = os.path.join(init.current_directory, "outputs/video_analyze_nsfw")
             sh.rmtree(outputs_dir1)
             outputs_dir2 = os.path.join(init.current_directory, "outputs/video_analyze_plain")
             sh.rmtree(outputs_dir2)
-            outputs_dir3 = os.path.join(init.current_directory, "tmp_pngs")
+            outputs_dir3 = os.path.join(init.current_directory, "tmp")
             sh.rmtree(outputs_dir3)
             folder_path1 = "outputs/video_analyze_nsfw"
             os.makedirs(folder_path1)
@@ -575,9 +572,9 @@ class multi:
     def PromptGenetator(prompt_input, pg_prompts, pg_max_length, randomize_temp):
         models.tokenizer_load()
         prompt = prompt_input
-        if randomize_temp == True:
+        if randomize_temp is True:
             tempreture_pg = (random.randint(4, 9)/10)
-        elif randomize_temp == False:
+        elif randomize_temp is False:
             tempreture_pg = 0.7
 
         nlp = pipeline('text-generation', model=model_tokinezer, tokenizer=tokenizer)

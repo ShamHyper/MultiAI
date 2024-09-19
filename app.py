@@ -1,6 +1,4 @@
-import time
-start_time = time.time()
-from multiai import *
+from multiai import init, config, multi
 import gradio as gr
 from clear import clear
 from upscalers import available_models, clear_on_device_caches
@@ -258,21 +256,16 @@ with gr.Blocks(css=CSS, title=init.ver, theme=gr.themes.Soft(
                                                        settings_clear_on_start], 
                         outputs=settings_save_progress)
 
-clear()
-
-if config.clear_on_start == True:
+if config.clear_on_start is True:
     init.clear_all()
 
-if config.preload_models == True:
+if config.preload_models is True:
     init.preloader()
     
 init.delete_tmp_pngs()
+
+clear()
    
 multiai.queue()
-
-end_time = time.time()
-total_time = round(end_time - start_time, 2)
-print(f"Executing time: {total_time}s")
-print("")
 
 multiai.launch(inbrowser=config.inbrowser, share=config.share_gradio)
