@@ -21,7 +21,11 @@ from numba import cuda
 from keras.models import load_model
 import numpy as np
 
-version = "MultiAI v1.13.0-b3"
+import gradio as gr
+
+from upscalers import clear_on_device_caches
+
+version = "MultiAI v1.13.0-b4"
 
 ##################################################################################################################################
 
@@ -43,10 +47,10 @@ class init:
 
         if filename in files_in_directory:
             if config.debug: 
-                print("NSFW Model detected")
+                gr.Info("NSFW Model detected")
         else:
             if config.debug: 
-                print("NSFW Model undected. Downloading...")
+                gr.Info("NSFW Model undected. Downloading...")
             urllib.request.urlretrieve(init.url, init.modelname)
     
     def checkfile_h5(filename):
@@ -54,10 +58,10 @@ class init:
         
         if filename in files_in_directory:
             if config.debug:
-                print("H5 Model detected")
+                gr.Info("H5 Model detected")
         else:
             if config.debug: 
-                print("H5 Model undected. Downloading...")
+                gr.Info("H5 Model undected. Downloading...")
             urllib.request.urlretrieve(init.url_h5, init.modelname_h5)
     
     def delete_tmp_pngs():
@@ -72,12 +76,11 @@ class init:
         try:
             os.remove(tmp_file)
         except FileNotFoundError as e:
-            print(f"Error: {e}")
+            gr.Error(f"Error: {e}")
             pass
     
     def preloader():
-        if config.debug: 
-            print("Preloading models...")
+        print("Preloading models...")
         models.ci_load()
         models.nsfw_load()
         models.tokenizer_load()  
@@ -90,8 +93,7 @@ class init:
         multi.NSFWDetector_Clear()
         multi.VideoAnalyzerBatch_Clear()
         multi.AID_Clear()
-        if config.debug: 
-            print("All outputs cleared!")
+        gr.Info("All outputs cleared!")
         clear_all_tb = "All outputs deleted!"
         return clear_all_tb
         
@@ -117,7 +119,10 @@ class config:
         with open(json_file, 'w') as file:
             json.dump(settings, file, indent=4)
             
-        settings_save_progress = f"Settings saved to [{json_file}]. Restart MultiAI!"
+        settings_save_progress_toast = f"Settings saved to [{json_file}]. Restart MultiAI!"
+        settings_save_progress = "Done!"
+        
+        gr.Info(settings_save_progress_toast)
         
         return settings_save_progress
     
@@ -137,8 +142,7 @@ class config:
     clear_on_start = data.get('clear_on_start', 'False').lower() == 'true'
 
     if not (debug or inbrowser or share_gradio or preload_models or clear_on_start):
-        if debug: 
-            print("Something wrong in config.json. Check them out!")
+        print("Something wrong in config.json. Check them out!")
 
 ##################################################################################################################################
 
@@ -152,7 +156,7 @@ class models:
                 nsfw_status = True
             elif nsfw_status is True:
                 if config.debug: 
-                    print("NSFW model already loaded!")
+                    gr.Info("NSFW model already loaded!")
         except NameError:
                 init.check_file(init.modelname)
                 model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
@@ -169,7 +173,7 @@ class models:
                 tokenizer_status = True
             elif tokenizer_status is True:
                 if config.debug: 
-                    print("Tokinezer already loaded!")
+                    gr.Info("Tokinezer already loaded!")
         except NameError:
                 tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
                 tokenizer.add_special_tokens({'pad_token': '[PAD]'})
@@ -185,7 +189,7 @@ class models:
                 ci_status = True
             elif ci_status is True:
                 if config.debug: 
-                    print("CLIP already loaded!")
+                    gr.Info("CLIP already loaded!")
         except NameError:
                 ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k"))
                 ci_status = True
@@ -200,7 +204,7 @@ class models:
                 h5_status = True
             elif h5_status is True:
                 if config.debug: 
-                    print("H5 model already loaded!")
+                    gr.Info("H5 model already loaded!")
         except NameError:
                 init.checkfile_h5(init.modelname_h5)
                 model_h5 = load_model('model.h5')
@@ -213,9 +217,8 @@ class multi:
     def BgRemoverLite(inputs):
         try:
             outputs = remove(inputs)
-        except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-            if config.debug: 
-                print(f"Error: {e}")
+        except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e: 
+            gr.Error(f"Error: {e}")
             pass
         return outputs
 
@@ -232,8 +235,7 @@ class multi:
                 output_image = remove(input_image)
                 output_image.save(outputs)
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-                if config.debug: 
-                    print(f"Error: {e}")
+                gr.Error(f"Error: {e}")
                 pass
         outputs = init.current_directory + r"\outputs" + r"\rembg_outputs"
         return outputs
@@ -245,6 +247,8 @@ class multi:
         os.makedirs(folder_path)
         file = open(f"{folder_path}/outputs will be here.txt", "w")
         file.close()
+        
+        gr.Info("BgRemoverLite outputs cleared")
         outputs = "Done!"
         return outputs
 
@@ -296,8 +300,7 @@ class multi:
                         plain += 1
                         
             except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
-                if config.debug: 
-                    print(f"Error: {e}")
+                gr.Error(f"Error: {e}")
                 pass
 
         outputs = (
@@ -319,6 +322,8 @@ class multi:
         os.makedirs(folder_path2)
         file = open(f"{folder_path2}/outputs will be here.txt", "w")
         file.close()
+        
+        gr.Info("Detector outputs cleared")
         outputs = "Done!"
         return outputs
 
@@ -361,8 +366,7 @@ class multi:
         try:
             os.remove(tmp_file)
         except FileNotFoundError as e:
-            if config.debug: 
-                print(f"Error: {e}")
+            gr.Error(f"Error: {e}")
             pass
 
         return spc_output
@@ -522,9 +526,7 @@ class multi:
                 out_cmd += f"\n[+]Plain: {_plain}"
                 
             if config.debug: 
-                print("")
                 print(out_cmd)
-                print("")
             out_cmd = str("")
             avg_sum = 0
             percentages = 0
@@ -563,7 +565,8 @@ class multi:
                 file.close()
             except (PermissionError, FileNotFoundError, FileExistsError, Exception):
                 pass
-            
+        
+        gr.Info("Video Analyzer outputs cleared")    
         bth_Vspc_clear_output = "Done!"
         return bth_Vspc_clear_output 
     
@@ -604,7 +607,6 @@ class multi:
                 predicted_max = float(np.max(result[0]))
                 
                 if config.debug: 
-                    print("") 
                     print(f"Result array of detecting:{result}") 
                     print(f"MAX result of detecting:{predicted_max}") 
                     print(f"Threshold:{threshold}") 
@@ -639,8 +641,7 @@ class multi:
             try:
                 img_path = os.path.join(aid_input_batch, image_file)
                 
-                if config.debug:
-                    print(f"Processing image: {img_path}")
+                print(f"Processing image: {img_path}")
                 
                 img_h5 = Image.open(img_path)
                 result = multi.is_image_generated(img_h5, threshold)
@@ -653,7 +654,7 @@ class multi:
                 elif result == "This is an image created by HUMAN":
                     sh.copyfile(img_path, os.path.join(aid_human_dir, image_file))
             except (UnidentifiedImageError, PermissionError, FileNotFoundError, FileExistsError, Exception) as e:
-                print(f"Error processing {image_file}: {e}")
+                gr.Error(f"Error processing {image_file}: {e}")
         
         aid_output_batch = "Images sorted successfully!"
         return aid_output_batch
@@ -672,7 +673,15 @@ class multi:
         os.makedirs(folder_path2)
         file = open(f"{folder_path2}/outputs will be here.txt", "w")
         file.close()
+        
+        gr.Info("AI Detecting outputs cleared")
         outputs = "Done!"
         return outputs
+
+##################################################################################################################################
+
+    def CODC_clearing():
+        clear_on_device_caches()
+        gr.Info("Cache cleared")
 
 ##################################################################################################################################

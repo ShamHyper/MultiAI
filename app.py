@@ -1,9 +1,9 @@
 from multiai import init, config, multi
 import gradio as gr
 from clear import clear
-from upscalers import available_models, clear_on_device_caches
+from upscalers import available_models
 
-with open("css/dark_2.0.css", "r") as file:
+with open("css/.css", "r") as file:
     CSS = file.read()
     print("CSS loaded!")
 
@@ -56,8 +56,6 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(
                 maximum=10.0,
             )
             upsc_button = gr.Button("📈 Start upscaling")
-        with gr.Row():
-            upsc_clear_cache = gr.Button("🧹 Clear torch, cuda and models cache")
             
 ##################################################################################################################################
             
@@ -207,6 +205,8 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(
             gr.Label("Clear all outputs")
             clear_all_button = gr.Button("⭐ Start")
             clear_all_tb = gr.Textbox(label="Result")
+        with gr.Row():
+            upsc_clear_cache = gr.Button("🧹 Clear torch, cuda and models cache") 
             
 ##################################################################################################################################
 
@@ -238,7 +238,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(
     detector_clear_button.click(multi.NSFWDetector_Clear, outputs=clearp)
     
     upsc_button.click(multi.Upscaler, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)
-    upsc_clear_cache.click(clear_on_device_caches)
+    upsc_clear_cache.click(multi.CODC_clearing)
     
     spc_button.click(multi.ImageAnalyzer, inputs=[file_spc, clip_checked], outputs=spc_output)
     
