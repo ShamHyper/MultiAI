@@ -48,7 +48,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(
             upsc_image_input = gr.Image(width=200, height=400)
             upsc_image_output = gr.Image(width=200, height=400)
         with gr.Row():
-            model_ups = gr.Dropdown(label="Model", choices=available_models())
+            model_ups = gr.Dropdown(label="Model", choices=available_models(), value="None")
             scale_factor = gr.Slider(
                 value=4.0,
                 label="Scale factor (4x factor max recommended)",
