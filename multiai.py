@@ -25,7 +25,7 @@ import gradio as gr
 
 from upscalers import clear_on_device_caches
 
-version = "MultiAI | v1.13.1-b1"
+version = "MultiAI | v1.13.1-b2"
 
 ##################################################################################################################################
 
@@ -612,13 +612,15 @@ class multi:
 
         if config.debug:
             print(f"Result array of detecting: {result}")
-            print(f"MAX result of detecting: {predicted_prc}%")
+            print(f"Result of detecting: {predicted_prc}%")
             print(f"Threshold: {threshold}")
-
+            
         if predicted_prc >= threshold:
-            return f"This is an image created by AI\n\n({predicted_prc}%)"
+            iig_text = f"This is an image created by AI\n\n({predicted_prc}%)"
+            return iig_text
         else:
-            return f"This is an image created by HUMAN\n\n({predicted_prc}%)"
+            iig_text = f"This is an image created by HUMAN\n\n({predicted_prc}%)"
+            return iig_text
 
     def AiDetector_single(aid_input_single, threshold):
         models.h5_load()   
@@ -629,7 +631,9 @@ class multi:
     def AiDetector_batch(aid_input_batch, threshold): 
         if config.debug:
             print(f"Working in: {aid_input_batch}")
+            
         models.h5_load()   
+        
         aid_ai_dir = os.path.join(init.current_directory, "outputs/aid_ai")
         aid_human_dir = os.path.join(init.current_directory, "outputs/aid_human")
         
@@ -643,14 +647,9 @@ class multi:
                 print(f"Created HUMAN directory: {aid_human_dir}")
         
         image_files = os.listdir(aid_input_batch)
-        valid_image_extensions = ['.png', '.jpg', '.jpeg', '.bmp']
         
         for image_file in tqdm(image_files):
             try:
-                if not any(image_file.lower().endswith(ext) for ext in valid_image_extensions):
-                    print(f"Skipping non-image file: {image_file}")
-                    continue
-                
                 img_path = os.path.join(aid_input_batch, image_file)
                 if config.debug:
                     print(f"Processing image: {img_path}")
@@ -661,25 +660,23 @@ class multi:
                 if config.debug:
                     print(f"Result for {image_file}: {result}")
                 
-                if result == "This is an image created by AI":
+                if "This is an image created by AI" in result:
                     dest_path = os.path.join(aid_ai_dir, image_file)
                     sh.copyfile(img_path, dest_path)
                     if config.debug:
                         print(f"Copied to AI directory: {dest_path}")
-                elif result == "This is an image created by HUMAN":
+                elif "This is an image created by HUMAN" in result:
                     dest_path = os.path.join(aid_human_dir, image_file)
                     sh.copyfile(img_path, dest_path)
                     if config.debug:
                         print(f"Copied to HUMAN directory: {dest_path}") 
-                
+            
             except Exception as e:
                 print(f"Error processing {image_file}: {e}")
                 pass
         
         aid_output_batch = "Images sorted successfully!"
         return aid_output_batch
-
-
 
     def AID_Clear():
         outputs_dir1 = os.path.join(init.current_directory, "outputs/aid_ai")
