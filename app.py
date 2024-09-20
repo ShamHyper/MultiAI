@@ -1,18 +1,21 @@
-from multiai import init, config, multi
 import gradio as gr
 from clear import clear
 from upscalers import available_models
+
+import main
+import config
+import multi
 
 with open("css/.css", "r") as file:
     CSS = file.read()
     print("CSS loaded!")
 
-with gr.Blocks(title=init.ver, theme=gr.themes.Soft(
+with gr.Blocks(title=main.ver, theme=gr.themes.Soft(
     primary_hue="purple", 
     secondary_hue="blue"),
     css=CSS  
     ) as multiai:
-    gr.Markdown(init.ver)
+    gr.Markdown(main.ver)
     
 ##################################################################################################################################
     
@@ -21,7 +24,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(
             gr.Label("Remove background from single image")
         with gr.Row():
             image_input = gr.Image(width=200, height=400)
-            image_output = gr.Image(width=200, height=400)
+            image_output = gr.Image(width=200, height=400, format="png")
         with gr.Row():
             rembg_button = gr.Button("🖼️ Remove one background")
         with gr.Row():
@@ -46,7 +49,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(
             gr.Label("Upscale image up to 10x size")
         with gr.Row():
             upsc_image_input = gr.Image(width=200, height=400)
-            upsc_image_output = gr.Image(width=200, height=400)
+            upsc_image_output = gr.Image(width=200, height=400, format="png")
         with gr.Row():
             model_ups = gr.Dropdown(label="Model", choices=available_models(), value="None")
             scale_factor = gr.Slider(
@@ -244,7 +247,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(
     aid_batch_button.click(multi.AiDetector_batch, inputs=aid_input_batch, outputs=aid_output_batch)
     aid_clear_button.click(multi.AID_Clear, outputs=aid_clearp)
     
-    clear_all_button.click(init.clear_all, outputs=clear_all_tb)
+    clear_all_button.click(main.clear_all, outputs=clear_all_tb)
     
     settings_save.click(config.save_config_gr, inputs=[settings_debug_mode, settings_start_in_browser, 
                                                        settings_share_gradio, settings_preload_models, 
@@ -252,12 +255,12 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(
                         outputs=settings_save_progress)
 
 if config.clear_on_start is True:
-    init.clear_all()
+    main.clear_all()
 
 if config.preload_models is True:
-    init.preloader()
+    main.preloader()
     
-init.delete_tmp_pngs()
+main.delete_tmp_pngs()
 
 clear()
    
