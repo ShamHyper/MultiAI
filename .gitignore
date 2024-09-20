@@ -1,3 +1,5 @@
+__pycache__/
+
 venv/
 
 pycache/
@@ -23,3 +25,5 @@ tmp/
 
 settings/dev_config.json
 dev_config.json
+
+data/*

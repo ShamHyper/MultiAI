@@ -6,6 +6,8 @@
 - Added tooltips instead of some logs
 - Fixed a bug that prevented the launch of the Video analyzer
 - Now None is selected in Upscaler according to the standard, which removed the error at startup
+- Release of AI Detector
+- Full new h5 model for detector, trained by me - https://github.com/ShamHyper/Classificator_HUMAN_VS_AI
 ## 1.12.x
 - Added [BETA]AI Detector - detecting AI or Human created images. Very crude function, a lot of false definitions
 - Some fixes of AI Detector
