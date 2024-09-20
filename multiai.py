@@ -25,7 +25,7 @@ import gradio as gr
 
 from upscalers import clear_on_device_caches
 
-version = "MultiAI | v1.13.1-b2.1"
+version = "MultiAI | v1.13.1"
 
 ##################################################################################################################################
 
@@ -39,8 +39,8 @@ class init:
     modelname = "nsfw_mobilenet2.224x224.h5"
     url = "https://vdmstudios.ru/server_archive/nsfw_mobilenet2.224x224.h5"
     
-    modelname_h5 = "model.h5"
-    url_h5 = "https://vdmstudios.ru/server_archive/model.h5"
+    modelname_h5 = "model_2.0.h5"
+    url_h5 = "https://vdmstudios.ru/server_archive/model_2.0.h5"
     
     def check_file(filename):
         files_in_directory = os.listdir(init.current_directory)
@@ -200,14 +200,14 @@ class models:
         try:
             if h5_status is not True:
                 init.checkfile_h5(init.modelname_h5)
-                model_h5 = load_model('model.h5')
+                model_h5 = load_model('model_2.0.h5')
                 h5_status = True
             elif h5_status is True:
                 if config.debug: 
                     gr.Info("H5 model already loaded!")
         except NameError:
                 init.checkfile_h5(init.modelname_h5)
-                model_h5 = load_model('model.h5')
+                model_h5 = load_model('model_2.0.h5')
                 h5_status = True
         return model_h5, h5_status
     
@@ -597,38 +597,47 @@ class multi:
     
 ##################################################################################################################################
 
-    def is_image_generated(test_image, threshold):
-        test_image = test_image.resize((200, 200))  
-        test_image = test_image.convert('L')  
-        test_image = np.array(test_image)
-        
-        test_image = np.expand_dims(test_image, axis=0)
-        test_image = np.expand_dims(test_image, axis=-1)
-        
+    def is_image_generated(test_image):
+        test_image = test_image.resize((512, 512))  
+        test_image = test_image.convert('RGB')  
+        test_image = np.array(test_image) / 255.0 
+
+        test_image = np.expand_dims(test_image, axis=0)  
+
         result = model_h5.predict(test_image)
         
-        predicted_prc_raw = float(result[0][4])*100
-        predicted_prc = round(predicted_prc_raw, 4)
+        predicted_prc_ai_raw = result[0][0] * 100 
+        predicted_prc_human_raw = result[0][1] * 100 
+        
+        predicted_prc_ai = round(predicted_prc_ai_raw, 4)
+        predicted_prc_human = round(predicted_prc_human_raw, 4)
 
         if config.debug:
             print(f"Result array of detecting: {result}")
-            print(f"Result of detecting: {predicted_prc}%")
-            print(f"Threshold: {threshold}")
+            print(f"Result of detecting AI: {predicted_prc_ai}%")
+            print(f"Result of detecting HUMAN: {predicted_prc_human}%")
             
-        if predicted_prc >= threshold:
-            iig_text = f"This is an image created by AI\n\n({predicted_prc}%)"
+        if predicted_prc_ai >= predicted_prc_human:
+            predicted_prc = predicted_prc_ai
+        elif predicted_prc_human >= predicted_prc_ai:
+            predicted_prc = predicted_prc_human
+                
+        
+        if predicted_prc == predicted_prc_ai:
+            iig_text = f"This is an image created by AI\n\nAI: {predicted_prc_ai}%\nHUMAN: {predicted_prc_human}%"
             return iig_text
-        else:
-            iig_text = f"This is an image created by HUMAN\n\n({predicted_prc}%)"
+        elif predicted_prc == predicted_prc_human:
+            iig_text = f"This is an image created by HUMAN\n\nAI: {predicted_prc_ai}%\nHUMAN: {predicted_prc_human}"
             return iig_text
 
-    def AiDetector_single(aid_input_single, threshold):
+
+    def AiDetector_single(aid_input_single):
         models.h5_load()   
         img_h5 = Image.fromarray(aid_input_single)
-        aid_output_single = multi.is_image_generated(img_h5, threshold)
+        aid_output_single = multi.is_image_generated(img_h5)
         return aid_output_single
     
-    def AiDetector_batch(aid_input_batch, threshold): 
+    def AiDetector_batch(aid_input_batch): 
         if config.debug:
             print(f"Working in: {aid_input_batch}")
             
@@ -655,7 +664,7 @@ class multi:
                     print(f"Processing image: {img_path}")
                 
                 img_h5 = Image.open(img_path)
-                result = multi.is_image_generated(img_h5, threshold)
+                result = multi.is_image_generated(img_h5)
                 
                 if config.debug:
                     print(f"Result for {image_file}: {result}")

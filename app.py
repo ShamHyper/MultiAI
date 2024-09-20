@@ -164,20 +164,7 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(
             
 ##################################################################################################################################            
             
-    with gr.Tab("[BETA-0.3]AI Detector"):
-        with gr.Row():
-            gr.Label("Detector threshold")
-            aid_slider = gr.Slider(
-                value=70,
-                label="Threshold in %",
-                minimum=1,
-                maximum=100,
-                step=1
-            ) 
-        with gr.Row():
-            gr.Label("AI predicts the percentage of the image created by AI."
-                    " For example, if you specify threshold 95%, and AI predicts 96%, then it will output that the image was created by AI." 
-                    " If you specified 95%, and AI predicts 94%, then it will show that the picture was created by a person. Etc.")
+    with gr.Tab("AI Detector"):
         with gr.Row():
             gr.Label("Analyze image")
         with gr.Row():
@@ -253,8 +240,8 @@ with gr.Blocks(title=init.ver, theme=gr.themes.Soft(
     
     promptgen_button.click(multi.PromptGenetator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
     
-    aid_single_button.click(multi.AiDetector_single, inputs=[aid_input_single, aid_slider], outputs=aid_output_single)
-    aid_batch_button.click(multi.AiDetector_batch, inputs=[aid_input_batch, aid_slider], outputs=aid_output_batch)
+    aid_single_button.click(multi.AiDetector_single, inputs=aid_input_single, outputs=aid_output_single)
+    aid_batch_button.click(multi.AiDetector_batch, inputs=aid_input_batch, outputs=aid_output_batch)
     aid_clear_button.click(multi.AID_Clear, outputs=aid_clearp)
     
     clear_all_button.click(init.clear_all, outputs=clear_all_tb)
