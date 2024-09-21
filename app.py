@@ -55,8 +55,9 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(
             scale_factor = gr.Slider(
                 value=4.0,
                 label="Scale factor (4x factor max recommended)",
-                minimum=1.1,
+                minimum=2,
                 maximum=10.0,
+                step=1
             )
             upsc_button = gr.Button("📈 Start upscaling")
             
@@ -101,6 +102,8 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(
             spc_output = gr.Textbox(label="Stats", placeholder="Press start to get specifications of image")
         with gr.Row():
             clip_checked = gr.Checkbox(value=False, label="Use CLIP for generate prompt (slow if a weak PC)")
+            clip_chunk_size = gr.Slider(value=512, label="Batch size for CLIP, use smaller for lower VRAM", maximum=2048, minimum=512, step=128)
+        with gr.Row():
             spc_button = gr.Button("👟 Click here to start")
             
 ##################################################################################################################################
@@ -202,6 +205,7 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(
             clear_all_tb = gr.Textbox(label="Result")
         with gr.Row():
             upsc_clear_cache = gr.Button("🧹 Clear torch, cuda and models cache") 
+            check_torch = gr.Button("👾Check cuda avaible")
             
 ##################################################################################################################################
 
@@ -233,9 +237,9 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(
     detector_clear_button.click(multi.NSFWDetector_Clear, outputs=clearp)
     
     upsc_button.click(multi.Upscaler, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)
-    upsc_clear_cache.click(multi.CODC_clearing)
+    upsc_clear_cache.click(multi.CODC_clear_app)
     
-    spc_button.click(multi.ImageAnalyzer, inputs=[file_spc, clip_checked], outputs=spc_output)
+    spc_button.click(multi.ImageAnalyzer, inputs=[file_spc, clip_checked, clip_chunk_size], outputs=spc_output)
     
     Vspc_button.click(multi.VideoAnalyzer, inputs=file_Vspc, outputs=Vspc_output)
     start_dir_videos.click(multi.VideoAnalyzerBatch, inputs=[video_dir, vbth_slider, threshold_Vspc_slider], outputs=bth_Vspc_output)   
@@ -248,6 +252,8 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(
     aid_clear_button.click(multi.AID_Clear, outputs=aid_clearp)
     
     clear_all_button.click(main.clear_all, outputs=clear_all_tb)
+    
+    check_torch.click(main.check_gpu)
     
     settings_save.click(config.save_config_gr, inputs=[settings_debug_mode, settings_start_in_browser, 
                                                        settings_share_gradio, settings_preload_models, 
@@ -263,7 +269,7 @@ if config.preload_models is True:
 main.delete_tmp_pngs()
 
 clear()
-   
+
 multiai.queue()
 
 multiai.launch(inbrowser=config.inbrowser, share=config.share_gradio)

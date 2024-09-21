@@ -25,12 +25,18 @@ import main
 import config
 import models
 
+import torch
+
+import tensorflow as tf 
+
 def BgRemoverLite(inputs):
     try:
         outputs = remove(inputs)
     except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e: 
         gr.Error(f"Error: {e}")
         pass
+    
+    CODC_clear(silent=True)
     return outputs
 
 def BgRemoverLiteBatch(inputs):
@@ -48,7 +54,10 @@ def BgRemoverLiteBatch(inputs):
         except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
             gr.Error(f"Error: {e}")
             pass
+        
     outputs = main.current_directory + r"\outputs" + r"\rembg_outputs"
+    
+    CODC_clear(silent=True)
     return outputs
 
 def BgRemoverLite_Clear():
@@ -68,9 +77,10 @@ def BgRemoverLite_Clear():
 def NSFW_Detector(detector_input, detector_slider, detector_skeep_dr, drawings_threshold):
     if detector_skeep_dr is True:
         if config.debug: 
-            print("I will skip drawings!")
+            print("I will skip drawings!")    
+                     
     model_nsfw = models.nsfw_load()
-    main.check_file(main.modelname)
+    
     FOLDER_NAME = str(detector_input)
     THRESHOLD = detector_slider
     DRAW_THRESHOLD = drawings_threshold
@@ -118,6 +128,9 @@ def NSFW_Detector(detector_input, detector_slider, detector_skeep_dr, drawings_t
         f"[{str(nsfw)}] NSFW: {os.path.abspath('./outputs/detector_outputs_nsfw')}\n"
         f"[{str(plain)}] Plain: {os.path.abspath('./outputs/detector_outputs_plain')}"
     )
+    
+    CODC_clear(silent=True)
+    del model_nsfw
     return outputs
 
 def NSFWDetector_Clear():
@@ -143,28 +156,40 @@ def NSFWDetector_Clear():
 def Upscaler(upsc_image_input, scale_factor, model_ups):
     tmp_img_ndr = Image.fromarray(upsc_image_input)
     upsc_image_output = upscale(model_ups, tmp_img_ndr, scale_factor)
+    
+    CODC_clear(silent=True)
     return upsc_image_output
 
 ##################################################################################################################################
 
-def ImageAnalyzer(file_spc, clip_checked):
+def ImageAnalyzer(file_spc, clip_checked, clip_chunk_size):
     img = Image.fromarray(file_spc, 'RGB')
     img.save('tmp.png')
     dir_img_fromarray = os.path.join(os.getcwd(), "tmp.png")
-
+    
+    spc_output = ""
+    
+    if clip_checked is True:
+        ci = models.ci_load(clip_chunk_size)
+        clip = Image.open(dir_img_fromarray).convert('RGB')
+        clip = clip.resize((224, 224))
+        if config.debug:
+            gr.Info(f"Cache path: {ci.config.cache_path}")
+        spc_output += f"Prompt: {ci.interrogate(clip)}\n\n" 
+        CODC_clear(silent=True)
+        import time
+        time.sleep(1)
+        if config.debug:
+            gr.Info("Waiting 1 second before load nsfw model...")
+   
     model_nsfw = models.nsfw_load()
+   
     result = predict.classify(model_nsfw, dir_img_fromarray)
     x = next(iter(result.keys()))
 
     values = result[x]
     total_sum = sum(values.values())
     percentages = {k: round((v / total_sum) * 100, 1) for k, v in values.items()}
-
-    spc_output = ""
-    if clip_checked is True:
-        ci = models.ci_load()
-        clip = Image.open(dir_img_fromarray).convert('RGB')
-        spc_output += f"Prompt:\n{ci.interrogate(clip)}\n\n" 
 
     spc_output += f"Drawings: {percentages['drawings']}%\n"
     spc_output += f"Porn: {percentages['porn']}%\n"
@@ -179,7 +204,9 @@ def ImageAnalyzer(file_spc, clip_checked):
     except FileNotFoundError as e:
         gr.Error(f"Error: {e}")
         pass
-
+    
+    CODC_clear(silent=True)
+    del model_nsfw, ci
     return spc_output
 
 ##################################################################################################################################
@@ -187,7 +214,9 @@ def ImageAnalyzer(file_spc, clip_checked):
 def VideoAnalyzer(file_Vspc):
     output_dir = 'tmp'
     os.makedirs(output_dir, exist_ok=True)
+          
     model_nsfw = models.nsfw_load()
+    
     cap = cv2.VideoCapture(file_Vspc)
 
     frame_count = 0
@@ -231,17 +260,20 @@ def VideoAnalyzer(file_Vspc):
     
     rm_tmp = os.path.join(main.current_directory, dir_tmp)
     sh.rmtree(rm_tmp)
+    
     cap.release()
     cv2.destroyAllWindows()
-    
+    CODC_clear(silent=True)
+    del model_nsfw
     return Vspc_output
 
 def process_frame(frame):
     result_frame = frame    
     return result_frame
 
-def VideoAnalyzerBatch(video_dir, vbth_slider, threshold_Vspc_slider):
+def VideoAnalyzerBatch(video_dir, vbth_slider, threshold_Vspc_slider):  
     model_nsfw = models.nsfw_load()
+    
     _nsfw = 0
     _plain = 0
     out_cmd = str("")
@@ -343,6 +375,8 @@ def VideoAnalyzerBatch(video_dir, vbth_slider, threshold_Vspc_slider):
         percentages = 0
     bth_Vspc_output = "Ready!"
         
+    CODC_clear(silent=True)
+    del model_nsfw
     return bth_Vspc_output
 
 def VideoAnalyzerBatch_Clear():
@@ -404,12 +438,14 @@ def PromptGenetator(prompt_input, pg_prompts, pg_max_length, randomize_temp):
     for i in tqdm(range(len(outs))):
         outs[i] = str(outs[i]['generated_text']).replace('  ', '').rstrip(',')
     promptgen_output = ('\n\n'.join(outs) + '\n')  
+    
+    CODC_clear(silent=True)
+    del tokenizer, model_tokinezer
     return promptgen_output 
 
 ##################################################################################################################################
 
-def is_image_generated(test_image):
-    model_h5 = models.h5_load() 
+def is_image_generated(test_image, model_h5): 
     
     test_image = test_image.resize((512, 512))  
     test_image = test_image.convert('RGB')  
@@ -445,11 +481,16 @@ def is_image_generated(test_image):
 
 
 def AiDetector_single(aid_input_single):  
+    model_h5 = models.h5_load()
     img_h5 = Image.fromarray(aid_input_single)
-    aid_output_single = is_image_generated(img_h5)
+    aid_output_single = is_image_generated(img_h5, model_h5)
+    
+    CODC_clear(silent=True)
+    del model_h5
     return aid_output_single
 
 def AiDetector_batch(aid_input_batch): 
+    model_h5 = models.h5_load()
     if config.debug:
         print(f"Working in: {aid_input_batch}")
 
@@ -474,7 +515,7 @@ def AiDetector_batch(aid_input_batch):
                 print(f"Processing image: {img_path}")
             
             img_h5 = Image.open(img_path)
-            result = is_image_generated(img_h5)
+            result = is_image_generated(img_h5, model_h5)
             
             if config.debug:
                 print(f"Result for {image_file}: {result}")
@@ -494,6 +535,8 @@ def AiDetector_batch(aid_input_batch):
             print(f"Error processing {image_file}: {e}")
             pass
     
+    CODC_clear(silent=True)
+    del model_h5
     aid_output_batch = "Images sorted successfully!"
     return aid_output_batch
 
@@ -517,6 +560,38 @@ def AID_Clear():
 
 ##################################################################################################################################
 
-def CODC_clearing():
-    clear_on_device_caches()
-    gr.Info("Cache cleared")
+def CODC_clear(silent):
+    try:
+        if not silent:
+            gr.Info("Clearing cache...")
+        
+        torch.cuda.empty_cache()
+        
+        clear_on_device_caches()
+        
+        tf.keras.backend.clear_session()
+        tf.compat.v1.reset_default_graph()
+        tf.compat.v1.disable_eager_execution()
+         
+        if not silent:
+            gr.Info("All cache cleared!")   
+    except Exception:
+        gr.Warning("Something wrong in cache clearing. Contact dev.")
+        gr.Info("All cache cleared?...")
+        
+def CODC_clear_app():
+    try:
+        gr.Info("Clearing cache...")
+        
+        torch.cuda.empty_cache()
+        
+        clear_on_device_caches()
+        
+        tf.keras.backend.clear_session()
+        tf.compat.v1.reset_default_graph()
+        tf.compat.v1.disable_eager_execution()
+        
+        gr.Info("All cache cleared!")   
+    except Exception:
+        gr.Warning("Something wrong in cache clearing. Contact dev.")
+        gr.Info("All cache cleared?...")

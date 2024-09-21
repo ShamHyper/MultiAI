@@ -29,8 +29,8 @@ set PYTHON=%VENV_DIR%\Scripts\python.exe
 call "%VENV_DIR%\Scripts\activate"
 
 echo Installing dependencies...
-%PYTHON% -m pip install --upgrade pip
-%PYTHON% -m pip install torch torchvision==0.16.2 torchaudio --index-url https://download.pytorch.org/whl/cu124
+%PYTHON% -m pip install pip==24.0
+%PYTHON% -m pip install torch torchvision==0.16.2 torchaudio --index-url https://download.pytorch.org/whl/cu118
 %PYTHON% -m pip install -r requirements.txt
 
 %PYTHON% app.py %*

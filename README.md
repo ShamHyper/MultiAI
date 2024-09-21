@@ -61,9 +61,13 @@ winget install -e --id Gyan.FFmpeg
 ```
 **5. Install [CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Windows)**
 
-**6. Restart your PC**
+**6. Install [cuDNN v8.9.7 (December 5th, 2023), for CUDA 11.x | Local Installer for Windows (Zip)](https://developer.nvidia.com/rdp/cudnn-archive)**
 
-**7. Clone repository**
+*You need to unpack archive, go to folder cudnn-windows-x86_64-8.9.7.29_cuda11-archive and copy all (bin, inlcude, lib, LICENSE) to "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8" or in your CUDA 11.8 folder*
+
+**7. Restart your PC**
+
+**8. Clone repository**
 ```git
 git clone https://github.com/ShamHyper/MultiAI.git
 ```
@@ -77,11 +81,15 @@ git clone https://github.com/ShamHyper/MultiAI.git
 
 **4. Install [CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Windows)**
 
-**5. Restart your PC**
+**5. Install [cuDNN v8.9.7 (December 5th, 2023), for CUDA 11.x | Local Installer for Windows (Zip)](https://developer.nvidia.com/rdp/cudnn-archive)**
 
-**6. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
+*You need to unpack archive, go to folder cudnn-windows-x86_64-8.9.7.29_cuda11-archive and copy all (bin, inlcude, lib, LICENSE) to "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8" or in your CUDA 11.8 folder*
 
-**7. Unarchive ZIP**
+**6. Restart your PC**
+
+**7. Download using "Code --> Download ZIP"** ([or click here](https://github.com/ShamHyper/MultiAI/archive/refs/heads/main.zip))
+
+**8. Unarchive ZIP**
 
 **8. Run *install.bat* for first time. Next time run *run.bat***
 ## Settings tab (recommended)

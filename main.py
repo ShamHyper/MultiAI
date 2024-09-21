@@ -8,7 +8,9 @@ import gradio as gr
 import config
 import models
 
-version = "MultiAI | v1.14.0-b1"
+import torch
+
+version = "MultiAI | v1.14.0-b2"
 
 ##################################################################################################################################
 
@@ -55,6 +57,7 @@ def delete_tmp_pngs():
         pass
     
     tmp_file = "tmp.png"
+    
     try:
         os.remove(tmp_file)
     except FileNotFoundError as e:
@@ -71,7 +74,7 @@ def preloader():
     return preloaded_tb
 
 def clear_all():
-    from multi import multi
+    import multi
     multi.BgRemoverLite_Clear()
     multi.NSFWDetector_Clear()
     multi.VideoAnalyzerBatch_Clear()
@@ -79,4 +82,16 @@ def clear_all():
     gr.Info("All outputs cleared!")
     clear_all_tb = "All outputs deleted!"
     return clear_all_tb
+
+def check_gpu():
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    
+    if config.debug:
+        gr.Info(f"Device: {device}")
+        
+    if torch.cuda.is_available():
+        gr.Info("CUDA available! Working on")
+    elif not torch.cuda.is_available():
+        gr.Warning("CUDA is not available, using CPU. Warning: this will be very slow!")
+    return device
 
