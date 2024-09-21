@@ -1,6 +1,12 @@
 # Changelog
 ## 1.14.x
-- 
+- Updated model loading
+- Fixed some bugs
+- Classes changed to .py files
+- Updated requirements versions
+- Fixed CLIP very slow generating
+- Updated GPU(CUDA) cache clearing
+- QOL fixes
 ## 1.13.x
 - Improved code readability
 - Changes recommended by Ruff have been made
