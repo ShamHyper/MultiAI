@@ -134,6 +134,7 @@ git clone https://github.com/ShamHyper/MultiAI.git
 - Using **u2net model** for *BgRemoverLite* - https://github.com/xuebinqin/U-2-Net
 - **RemBG** library for *BgRemoverLite* - https://github.com/danielgatis/rembg
 - **NSFW Detection** - https://github.com/GantMan/nsfw_model
+- **NSFW Detection 2.0** - https://huggingface.co/Falconsai/nsfw_image_detection 
 - **Upscaling** - https://github.com/kmewhort/upscalers
 - **Clip-interrogator** for *Image Analyzer* - https://github.com/pharmapsychotic/clip-interrogator
 - **Fast Prompt Generator** - https://huggingface.co/FredZhang7/anime-anything-promptgen-v2

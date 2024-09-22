@@ -8,6 +8,12 @@ import multi
 
 import os
 import sys
+import time
+
+SERVER_PORT = 7890
+SERVER_NAME = '127.0.0.1'
+
+print("")
 
 with open("app/css/.css", "r") as file:
     CSS = file.read()
@@ -16,8 +22,14 @@ with open("app/css/.css", "r") as file:
 with open("app/js/script.js", "r") as file:
     JS_SCRIPT = file.read()
     print("JS_SCRIPT loaded!")
-
+    
+with open("app/html/.html", "r") as file:
+    HTML_FILE = file.read()
+    print("HTML_FILE loaded!")
+    
 def restart_ui():
+    gr.Info("Reloading...") 
+    time.sleep(0.5)
     os.execv(sys.executable, ['python'] + sys.argv)
 
 with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", secondary_hue="blue"), css=CSS) as multiai:
@@ -272,4 +284,4 @@ clear()
 
 multiai.queue()
 
-multiai.launch(inbrowser=config.inbrowser, share=config.share_gradio)
+multiai.launch(inbrowser=config.inbrowser, share=config.share_gradio, server_port=SERVER_PORT, server_name=SERVER_NAME)
