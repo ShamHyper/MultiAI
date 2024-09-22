@@ -48,8 +48,6 @@ def nsfw_load():
         model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
     except NameError:
         gr.Error("Error in nsfw_load!")
-        check_file(modelname)
-        model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
     return model_nsfw
 
 def tokenizer_load():
@@ -61,9 +59,6 @@ def tokenizer_load():
         model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
     except NameError:
         gr.Error("Error in tokenizer_load!")
-        tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
-        tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-        model_tokinezer = GPT2LMHeadModel.from_pretrained('FredZhang7/anime-anything-promptgen-v2')
     return tokenizer, model_tokinezer
 
 def ci_load(clip_chunk_size):
@@ -76,10 +71,6 @@ def ci_load(clip_chunk_size):
             gr.Info(f"Chunk size: {clip_chunk_size}")          
     except (NameError, RuntimeError):
         gr.Error("Error in ci_load!")
-        ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k", chunk_size=clip_chunk_size, flavor_intermediate_count=clip_chunk_size))
-        if config.debug: 
-            gr.Info("Using laion2b_s32b_b79k model")
-            gr.Info(f"Chunk size: {clip_chunk_size}")
     return ci
 
 def h5_load():
@@ -90,8 +81,6 @@ def h5_load():
         model_h5 = load_model('model_2.0.h5')
     except NameError:
         gr.Error("Error in h5_load!")
-        checkfile_h5(modelname_h5)
-        model_h5 = load_model('model_2.0.h5')
     return model_h5
 
 def nsfw_ng_load():
@@ -102,8 +91,6 @@ def nsfw_ng_load():
         processor_nsfw_ng = ViTImageProcessor.from_pretrained('Falconsai/nsfw_image_detection')
     except NameError:
         gr.Error("Error in nsfw_ng_load!")
-        model_nsfw_ng = AutoModelForImageClassification.from_pretrained("Falconsai/nsfw_image_detection")
-        processor_nsfw_ng = ViTImageProcessor.from_pretrained('Falconsai/nsfw_image_detection')
     return model_nsfw_ng, processor_nsfw_ng
         
         
