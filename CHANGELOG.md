@@ -1,4 +1,7 @@
 # Changelog
+## 1.15.x
+- Updated CUDA to 12.1
+- Added restart MultiAI button in clearing tab
 ## 1.14.x
 - Updated model loading
 - Fixed some bugs

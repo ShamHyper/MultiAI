@@ -6,16 +6,23 @@ import main
 import config
 import multi
 
-with open("css/.css", "r") as file:
+import os
+import sys
+
+with open("app/css/.css", "r") as file:
     CSS = file.read()
     print("CSS loaded!")
+    
+with open("app/js/script.js", "r") as file:
+    JS_SCRIPT = file.read()
+    print("JS_SCRIPT loaded!")
 
-with gr.Blocks(title=main.ver, theme=gr.themes.Soft(
-    primary_hue="purple", 
-    secondary_hue="blue"),
-    css=CSS  
-    ) as multiai:
-    gr.Markdown(main.ver)
+def restart_ui():
+    os.execv(sys.executable, ['python'] + sys.argv)
+
+with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", secondary_hue="blue"), css=CSS) as multiai:
+    md_text = f'{main.ver} • Torch {main.torch_version} • Torchvision {main.torchvision_version} • CUDA {main.cuda_version} • cuDNN {main.cudnn_version}'
+    gr.Markdown(md_text)
     
 ##################################################################################################################################
     
@@ -205,7 +212,8 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(
             clear_all_tb = gr.Textbox(label="Result")
         with gr.Row():
             upsc_clear_cache = gr.Button("🧹 Clear torch, cuda and models cache") 
-            check_torch = gr.Button("👾Check cuda avaible")
+            check_torch = gr.Button("👾 Check cuda avaible")
+            btn_refresh = gr.Button(value="🔁 Restart MultiAI")
             
 ##################################################################################################################################
 
@@ -259,6 +267,8 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(
                                                        settings_share_gradio, settings_preload_models, 
                                                        settings_clear_on_start], 
                         outputs=settings_save_progress)
+    
+    btn_refresh.click(restart_ui, js=JS_SCRIPT)
 
 if config.clear_on_start is True:
     main.clear_all()

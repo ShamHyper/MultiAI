@@ -1,5 +1,5 @@
 [![wakatime](https://wakatime.com/badge/github/ShamHyper/MultiAI.svg)](https://wakatime.com/badge/github/ShamHyper/MultiAI)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/ShamHyper/MultiAI/blob/main/LICENSE.md)
 ## Donate
 **https://www.donationalerts.com/r/shamhyper0**
 
@@ -21,7 +21,7 @@
 ## System requirements
 **1. Windows 10-11**
 
-**2. NVIDIA GPU with CUDA 11.8 support**
+**2. NVIDIA GPU with CUDA 12.1 support**
 
 **3. 16gb RAM**
 
@@ -41,11 +41,11 @@ winget install -e --id Git.Git
 ```py
 winget install -e --id Gyan.FFmpeg
 ```
-**5. Install [CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Windows)**
+**5. Install [CUDA 12.1](https://developer.nvidia.com/cuda-12-1-0-download-archive?target_os=Windows)**
 
-**6. Install [cuDNN v8.9.7 (December 5th, 2023), for CUDA 11.x | Local Installer for Windows (Zip)](https://developer.nvidia.com/rdp/cudnn-archive)**
+**6. Install [cuDNN v8.9.7 (December 5th, 2023), for CUDA 12.x | Local Installer for Windows (Zip)](https://developer.nvidia.com/rdp/cudnn-archive)**
 
-*You need to unpack archive, go to folder cudnn-windows-x86_64-8.9.7.29_cuda11-archive and copy all (bin, inlcude, lib, LICENSE) to "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8" or in your CUDA 11.8 folder*
+*You need to unpack archive, go to folder cudnn-windows-x86_64-8.9.7.29_cuda12-archive and copy all (bin, inlcude, lib, LICENSE) to "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1" or in your CUDA 12.1 folder*
 
 **7. Restart your PC**
 
@@ -61,11 +61,11 @@ git clone https://github.com/ShamHyper/MultiAI.git
 
 **3. Install [FFmpeg](https://ffmpeg.org/download.html)**
 
-**4. Install [CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Windows)**
+**4. Install [CUDA 12.1](https://developer.nvidia.com/cuda-12-1-0-download-archive?target_os=Windows)**
 
-**5. Install [cuDNN v8.9.7 (December 5th, 2023), for CUDA 11.x | Local Installer for Windows (Zip)](https://developer.nvidia.com/rdp/cudnn-archive)**
+**5. Install [cuDNN v8.9.7 (December 5th, 2023), for CUDA 12.x | Local Installer for Windows (Zip)](https://developer.nvidia.com/rdp/cudnn-archive)**
 
-*You need to unpack archive, go to folder cudnn-windows-x86_64-8.9.7.29_cuda11-archive and copy all (bin, inlcude, lib, LICENSE) to "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8" or in your CUDA 11.8 folder*
+*You need to unpack archive, go to folder cudnn-windows-x86_64-8.9.7.29_cuda12-archive and copy all (bin, inlcude, lib, LICENSE) to "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1" or in your CUDA 12.1 folder*
 
 **6. Restart your PC**
 

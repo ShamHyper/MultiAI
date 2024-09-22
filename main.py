@@ -9,12 +9,17 @@ import config
 import models
 
 import torch
+import torchvision
 
-version = "MultiAI | v1.14.0"
+version = "MultiAI v1.15.0-b1"
 
 ##################################################################################################################################
 
 ver = version
+cuda_version = torch.version.cuda
+cudnn_version = torch.backends.cudnn.version()
+torch_version = torch.__version__
+torchvision_version = torchvision.__version__
 
 print(f"Initializing {ver} launch...")
 

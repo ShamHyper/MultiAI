@@ -120,7 +120,7 @@ def NSFW_Detector(detector_input, detector_slider, detector_skeep_dr, drawings_t
                     sh.copyfile(file, f'./outputs/detector_outputs_plain/{file.split("/")[-1]}')
                     plain += 1
                     
-        except (PermissionError, FileNotFoundError, UnidentifiedImageError) as e:
+        except (PermissionError, FileNotFoundError, UnidentifiedImageError, ValueError) as e:
             gr.Error(f"Error: {e}")
             pass
 
@@ -206,7 +206,9 @@ def ImageAnalyzer(file_spc, clip_checked, clip_chunk_size):
         pass
     
     CODC_clear(silent=True)
-    del model_nsfw, ci
+    del model_nsfw
+    if clip_checked is True:
+        del ci
     return spc_output
 
 ##################################################################################################################################
