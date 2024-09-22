@@ -2,6 +2,8 @@
 ## 1.15.x
 - Updated CUDA to 12.1
 - Added restart MultiAI button in clearing tab
+- Full new NSFW Detector (including Video Analyzer, Image Analyzer)
+- Clearing tab moved to Settings tab
 ## 1.14.x
 - Updated model loading
 - Fixed some bugs

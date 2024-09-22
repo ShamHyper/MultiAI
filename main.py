@@ -11,7 +11,7 @@ import models
 import torch
 import torchvision
 
-version = "MultiAI v1.15.0-b1"
+version = "MultiAI v1.15.0-b2"
 
 ##################################################################################################################################
 
@@ -85,8 +85,6 @@ def clear_all():
     multi.VideoAnalyzerBatch_Clear()
     multi.AID_Clear()
     gr.Info("All outputs cleared!")
-    clear_all_tb = "All outputs deleted!"
-    return clear_all_tb
 
 def check_gpu():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

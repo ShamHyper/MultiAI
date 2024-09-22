@@ -4,6 +4,7 @@ from nsfw_detector import predict
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from clip_interrogator import Config, Interrogator
 from keras.models import load_model
+from transformers import AutoModelForImageClassification, ViTImageProcessor
 
 import main
 import config
@@ -61,3 +62,17 @@ def h5_load():
         main.checkfile_h5(main.modelname_h5)
         model_h5 = load_model('model_2.0.h5')
     return model_h5
+
+def nsfw_ng_load():
+    try:
+        if config.debug:
+            gr.Info("Loading nsfw_ng model...")
+        model_nsfw_ng = AutoModelForImageClassification.from_pretrained("Falconsai/nsfw_image_detection")
+        processor_nsfw_ng = ViTImageProcessor.from_pretrained('Falconsai/nsfw_image_detection')
+    except NameError:
+        gr.Error("Error in nsfw_ng_load!")
+        model_nsfw_ng = AutoModelForImageClassification.from_pretrained("Falconsai/nsfw_image_detection")
+        processor_nsfw_ng = ViTImageProcessor.from_pretrained('Falconsai/nsfw_image_detection')
+    return model_nsfw_ng, processor_nsfw_ng
+        
+        

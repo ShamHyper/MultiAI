@@ -1,3 +1,7 @@
+import main
+import config
+import models
+
 import shutil as sh
 import os
 from tqdm import tqdm
@@ -21,13 +25,9 @@ import gradio as gr
 
 from upscalers import clear_on_device_caches
 
-import main
-import config
-import models
-
 import torch
-
 import tensorflow as tf 
+
 
 def BgRemoverLite(inputs):
     try:
@@ -153,6 +153,23 @@ def NSFWDetector_Clear():
 
 ##################################################################################################################################
 
+def nsfw_ng(file_nsfw_ng):
+    model, processor = models.nsfw_ng_load()
+    with torch.no_grad():
+        inputs = processor(images=file_nsfw_ng, return_tensors="pt")
+        outputs = model(**inputs)
+        logits = outputs.logits
+        if config.debug:
+            print(f"NSFW_NG logits: {logits}")
+
+    predicted_label = logits.argmax(-1).item()
+    predicted_class = model.config.id2label[predicted_label]
+    
+    CODC_clear(silent=True)
+    return predicted_class
+
+##################################################################################################################################
+
 def Upscaler(upsc_image_input, scale_factor, model_ups):
     tmp_img_ndr = Image.fromarray(upsc_image_input)
     upsc_image_output = upscale(model_ups, tmp_img_ndr, scale_factor)
@@ -191,6 +208,7 @@ def ImageAnalyzer(file_spc, clip_checked, clip_chunk_size):
     total_sum = sum(values.values())
     percentages = {k: round((v / total_sum) * 100, 1) for k, v in values.items()}
 
+    spc_output += f"Summary: {nsfw_ng(img)}\n\n"
     spc_output += f"Drawings: {percentages['drawings']}%\n"
     spc_output += f"Porn: {percentages['porn']}%\n"
     spc_output += f"Hentai: {percentages['hentai']}%\n"

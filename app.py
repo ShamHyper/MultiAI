@@ -26,7 +26,7 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", second
     
 ##################################################################################################################################
     
-    with gr.Tab("BgRemoverLite"):
+    with gr.Tab("🎗️BgRemoverLite"):
         with gr.Row():
             gr.Label("Remove background from single image")
         with gr.Row():
@@ -51,7 +51,7 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", second
       
 ##################################################################################################################################
             
-    with gr.Tab("Upscaler"):
+    with gr.Tab("⤴️Upscaler"):
         with gr.Row():
             gr.Label("Upscale image up to 10x size")
         with gr.Row():
@@ -70,7 +70,7 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", second
             
 ##################################################################################################################################
             
-    with gr.Tab("NSFW Detector"):
+    with gr.Tab("🔞NSFW Detector"):
         with gr.Row():
             gr.Label("Detect NSFW images from dir")
         with gr.Row():
@@ -99,9 +99,9 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", second
             detector_clear_button = gr.Button("🧹 Clear outputs")
             clearp = gr.Textbox(label="Clearing progress")
             
-##################################################################################################################################            
+##################################################################################################################################   
             
-    with gr.Tab("Image Analyzer"):
+    with gr.Tab("🔎Image Analyzer"):
         with gr.Row():
             gr.Label("Analyze image")
         with gr.Row():
@@ -115,7 +115,7 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", second
             
 ##################################################################################################################################
             
-    with gr.Tab("Video Analyzer"):
+    with gr.Tab("🎥Video Analyzer"):
         with gr.Row():
             gr.Label("Analyze Video")
         with gr.Row():
@@ -152,7 +152,7 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", second
             
 ##################################################################################################################################
             
-    with gr.Tab("Prompt Generator"):
+    with gr.Tab("💬Prompt Generator"):
         with gr.Row():
             gr.Label("Generate prompt from your input")
         with gr.Row():
@@ -177,16 +177,14 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", second
             
 ##################################################################################################################################            
             
-    with gr.Tab("AI Detector"):
+    with gr.Tab("🤖AI Detector"):
         with gr.Row():
             gr.Label("Analyze image")
         with gr.Row():
             aid_input_single = gr.Image(width=200, height=400)
             aid_output_single = gr.Textbox(label="Result", placeholder="Press start to get result")
         with gr.Row():
-            aid_single_button = gr.Button("👟 Click here to start")
-
-####                           ####                           ####                           ####                           ####                    
+            aid_single_button = gr.Button("👟 Click here to start")                
 
         with gr.Row():
             gr.Label("Detect AI/Human images from dir")
@@ -195,8 +193,7 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", second
             aid_output_batch = gr.Textbox(label="Output", placeholder="AI Detector outputs will be here")
         with gr.Row():
             aid_batch_button = gr.Button("👟 Click here to start")
-            
-####                           ####                           ####                           ####                           ####              
+                    
         with gr.Row():
             gr.Label("Clear outputs")
         with gr.Row():
@@ -204,20 +201,8 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", second
             aid_clearp = gr.Textbox(label="Clearing progress")
                   
 ##################################################################################################################################
-            
-    with gr.Tab("Clearing"):
-        with gr.Row():
-            gr.Label("Clear all outputs")
-            clear_all_button = gr.Button("⭐ Start")
-            clear_all_tb = gr.Textbox(label="Result")
-        with gr.Row():
-            upsc_clear_cache = gr.Button("🧹 Clear torch, cuda and models cache") 
-            check_torch = gr.Button("👾 Check cuda avaible")
-            btn_refresh = gr.Button(value="🔁 Restart MultiAI")
-            
-##################################################################################################################################
 
-    with gr.Tab("Settings"):
+    with gr.Tab("⚙️Settings"):
         with gr.Row():
             settings_debug_mode = gr.Checkbox(value=config.debug, label="Enable debug mode (write debug info)")
         with gr.Row():
@@ -234,6 +219,11 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", second
             settings_save_progress = gr.Textbox(label="Saving progress", placeholder="Your saving progress will be here")
         with gr.Row():
             gr.Label("Creating new ones .json files in ../settings will not give any effect.")
+        with gr.Row():
+            clear_all_button = gr.Button("⭐ Clear all outputs")
+            upsc_clear_cache = gr.Button("🧹 Clear torch, cuda and models cache") 
+            check_torch = gr.Button("👾 Check cuda avaible")
+            btn_refresh = gr.Button(value="🔁 Restart MultiAI")
             
 ##################################################################################################################################
                      
@@ -248,7 +238,7 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", second
     upsc_clear_cache.click(multi.CODC_clear_app)
     
     spc_button.click(multi.ImageAnalyzer, inputs=[file_spc, clip_checked, clip_chunk_size], outputs=spc_output)
-    
+       
     Vspc_button.click(multi.VideoAnalyzer, inputs=file_Vspc, outputs=Vspc_output)
     start_dir_videos.click(multi.VideoAnalyzerBatch, inputs=[video_dir, vbth_slider, threshold_Vspc_slider], outputs=bth_Vspc_output)   
     clear_videos.click(multi.VideoAnalyzerBatch_Clear, outputs=bth_Vspc_clear_output)   
@@ -259,7 +249,7 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", second
     aid_batch_button.click(multi.AiDetector_batch, inputs=aid_input_batch, outputs=aid_output_batch)
     aid_clear_button.click(multi.AID_Clear, outputs=aid_clearp)
     
-    clear_all_button.click(main.clear_all, outputs=clear_all_tb)
+    clear_all_button.click(main.clear_all)
     
     check_torch.click(main.check_gpu)
     
