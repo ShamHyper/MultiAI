@@ -1,3 +1,3 @@
-() => { 
-    setTimeout(() => { location.reload(); }, 1000); 
+function setupTabNavigation() {
+    const tabs = document.querySelectorAll('button[role="tab"]');
 }

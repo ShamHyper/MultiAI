@@ -4,6 +4,7 @@
 - Added restart MultiAI button in clearing tab
 - Full new NSFW Detector (including Video Analyzer, Image Analyzer)
 - Clearing tab moved to Settings tab
+- New CSS and JS styles
 ## 1.14.x
 - Updated model loading
 - Fixed some bugs

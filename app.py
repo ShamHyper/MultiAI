@@ -19,6 +19,10 @@ with open("app/css/.css", "r") as file:
     CSS = file.read()
     print("CSS loaded!")
     
+with open("app/js/preloader.js", "r") as file:
+    JS_SCRIPT_PRELOADER = file.read()
+    print("JS_SCRIPT_PRELOADER loaded!")
+
 with open("app/js/script.js", "r") as file:
     JS_SCRIPT = file.read()
     print("JS_SCRIPT loaded!")
@@ -32,9 +36,10 @@ def restart_ui():
     time.sleep(0.5)
     os.execv(sys.executable, ['python'] + sys.argv)
 
-with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", secondary_hue="blue"), css=CSS) as multiai:
+with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", secondary_hue="blue"), css=CSS, js=JS_SCRIPT) as multiai:
     md_text = f'{main.ver} • Torch {main.torch_version} • Torchvision {main.torchvision_version} • CUDA {main.cuda_version} • cuDNN {main.cudnn_version}'
     gr.Markdown(md_text)
+    
     
 ##################################################################################################################################
     
@@ -270,7 +275,7 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", second
                                                        settings_clear_on_start], 
                         outputs=settings_save_progress)
     
-    btn_refresh.click(restart_ui, js=JS_SCRIPT)
+    btn_refresh.click(restart_ui, js=JS_SCRIPT_PRELOADER)
 
 if config.clear_on_start is True:
     main.clear_all()
