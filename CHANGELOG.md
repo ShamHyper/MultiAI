@@ -5,6 +5,7 @@
 - Full new NSFW Detector (including Video Analyzer, Image Analyzer)
 - Clearing tab moved to Settings tab
 - New CSS and JS styles
+- Model preloading setting has been removed, because the function is useless starting from **1.14.x**
 ## 1.14.x
 - Updated model loading
 - Fixed some bugs

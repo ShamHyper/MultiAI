@@ -1,4 +1,3 @@
-import main
 import config
 import models
 
@@ -55,13 +54,13 @@ def BgRemoverLiteBatch(inputs):
             gr.Error(f"Error: {e}")
             pass
         
-    outputs = main.current_directory + r"\outputs" + r"\rembg_outputs"
+    outputs = config.current_directory + r"\outputs" + r"\rembg_outputs"
     
     CODC_clear(silent=True)
     return outputs
 
 def BgRemoverLite_Clear():
-    outputs_dir = os.path.join(main.current_directory, "outputs/rembg_outputs")
+    outputs_dir = os.path.join(config.current_directory, "outputs/rembg_outputs")
     sh.rmtree(outputs_dir)
     folder_path = "outputs/rembg_outputs"
     os.makedirs(folder_path)
@@ -134,9 +133,9 @@ def NSFW_Detector(detector_input, detector_slider, detector_skeep_dr, drawings_t
     return outputs
 
 def NSFWDetector_Clear():
-    outputs_dir1 = os.path.join(main.current_directory, "outputs/detector_outputs_nsfw")
+    outputs_dir1 = os.path.join(config.current_directory, "outputs/detector_outputs_nsfw")
     sh.rmtree(outputs_dir1)
-    outputs_dir2 = os.path.join(main.current_directory, "outputs/detector_outputs_plain")
+    outputs_dir2 = os.path.join(config.current_directory, "outputs/detector_outputs_plain")
     sh.rmtree(outputs_dir2)
     folder_path1 = "outputs/detector_outputs_nsfw"
     os.makedirs(folder_path1)
@@ -278,7 +277,7 @@ def VideoAnalyzer(file_Vspc):
     Vspc_output += f"Sexy: {value5}%\n"
     Vspc_output += f"Neutral: {value3}%"
     
-    rm_tmp = os.path.join(main.current_directory, dir_tmp)
+    rm_tmp = os.path.join(config.current_directory, dir_tmp)
     sh.rmtree(rm_tmp)
     
     cap.release()
@@ -376,7 +375,7 @@ def VideoAnalyzerBatch(video_dir, vbth_slider, threshold_Vspc_slider):
         cap.release()
         cv2.destroyAllWindows()
         
-        rm_tmp = os.path.join(main.current_directory, output_dir)
+        rm_tmp = os.path.join(config.current_directory, output_dir)
         sh.rmtree(rm_tmp)
         os.makedirs(output_dir, exist_ok=True)
         
@@ -402,11 +401,11 @@ def VideoAnalyzerBatch(video_dir, vbth_slider, threshold_Vspc_slider):
 def VideoAnalyzerBatch_Clear():
     output_dir = 'tmp'
     try:
-        outputs_dir1 = os.path.join(main.current_directory, "outputs/video_analyze_nsfw")
+        outputs_dir1 = os.path.join(config.current_directory, "outputs/video_analyze_nsfw")
         sh.rmtree(outputs_dir1)
-        outputs_dir2 = os.path.join(main.current_directory, "outputs/video_analyze_plain")
+        outputs_dir2 = os.path.join(config.current_directory, "outputs/video_analyze_plain")
         sh.rmtree(outputs_dir2)
-        outputs_dir3 = os.path.join(main.current_directory, "tmp")
+        outputs_dir3 = os.path.join(config.current_directory, "tmp")
         sh.rmtree(outputs_dir3)
         folder_path1 = "outputs/video_analyze_nsfw"
         os.makedirs(folder_path1)
@@ -416,7 +415,7 @@ def VideoAnalyzerBatch_Clear():
         os.makedirs(folder_path2)
         file = open(f"{folder_path2}/outputs will be here.txt", "w")
         file.close()
-        rm_tmp = os.path.join(main.current_directory, output_dir)
+        rm_tmp = os.path.join(config.current_directory, output_dir)
         sh.rmtree(rm_tmp)
     except (PermissionError, FileNotFoundError, FileExistsError, Exception):
         try:
@@ -514,8 +513,8 @@ def AiDetector_batch(aid_input_batch):
     if config.debug:
         print(f"Working in: {aid_input_batch}")
 
-    aid_ai_dir = os.path.join(main.current_directory, "outputs/aid_ai")
-    aid_human_dir = os.path.join(main.current_directory, "outputs/aid_human")
+    aid_ai_dir = os.path.join(config.current_directory, "outputs/aid_ai")
+    aid_human_dir = os.path.join(config.current_directory, "outputs/aid_human")
     
     if not os.path.exists(aid_ai_dir):
         os.makedirs(aid_ai_dir)
@@ -561,9 +560,9 @@ def AiDetector_batch(aid_input_batch):
     return aid_output_batch
 
 def AID_Clear():
-    outputs_dir1 = os.path.join(main.current_directory, "outputs/aid_ai")
+    outputs_dir1 = os.path.join(config.current_directory, "outputs/aid_ai")
     sh.rmtree(outputs_dir1)
-    outputs_dir2 = os.path.join(main.current_directory, "outputs/aid_human")
+    outputs_dir2 = os.path.join(config.current_directory, "outputs/aid_human")
     sh.rmtree(outputs_dir2)
     folder_path1 = "outputs/aid_ai"
     os.makedirs(folder_path1)

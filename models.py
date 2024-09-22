@@ -6,18 +6,49 @@ from clip_interrogator import Config, Interrogator
 from keras.models import load_model
 from transformers import AutoModelForImageClassification, ViTImageProcessor
 
-import main
+import os
+import urllib
+
+from config import current_directory
 import config
+
+modelname = "nsfw_mobilenet2.224x224.h5"
+url = "https://vdmstudios.ru/server_archive/nsfw_mobilenet2.224x224.h5"
+
+modelname_h5 = "model_2.0.h5"
+url_h5 = "https://vdmstudios.ru/server_archive/model_2.0.h5"
+
+def check_file(filename):
+    files_in_directory = os.listdir(current_directory)
+
+    if filename in files_in_directory:
+        if config.debug: 
+            gr.Info("NSFW Model detected")
+    else:
+        if config.debug: 
+            gr.Info("NSFW Model undected. Downloading...")
+        urllib.request.urlretrieve(url, modelname)
+
+def checkfile_h5(filename):
+    files_in_directory = os.listdir(current_directory)
+    
+    if filename in files_in_directory:
+        if config.debug:
+            gr.Info("H5 Model detected")
+    else:
+        if config.debug: 
+            gr.Info("H5 Model undected. Downloading...")
+        urllib.request.urlretrieve(url_h5, modelname_h5)
  
 def nsfw_load():
     try:
         if config.debug:
             gr.Info("Loading NSFW model...")
-        main.check_file(main.modelname)
+        check_file(modelname)
         model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
     except NameError:
         gr.Error("Error in nsfw_load!")
-        main.check_file(main.modelname)
+        check_file(modelname)
         model_nsfw = predict.load_model("nsfw_mobilenet2.224x224.h5")
     return model_nsfw
 
@@ -55,11 +86,11 @@ def h5_load():
     try:
         if config.debug:
             gr.Info("Loading H5 model...")
-        main.checkfile_h5(main.modelname_h5)
+        checkfile_h5(modelname_h5)
         model_h5 = load_model('model_2.0.h5')
     except NameError:
         gr.Error("Error in h5_load!")
-        main.checkfile_h5(main.modelname_h5)
+        checkfile_h5(modelname_h5)
         model_h5 = load_model('model_2.0.h5')
     return model_h5
 

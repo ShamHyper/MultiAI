@@ -2,7 +2,6 @@ import gradio as gr
 from clear import clear
 from upscalers import available_models
 
-import main
 import config
 import multi
 
@@ -10,8 +9,11 @@ import os
 import sys
 import time
 
+VERSION = "MultiAI v1.15.2-b1"
 SERVER_PORT = 7890
 SERVER_NAME = '127.0.0.1'
+
+print(f"Initializing {VERSION} launch...")
 
 print("")
 
@@ -35,9 +37,12 @@ def restart_ui():
     gr.Info("Reloading...") 
     time.sleep(0.5)
     os.execv(sys.executable, ['python'] + sys.argv)
+    
+##################################################################################################################################
 
-with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", secondary_hue="blue"), css=CSS, js=JS_SCRIPT) as multiai:
-    md_text = f'{main.ver} • Torch {main.torch_version} • Torchvision {main.torchvision_version} • CUDA {main.cuda_version} • cuDNN {main.cudnn_version}'
+
+with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", secondary_hue="blue"), css=CSS, js=JS_SCRIPT) as multiai:
+    md_text = f'{VERSION} • Torch {config.torch_version} • Torchvision {config.torchvision_version} • CUDA {config.cuda_version} • cuDNN {config.cudnn_version}'
     gr.Markdown(md_text)
     
     
@@ -227,8 +232,6 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", second
         with gr.Row():
             settings_share_gradio = gr.Checkbox(value=config.share_gradio, label="Enable MultiAI starting with share link")
         with gr.Row():
-            settings_preload_models = gr.Checkbox(value=config.preload_models, label="Enable preloading AI models")
-        with gr.Row():
             settings_clear_on_start = gr.Checkbox(value=config.clear_on_start, label="Enable clear all outputs on MultiAI start")
         with gr.Row():
             json_files = gr.Label("Saving in [../settings/config.json]")
@@ -266,24 +269,19 @@ with gr.Blocks(title=main.ver, theme=gr.themes.Soft(primary_hue="purple", second
     aid_batch_button.click(multi.AiDetector_batch, inputs=aid_input_batch, outputs=aid_output_batch)
     aid_clear_button.click(multi.AID_Clear, outputs=aid_clearp)
     
-    clear_all_button.click(main.clear_all)
+    clear_all_button.click(config.clear_all)
     
-    check_torch.click(main.check_gpu)
+    check_torch.click(config.check_gpu)
     
-    settings_save.click(config.save_config_gr, inputs=[settings_debug_mode, settings_start_in_browser, 
-                                                       settings_share_gradio, settings_preload_models, 
-                                                       settings_clear_on_start], 
-                        outputs=settings_save_progress)
+    settings_save.click(config.save_config_gr, inputs=[settings_debug_mode, settings_start_in_browser, settings_share_gradio, settings_clear_on_start]
+                        , outputs=settings_save_progress)
     
     btn_refresh.click(restart_ui, js=JS_SCRIPT_PRELOADER)
 
 if config.clear_on_start is True:
-    main.clear_all()
+    config.clear_all()
 
-if config.preload_models is True:
-    main.preloader()
-    
-main.delete_tmp_pngs()
+config.delete_tmp_pngs()
 
 clear()
 

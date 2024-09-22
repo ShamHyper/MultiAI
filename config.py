@@ -1,13 +1,15 @@
 import os
 import json
 import gradio as gr
+import torch
+import torchvision
+import shutil as sh
 
-def save_config_gr(settings_debug_mode, settings_start_in_browser, settings_share_gradio, settings_preload_models, settings_clear_on_start):
+def save_config_gr(settings_debug_mode, settings_start_in_browser, settings_share_gradio, settings_clear_on_start):
     settings = {
         "debug_mode": str(settings_debug_mode),
         "start_in_browser": str(settings_start_in_browser),
         "share_gradio": str(settings_share_gradio),
-        "preload_models": str(settings_preload_models),
         "clear_on_start": str(settings_clear_on_start)
     }
     
@@ -40,8 +42,48 @@ elif "config.json" in os.listdir("settings"):
 debug = data.get('debug_mode', 'False').lower() == 'true'
 inbrowser = data.get('start_in_browser', 'False').lower() == 'true'
 share_gradio = data.get('share_gradio', 'False').lower() == 'true'
-preload_models = data.get('preload_models', 'False').lower() == 'true'
 clear_on_start = data.get('clear_on_start', 'False').lower() == 'true'
 
-if not (debug or inbrowser or share_gradio or preload_models or clear_on_start):
+if not (debug or inbrowser or share_gradio or clear_on_start):
     print("Something wrong in config.json. Check them out!")
+    
+cuda_version = torch.version.cuda
+cudnn_version = torch.backends.cudnn.version()
+torch_version = torch.__version__
+torchvision_version = torchvision.__version__
+current_directory = os.path.dirname(os.path.abspath(__file__))
+
+def delete_tmp_pngs():
+    output_dir = "tmp"
+    try:
+        rm_tmp = os.path.join(current_directory, output_dir)
+        sh.rmtree(rm_tmp)
+    except (PermissionError, FileNotFoundError, FileExistsError, Exception):
+        pass
+    
+    tmp_file = "tmp.png"
+    
+    try:
+        os.remove(tmp_file)
+    except FileNotFoundError as e:
+        gr.Error(f"Error: {e}")
+        pass
+
+def clear_all():
+    import multi
+    multi.BgRemoverLite_Clear()
+    multi.NSFWDetector_Clear()
+    multi.VideoAnalyzerBatch_Clear()
+    multi.AID_Clear()
+    gr.Info("All outputs cleared!")
+
+def check_gpu():
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    
+    if debug:
+        gr.Info(f"Device: {device}")
+    if torch.cuda.is_available():
+        gr.Info("CUDA available! Working on")
+    elif not torch.cuda.is_available():
+        gr.Warning("CUDA is not available, using CPU. Warning: this will be very slow!")
+    return device

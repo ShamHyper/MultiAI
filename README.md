@@ -1,5 +1,5 @@
 [![wakatime](https://wakatime.com/badge/github/ShamHyper/MultiAI.svg)](https://wakatime.com/badge/github/ShamHyper/MultiAI)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/ShamHyper/MultiAI/blob/main/LICENSE.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/ShamHyper/MultiAI/blob/main/LICENSE.txt)
 ## Donate
 **https://www.donationalerts.com/r/shamhyper0**
 
@@ -95,12 +95,6 @@ git clone https://github.com/ShamHyper/MultiAI.git
         "share_gradio": "False",
         // Boolean ("True" or "False")
         // Enable MultiAI starting with share link
-
-        "preload_models": "False",
-        // Boolean ("True" or "False")
-        // Preloading AI models
-        // False loading time: ~5-10s
-        // True loading time: ~40-60s
 
         "clear_on_start": "False"
         // Boolean ("True" or "False")
