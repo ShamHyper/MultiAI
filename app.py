@@ -9,7 +9,7 @@ import os
 import sys
 import time
 
-VERSION = "MultiAI v1.15.2-b2"
+VERSION = "MultiAI v1.15.2-b3"
 SERVER_PORT = 7890
 SERVER_NAME = '127.0.0.1'
 
@@ -284,6 +284,9 @@ if config.clear_on_start is True:
 config.delete_tmp_pngs()
 
 clear()
+
+print("")
+config.check_gpu()
 
 multiai.queue()
 

@@ -78,12 +78,19 @@ def clear_all():
     gr.Info("All outputs cleared!")
 
 def check_gpu():
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    
-    if debug:
-        gr.Info(f"Device: {device}")
-    if torch.cuda.is_available():
-        gr.Info("CUDA available! Working on")
-    elif not torch.cuda.is_available():
-        gr.Warning("CUDA is not available, using CPU. Warning: this will be very slow!")
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') 
+    try:
+        if debug:
+            gr.Info(f"Device: {device}")
+            if torch.cuda.is_available():
+                torch.cuda.set_per_process_memory_fraction(0.3, device='cuda:0')
+            print(f"Allocated memory: {torch.cuda.memory_allocated()} bytes")
+            print(f"Reserved memory: {torch.cuda.memory_reserved()} bytes")
+        if torch.cuda.is_available():
+            gr.Info("CUDA available! Working on")
+        elif not torch.cuda.is_available():
+            gr.Warning("CUDA is not available, using CPU. Warning: this will be very slow!")
+    except Exception as e:
+        print(f"ERROR IN CHECK GPU: {e}")
     return device
+

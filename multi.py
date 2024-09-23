@@ -27,7 +27,6 @@ from upscalers import clear_on_device_caches
 import torch
 import tensorflow as tf 
 
-
 def BgRemoverLite(inputs):
     try:
         outputs = remove(inputs)
@@ -179,6 +178,8 @@ def Upscaler(upsc_image_input, scale_factor, model_ups):
 ##################################################################################################################################
 
 def ImageAnalyzer(file_spc, clip_checked, clip_chunk_size):
+    CODC_clear(silent=True)
+    
     img = Image.fromarray(file_spc, 'RGB')
     img.save('tmp.png')
     dir_img_fromarray = os.path.join(os.getcwd(), "tmp.png")
@@ -187,14 +188,21 @@ def ImageAnalyzer(file_spc, clip_checked, clip_chunk_size):
     
     if clip_checked is True:
         ci = models.ci_load(clip_chunk_size)
+        
+        config.check_gpu()
+  
         clip = Image.open(dir_img_fromarray).convert('RGB')
-        clip = clip.resize((224, 224))
+
         if config.debug:
             gr.Info(f"Cache path: {ci.config.cache_path}")
-        spc_output += f"Prompt: {ci.interrogate(clip)}\n\n" 
+            
+        with torch.autocast(device_type="cuda", dtype=torch.float16):
+            spc_output += f"Prompt: {ci.interrogate(clip)}\n\n"
+        
         CODC_clear(silent=True)
         import time
         time.sleep(1)
+        
         if config.debug:
             gr.Info("Waiting 1 second before load nsfw model...")
    
