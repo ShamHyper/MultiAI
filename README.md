@@ -1,5 +1,5 @@
 [![wakatime](https://wakatime.com/badge/github/ShamHyper/MultiAI.svg)](https://wakatime.com/badge/github/ShamHyper/MultiAI)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/ShamHyper/MultiAI/blob/main/LICENSE.txt)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/ShamHyper/MultiAI/blob/main/LICENSE)
 ## Donate
 **https://www.donationalerts.com/r/shamhyper0**
 
