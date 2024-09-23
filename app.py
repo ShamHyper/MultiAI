@@ -4,13 +4,14 @@ from upscalers import available_models
 
 import config
 import multi
+import models
 
 import os
 import sys
 import time
 
-VERSION = "MultiAI v1.15.2"
-SERVER_PORT = 7890
+VERSION = "MultiAI v1.16.0-b2"
+SERVER_PORT = 7891
 SERVER_NAME = '127.0.0.1'
 
 print(f"Initializing {VERSION} launch...")
@@ -37,6 +38,12 @@ def restart_ui():
     gr.Info("Reloading...") 
     time.sleep(0.5)
     os.execv(sys.executable, ['python'] + sys.argv)
+    
+def update_speakers(lang):
+    if lang == "en":
+        return gr.Dropdown(choices=models.voices_en, value="random", label="Speaker")
+    elif lang == "ru":
+        return gr.Dropdown(choices=models.voices_ru, value="random", label="Speaker")
     
 ##################################################################################################################################
 
@@ -131,7 +138,7 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
             spc_output = gr.Textbox(label="Stats", placeholder="Press start to get specifications of image")
         with gr.Row():
             clip_checked = gr.Checkbox(value=False, label="Use CLIP for generate prompt (slow if a weak PC)")
-            clip_chunk_size = gr.Slider(value=512, label="Batch size for CLIP, use smaller for lower VRAM", maximum=2048, minimum=512, step=128)
+            clip_chunk_size = gr.Slider(value=512, label="Batch size for CLIP, use smaller for lower VRAM", maximum=2048, minimum=512, step=512)
         with gr.Row():
             spc_button = gr.Button("👟 Click here to start")
             
@@ -224,6 +231,22 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
                   
 ##################################################################################################################################
 
+    with gr.Tab("🔊TTS"):
+        with gr.Row():
+            gr.Label("Text input")
+            gr.Label("Audio output")
+        with gr.Row():
+            tts_input = gr.Textbox(label="Your input", placeholder="Type something...")
+            tts_audio = gr.Audio(label="Audio")
+        with gr.Row():
+            tts_lang = gr.Dropdown(label="Language", choices=["en", "ru"], value="en")
+            tts_speakers = gr.Dropdown(label="Speaker", choices=models.voices_en, value="random")
+            tts_rate = gr.Dropdown(label="Sample rate", choices=models.sample_rates, value=48000)
+        with gr.Row():
+            tts_button = gr.Button("👟 Click here to start")
+                  
+##################################################################################################################################
+
     with gr.Tab("⚙️Settings"):
         with gr.Row():
             settings_debug_mode = gr.Checkbox(value=config.debug, label="Enable debug mode (write debug info)")
@@ -277,6 +300,9 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
                         , outputs=settings_save_progress)
     
     btn_refresh.click(restart_ui, js=JS_SCRIPT_PRELOADER)
+    
+    tts_lang.change(fn=update_speakers, inputs=tts_lang, outputs=tts_speakers)
+    tts_button.click(multi.silero_tts, inputs=[tts_input, tts_lang, tts_speakers, tts_rate], outputs=tts_audio)
 
 if config.clear_on_start is True:
     config.clear_all()

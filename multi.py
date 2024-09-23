@@ -572,6 +572,15 @@ def AID_Clear():
 
 ##################################################################################################################################
 
+def silero_tts(tts_input, tts_lang, tts_speakers, tts_rate):
+    tts_model = models.silero_tts_load(localization=tts_lang)
+    tts_audio = tts_model.save_wav(text=tts_input, speaker=tts_speakers, sample_rate=tts_rate)
+    
+    CODC_clear(silent=True)
+    return tts_audio
+
+##################################################################################################################################
+
 def CODC_clear(silent):
     try:
         if not silent:

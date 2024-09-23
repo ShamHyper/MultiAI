@@ -18,6 +18,8 @@
 **6. Prompt Generator**
 
 **7. AI Detector**
+
+**8. TTS**
 ## System requirements
 **1. Windows 10-11**
 
@@ -121,6 +123,8 @@ git clone https://github.com/ShamHyper/MultiAI.git
 ![7](https://i.imgur.com/hRVhMKa.png?raw=true)
 **7. AI Detector**
 ![8](https://i.imgur.com/qYRg0AS.png?raw=true)
+**8. TTS**
+![9](https://i.imgur.com/nxLEdST.png?raw=true)
 ## About Python 3.11 - 3.12
 *So far, most of the libraries used in my project have not been updated to 3.11 - 3.12 or are working incorrectly. I tried to adapt the project for the new version, but for now I advise you to stay within 3.10. **After v1.10.x, discontinued support for 3.9, only 3.10 now***
 ## Credits
@@ -132,6 +136,7 @@ git clone https://github.com/ShamHyper/MultiAI.git
 - **Upscaling** - https://github.com/kmewhort/upscalers
 - **Clip-interrogator** for *Image Analyzer* - https://github.com/pharmapsychotic/clip-interrogator
 - **Fast Prompt Generator** - https://huggingface.co/FredZhang7/anime-anything-promptgen-v2
-- **H5 Keras Model** - https://github.com/ShamHyper/Classificator_HUMAN_VS_AI
+- **H5 Keras Model** - https://huggingface.co/ShamHyper/AI_DETECTING
+- **Silero TTS** - https://github.com/snakers4/silero-models
 ## License
 MIT license | Copyright (c) 2023-2024 ShamHyper

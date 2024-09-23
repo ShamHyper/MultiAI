@@ -1,10 +1,10 @@
 __pycache__/
-
 venv/
-
+.vscode/
 pycache/
 cache/
 .ruff_cache/
+tmp/
 
 *.png
 *.jpg
@@ -16,14 +16,8 @@ cache/
 *.mov
 *.webm
 *.gif
-
-.vscode/
-
-tmp/
-
 *.h5
+*.pt
 
-settings/dev_config.json
 dev_config.json
-
-data/*
+TODO.md
