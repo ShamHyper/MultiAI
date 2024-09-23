@@ -5,27 +5,25 @@ import shutil as sh
 import os
 from tqdm import tqdm
 import random
+import gradio as gr
+import gc
 
 from PIL import Image, UnidentifiedImageError
 from rembg import remove
-
 from nsfw_detector import predict
-
-from upscalers import upscale
-
 from transformers import pipeline
-
-import cv2
-from numba import cuda
-
-import numpy as np
-
-import gradio as gr
-
-from upscalers import clear_on_device_caches
-
 import torch
 import tensorflow as tf 
+import cv2
+from numba import cuda
+import numpy as np
+
+from upscalers import upscale
+from upscalers import clear_on_device_caches
+
+gpu_devices = tf.config.experimental.list_physical_devices('GPU')
+for device in gpu_devices:
+    tf.config.experimental.set_memory_growth(device, True)
 
 def BgRemoverLite(inputs):
     try:
@@ -127,8 +125,8 @@ def NSFW_Detector(detector_input, detector_slider, detector_skeep_dr, drawings_t
         f"[{str(plain)}] Plain: {os.path.abspath('./outputs/detector_outputs_plain')}"
     )
     
-    CODC_clear(silent=True)
     del model_nsfw
+    CODC_clear(silent=True)
     return outputs
 
 def NSFWDetector_Clear():
@@ -163,7 +161,6 @@ def nsfw_ng(file_nsfw_ng):
     predicted_label = logits.argmax(-1).item()
     predicted_class = model.config.id2label[predicted_label]
     
-    CODC_clear(silent=True)
     return predicted_class
 
 ##################################################################################################################################
@@ -178,8 +175,6 @@ def Upscaler(upsc_image_input, scale_factor, model_ups):
 ##################################################################################################################################
 
 def ImageAnalyzer(file_spc, clip_checked, clip_chunk_size):
-    CODC_clear(silent=True)
-    
     img = Image.fromarray(file_spc, 'RGB')
     img.save('tmp.png')
     dir_img_fromarray = os.path.join(os.getcwd(), "tmp.png")
@@ -188,9 +183,6 @@ def ImageAnalyzer(file_spc, clip_checked, clip_chunk_size):
     
     if clip_checked is True:
         ci = models.ci_load(clip_chunk_size)
-        
-        config.check_gpu()
-  
         clip = Image.open(dir_img_fromarray).convert('RGB')
 
         if config.debug:
@@ -198,13 +190,6 @@ def ImageAnalyzer(file_spc, clip_checked, clip_chunk_size):
             
         with torch.autocast(device_type="cuda", dtype=torch.float16):
             spc_output += f"Prompt: {ci.interrogate(clip)}\n\n"
-        
-        CODC_clear(silent=True)
-        import time
-        time.sleep(1)
-        
-        if config.debug:
-            gr.Info("Waiting 1 second before load nsfw model...")
    
     model_nsfw = models.nsfw_load()
    
@@ -230,10 +215,10 @@ def ImageAnalyzer(file_spc, clip_checked, clip_chunk_size):
         gr.Error(f"Error: {e}")
         pass
     
-    CODC_clear(silent=True)
     del model_nsfw
     if clip_checked is True:
         del ci
+    CODC_clear(silent=True)
     return spc_output
 
 ##################################################################################################################################
@@ -290,8 +275,8 @@ def VideoAnalyzer(file_Vspc):
     
     cap.release()
     cv2.destroyAllWindows()
-    CODC_clear(silent=True)
     del model_nsfw
+    CODC_clear(silent=True)
     return Vspc_output
 
 def process_frame(frame):
@@ -402,8 +387,8 @@ def VideoAnalyzerBatch(video_dir, vbth_slider, threshold_Vspc_slider):
         percentages = 0
     bth_Vspc_output = "Ready!"
         
-    CODC_clear(silent=True)
     del model_nsfw
+    CODC_clear(silent=True)
     return bth_Vspc_output
 
 def VideoAnalyzerBatch_Clear():
@@ -466,8 +451,8 @@ def PromptGenetator(prompt_input, pg_prompts, pg_max_length, randomize_temp):
         outs[i] = str(outs[i]['generated_text']).replace('  ', '').rstrip(',')
     promptgen_output = ('\n\n'.join(outs) + '\n')  
     
-    CODC_clear(silent=True)
     del tokenizer, model_tokinezer
+    CODC_clear(silent=True)
     return promptgen_output 
 
 ##################################################################################################################################
@@ -512,8 +497,8 @@ def AiDetector_single(aid_input_single):
     img_h5 = Image.fromarray(aid_input_single)
     aid_output_single = is_image_generated(img_h5, model_h5)
     
-    CODC_clear(silent=True)
     del model_h5
+    CODC_clear(silent=True)
     return aid_output_single
 
 def AiDetector_batch(aid_input_batch): 
@@ -562,8 +547,8 @@ def AiDetector_batch(aid_input_batch):
             print(f"Error processing {image_file}: {e}")
             pass
     
-    CODC_clear(silent=True)
     del model_h5
+    CODC_clear(silent=True)
     aid_output_batch = "Images sorted successfully!"
     return aid_output_batch
 
@@ -599,6 +584,8 @@ def CODC_clear(silent):
         tf.keras.backend.clear_session()
         tf.compat.v1.reset_default_graph()
         tf.compat.v1.disable_eager_execution()
+        
+        gc.collect()
          
         if not silent:
             gr.Info("All cache cleared!")   
@@ -618,6 +605,8 @@ def CODC_clear_app():
         tf.compat.v1.reset_default_graph()
         tf.compat.v1.disable_eager_execution()
         
+        gc.collect()
+         
         gr.Info("All cache cleared!")   
     except Exception:
         gr.Warning("Something wrong in cache clearing. Contact dev.")

@@ -82,10 +82,9 @@ def check_gpu():
     try:
         if debug:
             gr.Info(f"Device: {device}")
-            if torch.cuda.is_available():
-                torch.cuda.set_per_process_memory_fraction(0.3, device='cuda:0')
             print(f"Allocated memory: {torch.cuda.memory_allocated()} bytes")
             print(f"Reserved memory: {torch.cuda.memory_reserved()} bytes")
+            print("")
         if torch.cuda.is_available():
             gr.Info("CUDA available! Working on")
         elif not torch.cuda.is_available():

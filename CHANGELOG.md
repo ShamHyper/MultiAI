@@ -6,6 +6,7 @@
 - Clearing tab moved to Settings tab
 - New CSS and JS styles
 - Model preloading setting has been removed, because the function is useless starting from **1.14.x**
+- Better VRAM Control (fixing #6 issue)
 ## 1.14.x
 - Updated model loading
 - Fixed some bugs

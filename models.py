@@ -65,12 +65,15 @@ def ci_load(clip_chunk_size):
     try:
         if config.debug:
             gr.Info("Loading CLIP model...")  
+            
         ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k", chunk_size=clip_chunk_size, flavor_intermediate_count=clip_chunk_size))
+        
         if config.debug:
             gr.Info("Using laion2b_s32b_b79k model")
             gr.Info(f"Chunk size: {clip_chunk_size}")          
-    except (NameError, RuntimeError):
+    except (NameError, RuntimeError, UnboundLocalError):
         gr.Error("Error in ci_load!")
+        ci = Interrogator(Config(clip_model_name="ViT-H-14/laion2b_s32b_b79k", chunk_size=clip_chunk_size, flavor_intermediate_count=clip_chunk_size))
     return ci
 
 def h5_load():
