@@ -3,7 +3,7 @@
 ## Donate
 **https://www.donationalerts.com/r/shamhyper0**
 
-**USDT(TRC20): TAaBpuhdoPGNv9xnyne2nXQ5gLQLNUrY6V**
+**USDT(TRC20): TF7hWy4Si7RqNujZkJpc92z2THNCTPHZp6**
 ## AIs
 **1. [BgRemoverLite](https://github.com/ShamHyper/BgRemoverLite)**
 
