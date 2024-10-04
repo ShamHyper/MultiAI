@@ -20,6 +20,7 @@ import numpy as np
 
 from upscalers import upscale
 from upscalers import clear_on_device_caches
+from datetime import datetime
 
 gpu_devices = tf.config.experimental.list_physical_devices('GPU')
 for device in gpu_devices:
@@ -574,10 +575,31 @@ def AID_Clear():
 
 def silero_tts(tts_input, tts_lang, tts_speakers, tts_rate):
     tts_model = models.silero_tts_load(localization=tts_lang)
-    tts_audio = tts_model.save_wav(text=tts_input, speaker=tts_speakers, sample_rate=tts_rate)
+    tts_model.save_wav(text=tts_input, speaker=tts_speakers, sample_rate=tts_rate)
+    
+    src_path = 'test.wav'
+    dest_dir = 'outputs/tts'
+    if not os.path.exists(dest_dir):
+        os.makedirs(dest_dir)
+    current_time = datetime.now().strftime("%d.%m.%y_%H-%M")
+    new_filename = f"tts_{current_time}.wav"
+    dest_path = os.path.join(dest_dir, new_filename)
+    sh.move(src_path, dest_path)
+    
+    wav_file = dest_path
     
     CODC_clear(silent=True)
-    return tts_audio
+    return wav_file
+
+def tts_clear():
+    outputs_dir1 = os.path.join(config.current_directory, "outputs/tts")
+    sh.rmtree(outputs_dir1)
+    folder_path1 = "outputs/tts"
+    os.makedirs(folder_path1)
+    file = open(f"{folder_path1}/outputs will be here.txt", "w")
+    file.close()
+    
+    gr.Info("TTS outputs cleared")    
 
 ##################################################################################################################################
 

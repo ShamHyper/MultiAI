@@ -75,6 +75,7 @@ def clear_all():
     multi.NSFWDetector_Clear()
     multi.VideoAnalyzerBatch_Clear()
     multi.AID_Clear()
+    multi.tts_clear()
     gr.Info("All outputs cleared!")
 
 def check_gpu():

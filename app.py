@@ -10,7 +10,7 @@ import os
 import sys
 import time
 
-VERSION = "MultiAI v1.16.0-b2"
+VERSION = "MultiAI v1.16.0"
 SERVER_PORT = 7891
 SERVER_NAME = '127.0.0.1'
 
@@ -244,6 +244,7 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
             tts_rate = gr.Dropdown(label="Sample rate", choices=models.sample_rates, value=48000)
         with gr.Row():
             tts_button = gr.Button("👟 Click here to start")
+            tts_clear = gr.Button("🧹 Clear outputs")
                   
 ##################################################################################################################################
 
@@ -303,6 +304,7 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
     
     tts_lang.change(fn=update_speakers, inputs=tts_lang, outputs=tts_speakers)
     tts_button.click(multi.silero_tts, inputs=[tts_input, tts_lang, tts_speakers, tts_rate], outputs=tts_audio)
+    tts_clear.click(multi.tts_clear)
 
 if config.clear_on_start is True:
     config.clear_all()
