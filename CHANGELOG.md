@@ -2,6 +2,7 @@
 ## 1.16.x
 - Added TTS AI
 - QOL fixes
+- Added new setting: use proxy or not
 ## 1.15.x
 - Updated CUDA to 12.1
 - Added restart MultiAI button in clearing tab

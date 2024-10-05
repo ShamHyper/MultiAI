@@ -10,7 +10,10 @@ import os
 import sys
 import time
 
-VERSION = "MultiAI v1.16.0"
+if config.use_proxy is False:
+    os.environ["no_proxy"] = "localhost,127.0.0.1,::1"
+
+VERSION = "MultiAI v1.16.1-b1"
 SERVER_PORT = 7891
 SERVER_NAME = '127.0.0.1'
 
@@ -258,6 +261,8 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
         with gr.Row():
             settings_clear_on_start = gr.Checkbox(value=config.clear_on_start, label="Enable clear all outputs on MultiAI start")
         with gr.Row():
+            settings_use_proxy = gr.Checkbox(value=config.use_proxy, label="Enable using system proxy for connect to WebUI. NEED TO FULL RESTART (CLOSING CMD AND RUNNING .BAT)")
+        with gr.Row():
             json_files = gr.Label("Saving in [../settings/config.json]")
             settings_save = gr.Button("🗃️ Save settings")
             settings_save_progress = gr.Textbox(label="Saving progress", placeholder="Your saving progress will be here")
@@ -297,7 +302,7 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
     
     check_torch.click(config.check_gpu)
     
-    settings_save.click(config.save_config_gr, inputs=[settings_debug_mode, settings_start_in_browser, settings_share_gradio, settings_clear_on_start]
+    settings_save.click(config.save_config_gr, inputs=[settings_debug_mode, settings_start_in_browser, settings_share_gradio, settings_clear_on_start, settings_use_proxy]
                         , outputs=settings_save_progress)
     
     btn_refresh.click(restart_ui, js=JS_SCRIPT_PRELOADER)

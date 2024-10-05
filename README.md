@@ -98,9 +98,13 @@ git clone https://github.com/ShamHyper/MultiAI.git
         // Boolean ("True" or "False")
         // Enable MultiAI starting with share link
 
-        "clear_on_start": "False"
+        "clear_on_start": "False",
         // Boolean ("True" or "False")
         // Clear all outputs on start
+
+        "use_proxy": "False"
+        // Boolean ("True" or "False")
+        // Using system proxy to use WebUI
     }
 ```
 ## Support

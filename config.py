@@ -5,12 +5,13 @@ import torch
 import torchvision
 import shutil as sh
 
-def save_config_gr(settings_debug_mode, settings_start_in_browser, settings_share_gradio, settings_clear_on_start):
+def save_config_gr(settings_debug_mode, settings_start_in_browser, settings_share_gradio, settings_clear_on_start, settings_use_proxy):
     settings = {
         "debug_mode": str(settings_debug_mode),
         "start_in_browser": str(settings_start_in_browser),
         "share_gradio": str(settings_share_gradio),
-        "clear_on_start": str(settings_clear_on_start)
+        "clear_on_start": str(settings_clear_on_start),
+        "use_proxy": str(settings_use_proxy)
     }
     
     if "dev_config.json" in os.listdir("settings"):
@@ -43,8 +44,9 @@ debug = data.get('debug_mode', 'False').lower() == 'true'
 inbrowser = data.get('start_in_browser', 'False').lower() == 'true'
 share_gradio = data.get('share_gradio', 'False').lower() == 'true'
 clear_on_start = data.get('clear_on_start', 'False').lower() == 'true'
+use_proxy = data.get('use_proxy', 'False').lower() == 'true'
 
-if not (debug or inbrowser or share_gradio or clear_on_start):
+if not (debug or inbrowser or share_gradio or clear_on_start or use_proxy):
     print("Something wrong in config.json. Check them out!")
     
 cuda_version = torch.version.cuda

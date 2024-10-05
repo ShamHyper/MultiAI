@@ -2,5 +2,6 @@
     "debug_mode": "False",
     "start_in_browser": "True",
     "share_gradio": "False",
-    "clear_on_start": "False"
+    "clear_on_start": "False",
+    "use_proxy": "False"
 }
