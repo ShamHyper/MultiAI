@@ -15,7 +15,6 @@ from transformers import pipeline
 import torch
 import tensorflow as tf 
 import cv2
-from numba import cuda
 import numpy as np
 
 from upscalers import upscale
@@ -265,91 +264,80 @@ def process_batch(model, processor, batch_images, nsfw_count, normal_count, file
     
     return nsfw_count, normal_count, file_count
 
+def process_batch_2(model, processor, batch_images):
+    nsfw_count = 0
+    normal_count = 0
+    
+    with torch.no_grad():
+        inputs = processor(images=batch_images, return_tensors="pt")
+        outputs = model(**inputs)
+        logits = outputs.logits
+        predicted_labels = logits.argmax(-1)
+        
+        for label in predicted_labels:
+            predicted_class = model.config.id2label[label.item()]
+            if predicted_class == "nsfw":
+                nsfw_count += 1
+            else:
+                normal_count += 1
+
+    return nsfw_count, normal_count
+
 def process_frame(frame):
     result_frame = frame    
     return result_frame
 
 def VideoAnalyzerBatch(video_dir, vbth_slider, threshold_Vspc_slider):  
-    model_nsfw = models.nsfw_load()
-    
+    model, processor = models.nsfw_ng_load()
     _nsfw = 0
     _plain = 0
-    out_cmd = str("")
     output_dir = 'tmp'
     os.makedirs(output_dir, exist_ok=True)
+    
     video_files = os.listdir(video_dir)
     
-    for dir_Vspc in tqdm(video_files):
-        _nsfw_factor = False
-        _plain_factor = False
+    for dir_Vspc in tqdm(video_files, desc="Processing videos"):
         cap = cv2.VideoCapture(os.path.join(video_dir, dir_Vspc))
         frame_count = 0
-
-        while cap.isOpened():
-            ret, frame = cap.read()
-            if not ret:
-                break
-
-            frame_gpu = cuda.to_device(frame)
-            processed_frame_gpu = process_frame(frame_gpu)
-
-            processed_frame = processed_frame_gpu.copy_to_host()
-
-            output_file = os.path.join(output_dir, f'{frame_count + 1}.png')
-            cv2.imwrite(output_file, processed_frame)
-
-            frame_count += 1
-
-        cap.release()
+        batch_images = []
         
-        total_sum = 0
-        file_count = 0
+        total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         
-        for i, file_name in enumerate(os.listdir(output_dir)):
-            if vbth_slider != 1:
-                if i % vbth_slider != 0:
+        with tqdm(total=total_frames, desc=f"Processing frames in {dir_Vspc}") as pbar:
+            while cap.isOpened():
+                ret, frame = cap.read()
+                if not ret:
+                    break
+
+                if vbth_slider != 1 and frame_count % vbth_slider != 0:
+                    frame_count += 1
+                    pbar.update(1)
                     continue
-            elif vbth_slider == 1:
-                if config.debug: 
-                    print("Frame-Skip disabled!")
-                else:
-                    pass
+
+                image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+                batch_images.append(image)
                 
-            try:   
-                file_path = os.path.join(output_dir, file_name)
-                result = predict.classify(model_nsfw, file_path)###
-                x = next(iter(result.keys()))
-                values = result[x]
-                file_sum = sum(values.values())
-                total_sum += file_sum 
-                file_count += 1
-            except Exception:
-                pass
-            
-        try: 
-            avg_sum = total_sum / file_count 
-            percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
-            THRESHOLD = threshold_Vspc_slider
-            
-            value_nsfw_1 = percentages["porn"]
-            value_nsfw_2 = percentages["hentai"]
-            value_nsfw_3 = percentages["sexy"]
-        except (ZeroDivisionError, Exception):
-            pass
+                pbar.update(1)
+                frame_count += 1
+
+                if len(batch_images) >= 16:
+                    nsfw_count, normal_count = process_batch_2(model, processor, batch_images)
+                    batch_images = []
+
+            if batch_images:
+                nsfw_count, normal_count = process_batch_2(model, processor, batch_images)
         
-        try:
-            if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD:
-                video_path = os.path.join(video_dir, dir_Vspc)
-                sh.copy(video_path, 'outputs/video_analyze_nsfw')
-                _nsfw += 1
-                _nsfw_factor = True
-            else:
-                video_path = os.path.join(video_dir, dir_Vspc)
-                sh.copy(video_path, 'outputs/video_analyze_plain')
-                _plain += 1
-                _plain_factor = True
-        except (PermissionError, FileExistsError, Exception):
-            pass
+        total_frames_classified = nsfw_count + normal_count
+        nsfw_percent = (nsfw_count / total_frames_classified) * 100 if total_frames_classified > 0 else 0
+        
+        if nsfw_percent > threshold_Vspc_slider:
+            video_path = os.path.join(video_dir, dir_Vspc)
+            sh.copy(video_path, 'outputs/video_analyze_nsfw')
+            _nsfw += 1
+        else:
+            video_path = os.path.join(video_dir, dir_Vspc)
+            sh.copy(video_path, 'outputs/video_analyze_plain')
+            _plain += 1
             
         cap.release()
         cv2.destroyAllWindows()
@@ -357,25 +345,10 @@ def VideoAnalyzerBatch(video_dir, vbth_slider, threshold_Vspc_slider):
         rm_tmp = os.path.join(config.current_directory, output_dir)
         sh.rmtree(rm_tmp)
         os.makedirs(output_dir, exist_ok=True)
-        
-        if _nsfw_factor is True:  
-            out_cmd = f"[+]NSFW: {_nsfw}"
-            out_cmd += f"\nPlain: {_plain}"
-            
-        elif _plain_factor is True:
-            out_cmd = f"NSFW: {_nsfw}"
-            out_cmd += f"\n[+]Plain: {_plain}"
-            
-        if config.debug: 
-            print(out_cmd)
-        out_cmd = str("")
-        avg_sum = 0
-        percentages = 0
-    bth_Vspc_output = "Ready!"
-        
-    del model_nsfw
+
+    del model
     CODC_clear(silent=True)
-    return bth_Vspc_output
+    return f"NSFW: {_nsfw} | Plain: {_plain}"
 
 def VideoAnalyzerBatch_Clear():
     output_dir = 'tmp'
