@@ -203,60 +203,67 @@ def ImageAnalyzer(file_spc, clip_checked, clip_chunk_size):
 ##################################################################################################################################
 
 def VideoAnalyzer(file_Vspc):
-    output_dir = 'tmp'
-    os.makedirs(output_dir, exist_ok=True)
-          
-    model_nsfw = models.nsfw_load()
+    model, processor = models.nsfw_ng_load()
     
     cap = cv2.VideoCapture(file_Vspc)
-
-    frame_count = 0
-
-    while cap.isOpened():
-        ret, frame = cap.read()
-        if not ret:
-            break
-        output_file = os.path.join(output_dir, f'{frame_count + 1}.png')
-        cv2.imwrite(output_file, frame)
-        frame_count += 1
     
-    dir_tmp = "tmp"
-    total_sum = 0
+    nsfw_count = 0
+    normal_count = 0
     file_count = 0
     
-    for file_name in tqdm(os.listdir(dir_tmp)):
-        file_path = os.path.join(dir_tmp, file_name)
-        
-        result = predict.classify(model_nsfw, file_path)
-        x = next(iter(result.keys()))
-        values = result[x]
-        file_sum = sum(values.values())
-        total_sum += file_sum 
-        file_count += 1  
-
-    avg_sum = total_sum / file_count 
-    percentages = {k: round((v / avg_sum ) * 100, 1) for k, v in values.items()}
+    batch_images = []
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     
-    value1 = percentages["drawings"]
-    value2 = percentages["hentai"]
-    value3 = percentages["neutral"]
-    value4 = percentages["porn"]
-    value5 = percentages["sexy"]
+    with tqdm(total=total_frames, desc="Processing frames") as pbar:
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret:
+                break
+            
+            image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            batch_images.append(image)
+            
+            pbar.update(1)
+            
+            if len(batch_images) >= 16:
+                nsfw_count, normal_count, file_count = process_batch(
+                    model, processor, batch_images, nsfw_count, normal_count, file_count
+                )
+                batch_images = []
     
-    Vspc_output = f"Drawings: {value1}%\n"
-    Vspc_output += f"Hentai: {value2}%\n"
-    Vspc_output += f"Porn: {value4}%\n"
-    Vspc_output += f"Sexy: {value5}%\n"
-    Vspc_output += f"Neutral: {value3}%"
+        if batch_images:
+            nsfw_count, normal_count, file_count = process_batch(
+                model, processor, batch_images, nsfw_count, normal_count, file_count
+            )
     
-    rm_tmp = os.path.join(config.current_directory, dir_tmp)
-    sh.rmtree(rm_tmp)
+    nsfw_percent = (nsfw_count / file_count) * 100 if file_count > 0 else 0
+    
+    Vspc_output = f"NSFW: {nsfw_count} frames\n"
+    Vspc_output += f"Normal: {normal_count} frames\n\n"
+    Vspc_output += f"NSFW percent: {nsfw_percent:.2f}%"
     
     cap.release()
     cv2.destroyAllWindows()
-    del model_nsfw
     CODC_clear(silent=True)
+    
     return Vspc_output
+
+def process_batch(model, processor, batch_images, nsfw_count, normal_count, file_count):
+    with torch.no_grad():
+        inputs = processor(images=batch_images, return_tensors="pt")
+        outputs = model(**inputs)
+        logits = outputs.logits
+        
+        predicted_labels = logits.argmax(-1).tolist()
+        for label in predicted_labels:
+            predicted_class = model.config.id2label[label]
+            if predicted_class == "nsfw":
+                nsfw_count += 1
+            else:
+                normal_count += 1
+            file_count += 1
+    
+    return nsfw_count, normal_count, file_count
 
 def process_frame(frame):
     result_frame = frame    
@@ -310,7 +317,7 @@ def VideoAnalyzerBatch(video_dir, vbth_slider, threshold_Vspc_slider):
                 
             try:   
                 file_path = os.path.join(output_dir, file_name)
-                result = predict.classify(model_nsfw, file_path)
+                result = predict.classify(model_nsfw, file_path)###
                 x = next(iter(result.keys()))
                 values = result[x]
                 file_sum = sum(values.values())
