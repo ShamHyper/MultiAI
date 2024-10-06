@@ -451,18 +451,12 @@ def is_image_generated(test_image, model_h5):
     
     predicted_prc_ai = round(predicted_prc_ai_raw, 4)
     predicted_prc_human = round(predicted_prc_human_raw, 4)
-
-    if config.debug:
-        print(f"Result array of detecting: {result}")
-        print(f"Result of detecting AI: {predicted_prc_ai}%")
-        print(f"Result of detecting HUMAN: {predicted_prc_human}%")
-        
+ 
     if predicted_prc_ai >= predicted_prc_human:
         predicted_prc = predicted_prc_ai
     elif predicted_prc_human >= predicted_prc_ai:
         predicted_prc = predicted_prc_human
             
-    
     if predicted_prc == predicted_prc_ai:
         iig_text = f"This is an image created by AI\n\nAI: {predicted_prc_ai}%\nHUMAN: {predicted_prc_human}%"
         return iig_text
@@ -502,25 +496,16 @@ def AiDetector_batch(aid_input_batch):
     for image_file in tqdm(image_files):
         try:
             img_path = os.path.join(aid_input_batch, image_file)
-            if config.debug:
-                print(f"Processing image: {img_path}")
             
             img_h5 = Image.open(img_path)
             result = is_image_generated(img_h5, model_h5)
-            
-            if config.debug:
-                print(f"Result for {image_file}: {result}")
-            
+              
             if "This is an image created by AI" in result:
                 dest_path = os.path.join(aid_ai_dir, image_file)
                 sh.copyfile(img_path, dest_path)
-                if config.debug:
-                    print(f"Copied to AI directory: {dest_path}")
             elif "This is an image created by HUMAN" in result:
                 dest_path = os.path.join(aid_human_dir, image_file)
                 sh.copyfile(img_path, dest_path)
-                if config.debug:
-                    print(f"Copied to HUMAN directory: {dest_path}") 
         
         except Exception as e:
             print(f"Error processing {image_file}: {e}")

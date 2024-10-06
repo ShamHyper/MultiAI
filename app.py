@@ -14,7 +14,7 @@ from PIL import Image
 if config.use_proxy is False:
     os.environ["no_proxy"] = "localhost,127.0.0.1,::1"
 
-VERSION = "MultiAI v1.16.1-b3"
+VERSION = "MultiAI v1.16.1-b4"
 SERVER_PORT = 7891
 SERVER_NAME = '127.0.0.1'
 
@@ -49,7 +49,7 @@ def update_speakers(lang):
     elif lang == "ru":
         return gr.Dropdown(choices=models.voices_ru, value="random", label="Speaker")
 
-def load_images_from_folder(folder):
+def LIFF(folder):
     images = []
     for filename in os.listdir(folder):
         img_path = os.path.join(folder, filename)
@@ -61,12 +61,8 @@ def load_images_from_folder(folder):
                 pass
     return images
 
-outputs_folder = "outputs"
-subfolders = ["aid_ai", "aid_human", "detector_outputs_nsfw", "detector_outputs_plain", "rembg_outputs"]
-
-def refresh_all_galleries():
-    gr.Info("Updating gallery...")
-    return [load_images_from_folder(os.path.join(outputs_folder, subfolder)) for subfolder in subfolders]
+def refresh_gallery():
+    return LIFF(aid_ai), LIFF(aid_human), LIFF(detector_outputs_nsfw), LIFF(detector_outputs_plain), LIFF(rembg_outputs)
     
 ##################################################################################################################################
 
@@ -253,14 +249,34 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
 
 ##################################################################################################################################
 
-    with gr.Tab("🖼️Gallery"):
+    with gr.Tab("🖼️Outputs"):
         with gr.Row():
-            refresh_button = gr.Button("🔄 Update All Galleries")
-        for subfolder in subfolders:
-            folder_path = os.path.join(outputs_folder, subfolder)
-            with gr.Row():
-                galleries = gr.Gallery(value=load_images_from_folder(folder_path), label=f"Gallery: {subfolder}", format="png", interactive=False)
-                folder_input = gr.Textbox(value=folder_path, visible=False)
+            refresh_button = gr.Button("🔄Reload gallery")
+        with gr.Row():
+            gr.Label("AI Detector - AI")
+        with gr.Row():
+            aid_ai = "outputs/aid_ai"
+            gallery_aid_ai = gr.Gallery(value=LIFF(aid_ai), format="png", interactive=False, columns=8, container=False)
+        with gr.Row():
+            gr.Label("AI Detector - HUMAN")
+        with gr.Row():
+            aid_human = "outputs/aid_human"
+            gallery_aid_human = gr.Gallery(value=LIFF(aid_human), format="png", interactive=False, columns=8, container=False)
+        with gr.Row():
+            gr.Label("Analyzer - NSFW")
+        with gr.Row():
+            detector_outputs_nsfw = "outputs/detector_outputs_nsfw"
+            gallery_detector_outputs_nsfw = gr.Gallery(value=LIFF(detector_outputs_nsfw), format="png", interactive=False, columns=8, container=False)
+        with gr.Row():
+            gr.Label("Analyzer - PLAIN")
+        with gr.Row():
+            detector_outputs_plain = "outputs/detector_outputs_plain"
+            gallery_detector_outputs_plain = gr.Gallery(value=LIFF(detector_outputs_plain), format="png", interactive=False, columns=8, container=False)
+        with gr.Row():
+            gr.Label("Rembg")
+        with gr.Row():
+            rembg_outputs = "outputs/rembg_outputs"
+            gallery_rembg_outputs = gr.Gallery(value=LIFF(rembg_outputs), format="png", interactive=False, columns=8, container=False)
 
 ##################################################################################################################################
 
@@ -324,7 +340,7 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
     tts_button.click(multi.silero_tts, inputs=[tts_input, tts_lang, tts_speakers, tts_rate], outputs=tts_audio)
     tts_clear.click(multi.tts_clear)
     
-    refresh_button.click(refresh_all_galleries, outputs=galleries)
+    refresh_button.click(fn=refresh_gallery, outputs=[gallery_aid_ai, gallery_aid_human, gallery_detector_outputs_nsfw, gallery_detector_outputs_plain, gallery_rembg_outputs])
     
 if config.clear_on_start is True:
     config.clear_all()

@@ -5,6 +5,7 @@
 - Added new setting: use proxy or not
 - Merged NSFW Detector with Analyzer
 - NSFW Detector updated to new detection function
+- Added outputs gallery tab
 ## 1.15.x
 - Updated CUDA to 12.1
 - Added restart MultiAI button in clearing tab
