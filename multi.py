@@ -71,53 +71,33 @@ def BgRemoverLite_Clear():
 
 ##################################################################################################################################
 
-def NSFW_Detector(detector_input, detector_slider, detector_skeep_dr, drawings_threshold):
-    if detector_skeep_dr is True:
-        if config.debug: 
-            print("I will skip drawings!")    
-                     
-    model_nsfw = models.nsfw_load()
+def NSFW_Detector(detector_input):         
+    model, processor = models.nsfw_ng_load()
     
-    FOLDER_NAME = str(detector_input)
-    THRESHOLD = detector_slider
-    DRAW_THRESHOLD = drawings_threshold
     nsfw = 0
     plain = 0
-
+    
+    FOLDER_NAME = str(detector_input)
     dirarr = [f"{FOLDER_NAME}/{f}" for f in os.listdir(FOLDER_NAME)]
-
+    
     for file in tqdm(dirarr):
         try:
-            result = predict.classify(model_nsfw, file)
-            keys_list = list(result.keys())
-            x = keys_list[0]
+            with torch.no_grad():
+                image = Image.open(file).convert("RGB")
+                inputs = processor(images=image, return_tensors="pt")
+                outputs = model(**inputs)
+                logits = outputs.logits
 
-            value_nsfw_1 = result[x]["porn"]
-            value_nsfw_2 = result[x]["hentai"]
-            value_nsfw_3 = result[x]["sexy"]
-            value_draw = result[x]["drawings"]
+            predicted_label = logits.argmax(-1).item()
+            predicted_class = model.config.id2label[predicted_label]
 
-            if detector_skeep_dr is False:
-                if value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
-                    sh.copyfile(file, f'./outputs/detector_outputs_nsfw/{file.split("/")[-1]}')
-                    nsfw += 1
-                else:
-                    sh.copyfile(file, f'./outputs/detector_outputs_plain/{file.split("/")[-1]}')
-                    plain += 1
-                    
-            elif detector_skeep_dr is True:
-                if value_draw > DRAW_THRESHOLD or value_nsfw_2 > THRESHOLD * 1.5:
-                    if config.debug: 
-                        print(f"I skipped this pic, because value_draw[{value_draw}] > DRAW_THRESHOLD[{DRAW_THRESHOLD}]")
-                    pass
-                elif value_nsfw_1 > THRESHOLD or value_nsfw_2 > THRESHOLD or value_nsfw_3 > THRESHOLD * 1.3:
-                    sh.copyfile(file, f'./outputs/detector_outputs_nsfw/{file.split("/")[-1]}')
-                    nsfw += 1
-                else:
-                    sh.copyfile(file, f'./outputs/detector_outputs_plain/{file.split("/")[-1]}')
-                    plain += 1
-                    
-        except (PermissionError, FileNotFoundError, UnidentifiedImageError, ValueError) as e:
+            if predicted_class == "normal":
+                sh.copyfile(file, f'./outputs/detector_outputs_plain/{file.split("/")[-1]}')
+                plain += 1
+            elif predicted_class == "nsfw":
+                sh.copyfile(file, f'./outputs/detector_outputs_nsfw/{file.split("/")[-1]}')
+                nsfw += 1
+        except Exception as e:
             gr.Error(f"Error: {e}")
             pass
 
@@ -125,8 +105,6 @@ def NSFW_Detector(detector_input, detector_slider, detector_skeep_dr, drawings_t
         f"[{str(nsfw)}] NSFW: {os.path.abspath('./outputs/detector_outputs_nsfw')}\n"
         f"[{str(plain)}] Plain: {os.path.abspath('./outputs/detector_outputs_plain')}"
     )
-    
-    del model_nsfw
     CODC_clear(silent=True)
     return outputs
 

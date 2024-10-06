@@ -95,4 +95,3 @@ def check_gpu():
     except Exception as e:
         print(f"ERROR IN CHECK GPU: {e}")
     return device
-

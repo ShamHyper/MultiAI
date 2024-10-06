@@ -13,7 +13,7 @@ import time
 if config.use_proxy is False:
     os.environ["no_proxy"] = "localhost,127.0.0.1,::1"
 
-VERSION = "MultiAI v1.16.1-b1"
+VERSION = "MultiAI v1.16.1-b2"
 SERVER_PORT = 7891
 SERVER_NAME = '127.0.0.1'
 
@@ -102,37 +102,6 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
             
 ##################################################################################################################################
             
-    with gr.Tab("🔞NSFW Detector"):
-        with gr.Row():
-            gr.Label("Detect NSFW images from dir")
-        with gr.Row():
-            detector_input = gr.Textbox(label="Enter dir", placeholder="Enter dir like this: D:\Python\MultiAI")
-            detector_output = gr.Textbox(label="Output", placeholder="NSFW Detector outputs will be here")
-        with gr.Row():
-            detector_slider = gr.Slider(
-                value=0.36,
-                label="Threshold (larger number = simpler detection | smaller number = stricter one)",
-                minimum=0.01,
-                maximum=0.98
-            )
-        with gr.Row():
-            detector_skeep_dr = gr.Checkbox(value=False, label="🎨 Skip drawings or anime")
-            drawings_threshold = gr.Slider(
-                value=0.10,
-                label="Threshold for 🎨 Skip drawings or anime",
-                minimum=0.01,
-                maximum=0.98
-            )
-        with gr.Row():
-            detector_button = gr.Button("👟 Click here to start")
-        with gr.Row():
-            gr.Label("Clear outputs")
-        with gr.Row():
-            detector_clear_button = gr.Button("🧹 Clear outputs")
-            clearp = gr.Textbox(label="Clearing progress")
-            
-##################################################################################################################################   
-            
     with gr.Tab("🔎Image Analyzer"):
         with gr.Row():
             gr.Label("Analyze image")
@@ -144,6 +113,19 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
             clip_chunk_size = gr.Slider(value=512, label="Batch size for CLIP, use smaller for lower VRAM", maximum=2048, minimum=512, step=512)
         with gr.Row():
             spc_button = gr.Button("👟 Click here to start")
+            
+        with gr.Row():
+            gr.Label("Detect NSFW images from dir")
+        with gr.Row():
+            detector_input = gr.Textbox(label="Enter dir", placeholder="Enter dir like this: D:\Python\MultiAI")
+            detector_output = gr.Textbox(label="Output", placeholder="NSFW Detector outputs will be here")
+        with gr.Row():
+            detector_button = gr.Button("👟 Click here to start")
+        with gr.Row():
+            gr.Label("Clear outputs")
+        with gr.Row():
+            detector_clear_button = gr.Button("🧹 Clear outputs")
+            clearp = gr.Textbox(label="Clearing progress")
             
 ##################################################################################################################################
             
@@ -248,7 +230,7 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
         with gr.Row():
             tts_button = gr.Button("👟 Click here to start")
             tts_clear = gr.Button("🧹 Clear outputs")
-                  
+
 ##################################################################################################################################
 
     with gr.Tab("⚙️Settings"):
@@ -280,7 +262,7 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
     rembg_batch_button.click(multi.BgRemoverLiteBatch, inputs=image_input_dir, outputs=image_output_dir)
     clearp_bgr_button.click(multi.BgRemoverLite_Clear, outputs=clearp_bgr)
 
-    detector_button.click(multi.NSFW_Detector, inputs=[detector_input, detector_slider, detector_skeep_dr, drawings_threshold], outputs=detector_output)
+    detector_button.click(multi.NSFW_Detector, inputs=detector_input, outputs=detector_output)
     detector_clear_button.click(multi.NSFWDetector_Clear, outputs=clearp)
     
     upsc_button.click(multi.Upscaler, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)
