@@ -9,11 +9,12 @@ import models
 import os
 import sys
 import time
+from PIL import Image
 
 if config.use_proxy is False:
     os.environ["no_proxy"] = "localhost,127.0.0.1,::1"
 
-VERSION = "MultiAI v1.16.1-b2"
+VERSION = "MultiAI v1.16.1-b3"
 SERVER_PORT = 7891
 SERVER_NAME = '127.0.0.1'
 
@@ -47,6 +48,25 @@ def update_speakers(lang):
         return gr.Dropdown(choices=models.voices_en, value="random", label="Speaker")
     elif lang == "ru":
         return gr.Dropdown(choices=models.voices_ru, value="random", label="Speaker")
+
+def load_images_from_folder(folder):
+    images = []
+    for filename in os.listdir(folder):
+        img_path = os.path.join(folder, filename)
+        if os.path.isfile(img_path):
+            try:
+                img = Image.open(img_path)
+                images.append(img)
+            except Exception:
+                pass
+    return images
+
+outputs_folder = "outputs"
+subfolders = ["aid_ai", "aid_human", "detector_outputs_nsfw", "detector_outputs_plain", "rembg_outputs"]
+
+def refresh_all_galleries():
+    gr.Info("Updating gallery...")
+    return [load_images_from_folder(os.path.join(outputs_folder, subfolder)) for subfolder in subfolders]
     
 ##################################################################################################################################
 
@@ -233,6 +253,17 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
 
 ##################################################################################################################################
 
+    with gr.Tab("🖼️Gallery"):
+        with gr.Row():
+            refresh_button = gr.Button("🔄 Update All Galleries")
+        for subfolder in subfolders:
+            folder_path = os.path.join(outputs_folder, subfolder)
+            with gr.Row():
+                galleries = gr.Gallery(value=load_images_from_folder(folder_path), label=f"Gallery: {subfolder}", format="png", interactive=False)
+                folder_input = gr.Textbox(value=folder_path, visible=False)
+
+##################################################################################################################################
+
     with gr.Tab("⚙️Settings"):
         with gr.Row():
             settings_debug_mode = gr.Checkbox(value=config.debug, label="Enable debug mode (write debug info)")
@@ -289,10 +320,12 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
     
     btn_refresh.click(restart_ui, js=JS_SCRIPT_PRELOADER)
     
-    tts_lang.change(fn=update_speakers, inputs=tts_lang, outputs=tts_speakers)
+    tts_lang.change(update_speakers, inputs=tts_lang, outputs=tts_speakers)
     tts_button.click(multi.silero_tts, inputs=[tts_input, tts_lang, tts_speakers, tts_rate], outputs=tts_audio)
     tts_clear.click(multi.tts_clear)
-
+    
+    refresh_button.click(refresh_all_galleries, outputs=galleries)
+    
 if config.clear_on_start is True:
     config.clear_all()
 
