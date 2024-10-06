@@ -14,9 +14,13 @@ from PIL import Image
 if config.use_proxy is False:
     os.environ["no_proxy"] = "localhost,127.0.0.1,::1"
 
-VERSION = "MultiAI v1.16.1-b4"
+##################################################################################################################################
+
+VERSION = "MultiAI v1.16.1"
 SERVER_PORT = 7891
 SERVER_NAME = '127.0.0.1'
+
+##################################################################################################################################
 
 print(f"Initializing {VERSION} launch...")
 
@@ -340,7 +344,7 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
     tts_button.click(multi.silero_tts, inputs=[tts_input, tts_lang, tts_speakers, tts_rate], outputs=tts_audio)
     tts_clear.click(multi.tts_clear)
     
-    refresh_button.click(fn=refresh_gallery, outputs=[gallery_aid_ai, gallery_aid_human, gallery_detector_outputs_nsfw, gallery_detector_outputs_plain, gallery_rembg_outputs])
+    refresh_button.click(refresh_gallery, outputs=[gallery_aid_ai, gallery_aid_human, gallery_detector_outputs_nsfw, gallery_detector_outputs_plain, gallery_rembg_outputs])
     
 if config.clear_on_start is True:
     config.clear_all()
