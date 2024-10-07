@@ -63,10 +63,7 @@ def BgRemoverLite_Clear():
     os.makedirs(folder_path)
     file = open(f"{folder_path}/outputs will be here.txt", "w")
     file.close()
-    
     gr.Info("BgRemoverLite outputs cleared")
-    outputs = "Done!"
-    return outputs
 
 ##################################################################################################################################
 
@@ -120,10 +117,7 @@ def NSFWDetector_Clear():
     os.makedirs(folder_path2)
     file = open(f"{folder_path2}/outputs will be here.txt", "w")
     file.close()
-    
     gr.Info("Detector outputs cleared")
-    outputs = "Done!"
-    return outputs
 
 ##################################################################################################################################
 
@@ -149,6 +143,43 @@ def Upscaler(upsc_image_input, scale_factor, model_ups):
     
     CODC_clear(silent=True)
     return upsc_image_output
+
+def Upscaler_2(upsc_image_input, scale_factor, model_ups):
+    tmp_img_ndr = Image.fromarray(upsc_image_input)
+    upsc_image_output = upscale(model_ups, tmp_img_ndr, scale_factor)
+    
+    return upsc_image_output
+
+def Upscaler_batch(upsc_dir_input, scale_factor_batch, model_ups_batch):
+    output_dir = "outputs/upscaler_outputs"
+    os.makedirs(output_dir, exist_ok=True)
+    
+    for filename in tqdm(os.listdir(upsc_dir_input)):
+        input_path = os.path.join(upsc_dir_input, filename)
+        try:
+            if os.path.isfile(input_path):
+                img = Image.open(input_path)
+                img_array = np.array(img)
+                
+                upsc_image_output = Upscaler_2(img_array, scale_factor_batch, model_ups_batch)
+                
+                output_path = os.path.join(output_dir, filename)
+                upsc_image_output.save(output_path)
+        except Exception as e:
+            gr.Error(e)
+            
+    output_dir = f"Your outputs here: {output_dir}"
+    CODC_clear(silent=True)
+    return output_dir
+
+def Upscaler_batch_Clear():
+    outputs_dir = os.path.join(config.current_directory, "outputs/upscaler_outputs")
+    sh.rmtree(outputs_dir)
+    folder_path = "outputs/upscaler_outputs"
+    os.makedirs(folder_path)
+    file = open(f"{folder_path}/outputs will be here.txt", "w")
+    file.close()
+    gr.Info("Upscaler outputs cleared")
 
 ##################################################################################################################################
 
@@ -383,8 +414,6 @@ def VideoAnalyzerBatch_Clear():
             pass
     
     gr.Info("Video Analyzer outputs cleared")    
-    bth_Vspc_clear_output = "Done!"
-    return bth_Vspc_clear_output 
 
 ##################################################################################################################################
 
@@ -509,10 +538,7 @@ def AID_Clear():
     os.makedirs(folder_path2)
     file = open(f"{folder_path2}/outputs will be here.txt", "w")
     file.close()
-    
     gr.Info("AI Detecting outputs cleared")
-    outputs = "Done!"
-    return outputs
 
 ##################################################################################################################################
 
@@ -541,7 +567,6 @@ def tts_clear():
     os.makedirs(folder_path1)
     file = open(f"{folder_path1}/outputs will be here.txt", "w")
     file.close()
-    
     gr.Info("TTS outputs cleared")    
 
 ##################################################################################################################################

@@ -16,7 +16,7 @@ if config.use_proxy is False:
 
 ##################################################################################################################################
 
-VERSION = "MultiAI v1.16.2"
+VERSION = "MultiAI v1.16.3"
 SERVER_PORT = 7891
 SERVER_NAME = '127.0.0.1'
 
@@ -66,7 +66,7 @@ def LIFF(folder):
     return images
 
 def refresh_gallery():
-    return LIFF(aid_ai), LIFF(aid_human), LIFF(detector_outputs_nsfw), LIFF(detector_outputs_plain), LIFF(rembg_outputs)
+    return LIFF(rembg_outputs), LIFF(upscaler_outputs), LIFF(detector_outputs_nsfw), LIFF(detector_outputs_plain), LIFF(aid_ai), LIFF(aid_human)
     
 ##################################################################################################################################
 
@@ -95,11 +95,7 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
                 label="Output", placeholder="BrRemoverLite outputs will be here")
         with gr.Row():
             rembg_batch_button = gr.Button("🖼️ Remove some backgrounds")
-        with gr.Row():
-            gr.Label("Clear outputs")
-        with gr.Row():
             clearp_bgr_button = gr.Button("🧹 Clear outputs")
-            clearp_bgr = gr.Textbox(label="Clearing progress")
       
 ##################################################################################################################################
             
@@ -119,6 +115,22 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
                 step=1
             )
             upsc_button = gr.Button("📈 Start upscaling")
+        with gr.Row():
+            gr.Label("Upscale images from dir")
+        with gr.Row():
+            upsc_batch_input = gr.Textbox(label="Enter dir", placeholder="Enter dir like this: D:\Python\MultiAI")
+            upsc_batch_output = gr.Textbox(label="Output", placeholder="Upscaler outputs will be here")
+        with gr.Row():
+            model_ups_batch = gr.Dropdown(label="Model", choices=available_models(), value="None")
+            scale_factor_batch = gr.Slider(
+                value=4.0,
+                label="Scale factor (4x factor max recommended)",
+                minimum=2,
+                maximum=10.0,
+                step=1
+            )
+            upsc_button_batch = gr.Button("📈 Start dir upscaling")
+            clear_upsc_button = gr.Button("🧹 Clear outputs")
             
 ##################################################################################################################################
             
@@ -141,11 +153,7 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
             detector_output = gr.Textbox(label="Output", placeholder="NSFW Detector outputs will be here")
         with gr.Row():
             detector_button = gr.Button("👟 Click here to start")
-        with gr.Row():
-            gr.Label("Clear outputs")
-        with gr.Row():
             detector_clear_button = gr.Button("🧹 Clear outputs")
-            clearp = gr.Textbox(label="Clearing progress")
             
 ##################################################################################################################################
             
@@ -180,9 +188,7 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
         )
         with gr.Row():
             start_dir_videos = gr.Button("⭐ Start")
-        with gr.Row():
             clear_videos = gr.Button("🧹 Clear outputs")
-            bth_Vspc_clear_output = gr.Textbox(label="Clearing progress", placeholder="Clear output will be here...")
             
 ##################################################################################################################################
             
@@ -227,12 +233,7 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
             aid_output_batch = gr.Textbox(label="Output", placeholder="AI Detector outputs will be here")
         with gr.Row():
             aid_batch_button = gr.Button("👟 Click here to start")
-                    
-        with gr.Row():
-            gr.Label("Clear outputs")
-        with gr.Row():
             aid_clear_button = gr.Button("🧹 Clear outputs")
-            aid_clearp = gr.Textbox(label="Clearing progress")
                   
 ##################################################################################################################################
 
@@ -257,15 +258,15 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
         with gr.Row():
             refresh_button = gr.Button("🔄Reload gallery")
         with gr.Row():
-            gr.Label("AI Detector - AI")
+            gr.Label("Rembg")
         with gr.Row():
-            aid_ai = "outputs/aid_ai"
-            gallery_aid_ai = gr.Gallery(value=LIFF(aid_ai), format="png", interactive=False, columns=8, container=False)
+            rembg_outputs = "outputs/rembg_outputs"
+            gallery_rembg_outputs = gr.Gallery(value=LIFF(rembg_outputs), format="png", interactive=False, columns=8, container=False)
         with gr.Row():
-            gr.Label("AI Detector - HUMAN")
+            gr.Label("Upscaler")
         with gr.Row():
-            aid_human = "outputs/aid_human"
-            gallery_aid_human = gr.Gallery(value=LIFF(aid_human), format="png", interactive=False, columns=8, container=False)
+            upscaler_outputs = "outputs/upscaler_outputs"
+            gallery_upscaler_outputs = gr.Gallery(value=LIFF(upscaler_outputs), format="png", interactive=False, columns=8, container=False)
         with gr.Row():
             gr.Label("Analyzer - NSFW")
         with gr.Row():
@@ -277,10 +278,15 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
             detector_outputs_plain = "outputs/detector_outputs_plain"
             gallery_detector_outputs_plain = gr.Gallery(value=LIFF(detector_outputs_plain), format="png", interactive=False, columns=8, container=False)
         with gr.Row():
-            gr.Label("Rembg")
+            gr.Label("AI Detector - AI")
         with gr.Row():
-            rembg_outputs = "outputs/rembg_outputs"
-            gallery_rembg_outputs = gr.Gallery(value=LIFF(rembg_outputs), format="png", interactive=False, columns=8, container=False)
+            aid_ai = "outputs/aid_ai"
+            gallery_aid_ai = gr.Gallery(value=LIFF(aid_ai), format="png", interactive=False, columns=8, container=False)
+        with gr.Row():
+            gr.Label("AI Detector - HUMAN")
+        with gr.Row():
+            aid_human = "outputs/aid_human"
+            gallery_aid_human = gr.Gallery(value=LIFF(aid_human), format="png", interactive=False, columns=8, container=False)
 
 ##################################################################################################################################
 
@@ -311,25 +317,27 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
                      
     rembg_button.click(multi.BgRemoverLite, inputs=image_input, outputs=image_output)
     rembg_batch_button.click(multi.BgRemoverLiteBatch, inputs=image_input_dir, outputs=image_output_dir)
-    clearp_bgr_button.click(multi.BgRemoverLite_Clear, outputs=clearp_bgr)
+    clearp_bgr_button.click(multi.BgRemoverLite_Clear)
 
     detector_button.click(multi.NSFW_Detector, inputs=detector_input, outputs=detector_output)
-    detector_clear_button.click(multi.NSFWDetector_Clear, outputs=clearp)
+    detector_clear_button.click(multi.NSFWDetector_Clear)
     
     upsc_button.click(multi.Upscaler, inputs=[upsc_image_input, scale_factor, model_ups], outputs=upsc_image_output)
+    upsc_button_batch.click(multi.Upscaler_batch, inputs=[upsc_batch_input, scale_factor_batch, model_ups_batch], outputs=upsc_batch_output)
+    clear_upsc_button.click(multi.Upscaler_batch_Clear)
     upsc_clear_cache.click(multi.CODC_clear_app)
     
     spc_button.click(multi.ImageAnalyzer, inputs=[file_spc, clip_checked, clip_chunk_size], outputs=spc_output)
        
     Vspc_button.click(multi.VideoAnalyzer, inputs=file_Vspc, outputs=Vspc_output)
     start_dir_videos.click(multi.VideoAnalyzerBatch, inputs=[video_dir, vbth_slider, threshold_Vspc_slider], outputs=bth_Vspc_output)   
-    clear_videos.click(multi.VideoAnalyzerBatch_Clear, outputs=bth_Vspc_clear_output)   
+    clear_videos.click(multi.VideoAnalyzerBatch_Clear)   
     
     promptgen_button.click(multi.PromptGenetator, inputs=[prompt_input, pg_prompts, pg_max_length, randomize_temp], outputs=promptgen_output)
     
     aid_single_button.click(multi.AiDetector_single, inputs=aid_input_single, outputs=aid_output_single)
     aid_batch_button.click(multi.AiDetector_batch, inputs=aid_input_batch, outputs=aid_output_batch)
-    aid_clear_button.click(multi.AID_Clear, outputs=aid_clearp)
+    aid_clear_button.click(multi.AID_Clear)
     
     clear_all_button.click(config.clear_all)
     
@@ -344,7 +352,12 @@ with gr.Blocks(title=VERSION, theme=gr.themes.Soft(primary_hue="purple", seconda
     tts_button.click(multi.silero_tts, inputs=[tts_input, tts_lang, tts_speakers, tts_rate], outputs=tts_audio)
     tts_clear.click(multi.tts_clear)
     
-    refresh_button.click(refresh_gallery, outputs=[gallery_aid_ai, gallery_aid_human, gallery_detector_outputs_nsfw, gallery_detector_outputs_plain, gallery_rembg_outputs])
+    refresh_button.click(refresh_gallery, outputs=[gallery_rembg_outputs, 
+                                                   gallery_upscaler_outputs, 
+                                                   gallery_detector_outputs_nsfw, 
+                                                   gallery_detector_outputs_plain,
+                                                   gallery_aid_ai, 
+                                                   gallery_aid_human])
     
 if config.clear_on_start is True:
     config.clear_all()

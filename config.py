@@ -73,6 +73,7 @@ def delete_tmp_pngs():
 
 def clear_all():
     import multi
+    multi.Upscaler_batch_Clear()
     multi.BgRemoverLite_Clear()
     multi.NSFWDetector_Clear()
     multi.VideoAnalyzerBatch_Clear()
