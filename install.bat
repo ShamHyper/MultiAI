@@ -32,15 +32,8 @@ echo Installing pip:
 %PYTHON% -m pip install pip==24.0
 echo Installing pip-tools:
 %PYTHON% -m pip install pip-tools
-
-set /p COMPILE_REQ="[REQUIRED FOR THE FIRST LAUNCH OF INSTALL.BAT] Compile requirements? (Y/N): "
-
-if /I "%COMPILE_REQ%"=="Y" (
-    echo Compiling requirements:
-    %PYTHON% -m piptools compile requirements.in
-) else (
-    echo Skipping requirements compilation.
-)
+echo Compiling requirements:
+%PYTHON% -m piptools compile requirements.in
 
 echo Installing requirements:
 %PYTHON% -m pip install -r requirements.txt
