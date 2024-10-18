@@ -1,6 +1,6 @@
 # Changelog
 ## 1.17.x
-- Requirements compiling
+- Requirements compilation
 ## 1.16.x
 - Added TTS AI
 - QOL fixes
