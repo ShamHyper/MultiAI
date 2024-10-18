@@ -28,11 +28,26 @@ set PYTHON=%VENV_DIR%\Scripts\python.exe
 
 call "%VENV_DIR%\Scripts\activate"
 
-echo Installing dependencies...
+echo Installing pip:
 %PYTHON% -m pip install pip==24.0
-%PYTHON% -m pip install torch torchvision==0.16.2 torchaudio --index-url https://download.pytorch.org/whl/cu121
-%PYTHON% -m pip install -r requirements.txt
+echo Installing pip-tools:
+%PYTHON% -m pip install pip-tools
 
+set /p COMPILE_REQ="[REQUIRED FOR THE FIRST LAUNCH OF INSTALL.BAT] Compile requirements? (Y/N): "
+
+if /I "%COMPILE_REQ%"=="Y" (
+    echo Compiling requirements:
+    %PYTHON% -m piptools compile requirements.in
+) else (
+    echo Skipping requirements compilation.
+)
+
+echo Installing requirements:
+%PYTHON% -m pip install -r requirements.txt
+echo Installing torch:
+%PYTHON% -m pip install torch torchvision==0.16.2 torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+echo Running app.py:
 %PYTHON% app.py %*
 
 pause
